@@ -1,0 +1,14 @@
+$primaryColor: #5E72E4;
+$sidebarWidth: 270px;
+
+.sidebar-wrapper {
+    height: 100vh;
+    width: $sidebarWidth;
+    background-color: $primaryColor;
+    border-right: 1px solid $primaryColor;
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-shadow: 3px 0 5px -2px rgba(0, 0, 0, 0.3);
+    padding: 10px 20px;
+}
