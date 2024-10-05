@@ -1,3 +1,9 @@
 <div class="sidebar-wrapper">
-    {{ $slot }}
+    <div class="header">
+        @if(isset($header))
+        @endif
+    </div>
+    <div class="item-wrapper">
+        {{ $slot }}
+    </div>
 </div>

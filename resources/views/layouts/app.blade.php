@@ -17,7 +17,32 @@
 </head>
 <body class="bg-neutral-100">
 <x-navigation.sidebar.wrapper>
-
+    <x-navigation.sidebar.item
+        title="Dashboard"
+        to="/dashboard"
+        materialIcon="dashboard"
+    ></x-navigation.sidebar.item>
+    <x-navigation.sidebar.item-tree
+        title="Master Data"
+        to="/dashboard"
+        materialIcon="database"
+    >
+        <x-navigation.sidebar.item
+            title="Dashboard"
+            to="/dashboard"
+            materialIcon="dashboard"
+        ></x-navigation.sidebar.item>
+        <x-navigation.sidebar.item
+            title="Dashboard"
+            to="/dashboard"
+            materialIcon="dashboard"
+        ></x-navigation.sidebar.item>
+    </x-navigation.sidebar.item-tree>
+    <x-navigation.sidebar.item
+        title="Dashboard"
+        to="/dashboard"
+        materialIcon="dashboard"
+    ></x-navigation.sidebar.item>
 </x-navigation.sidebar.wrapper>
 {{ $slot }}
 
