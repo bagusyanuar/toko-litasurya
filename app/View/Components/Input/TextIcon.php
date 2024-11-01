@@ -12,17 +12,20 @@ class TextIcon extends Component
     public $materialIcon;
     public $baseClass;
     public $iconClass;
+    public $parentClassName;
 
     /**
      * Create a new component instance.
      * @param string $size
      * @param string $materialIcon
+     * @param string $parentClassName
      */
-    public function __construct($size = 'normal', $materialIcon = 'circle')
+    public function __construct($size = 'normal', $materialIcon = 'circle', $parentClassName = '')
     {
         $this->size = $size;
         $this->materialIcon = $materialIcon;
-        $this->baseClass = 'rounded-[4px] border border-neutral-300 outline-none focus:outline-none focus:ring-0 focus:border-brand-500 transition duration-300 ease-in-out';
+        $this->parentClassName = $parentClassName;
+        $this->baseClass = 'w-full rounded-[4px] text-neutral-500 border border-neutral-300 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500 transition duration-300 ease-in-out';
         switch ($size) {
             case 'small':
                 $this->baseClass .= ' text-[0.725em] ps-[2.05rem] pe-[0.825rem] py-[0.45rem] rounded-[4px]';

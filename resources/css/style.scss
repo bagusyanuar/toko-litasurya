@@ -2,6 +2,11 @@ $primaryColor: #5E72E4;
 $sidebarWidth: 250px;
 $sidebarItemInactiveColor: #B5BEF3;
 
+body {
+    font-family: "Poppins", sans-serif;
+    font-style: normal;
+}
+
 .sidebar-wrapper {
     height: 100vh;
     width: $sidebarWidth;
