@@ -10,28 +10,10 @@ class Login extends Component
     public $password;
     public $onLoading = false;
 
-
-    public function mount()
+    public function login()
     {
-        $this->onLoading = false;
+        sleep(2);
     }
-
-    public function submitLogin()
-    {
-        $this->onLoading = true;
-        sleep(5);
-        $this->onLoading = false;
-//        $this->onLoading = false;
-    }
-
-    public function submitLogin2()
-    {
-        $this->onLoading = true;
-        sleep(5);
-        $this->onLoading = false;
-//        $this->onLoading = false;
-    }
-
 
     public function render()
     {

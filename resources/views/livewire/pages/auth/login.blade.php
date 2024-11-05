@@ -20,6 +20,19 @@
                     placeholder="password">
                 </x-input.password.password-icon>
             </div>
+            <div class="w-full mb-5">
+                <x-button.button-loading
+                    loadingTarget="login"
+                    loadingText="Loading"
+                    x-on:click="$wire.login()"
+                    class="w-full flex justify-center"
+                >
+                    <span>Login</span>
+                </x-button.button-loading>
+            </div>
+            <div class="w-full text-center">
+                <span class="text-xs text-neutral-500">App Version v.1.0</span>
+            </div>
         </div>
     </div>
 </div>
