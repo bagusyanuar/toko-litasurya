@@ -18,7 +18,7 @@ module.exports = {
                 'sidebar': '3px 0 3px -2px rgba(0, 0, 0, 0.2)',
             },
             width: {
-                'sidebar': '250px',
+                'sidebar': '215px',
             },
             colors: {
                 'background': '#F7F7F7',
