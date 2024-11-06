@@ -14,7 +14,14 @@ module.exports = {
             animation: {
                 spinner: 'spinner 1.5s linear infinite',
             },
+            boxShadow: {
+                'sidebar': '3px 0 3px -2px rgba(0, 0, 0, 0.2)',
+            },
+            width: {
+                'sidebar': '250px',
+            },
             colors: {
+                'background': '#F7F7F7',
                 'brand': {
                     50: '#eff1fc',
                     100: '#cdd3f7',

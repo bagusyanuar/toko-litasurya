@@ -13,6 +13,7 @@ class Login extends Component
     public function login()
     {
         sleep(2);
+        return $this->redirectRoute('dashboard');
     }
 
     public function render()

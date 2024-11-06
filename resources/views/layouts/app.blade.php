@@ -20,7 +20,7 @@
     <!-- CSRF Token -->
 
 </head>
-<body class="bg-neutral-100">
+<body class="bg-background">
 <x-navigation.sidebar.wrapper>
     <x-navigation.sidebar.item
         title="Dashboard"
@@ -51,6 +51,10 @@
 </x-navigation.sidebar.wrapper>
 {{ $slot }}
 
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    lucide.createIcons();
+</script>
 @livewireScripts
 </body>
 </html>
