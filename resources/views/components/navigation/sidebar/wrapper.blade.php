@@ -16,12 +16,36 @@
                 title="Dashboard"
                 active="{{ \Illuminate\Support\Facades\Route::is('dashboard') }}"
             ></x-navigation.sidebar.item>
-            <x-navigation.sidebar.item
-                to="/master"
+            <x-navigation.sidebar.item-tree
                 icon="database"
                 title="Master"
-                active="{{ \Illuminate\Support\Facades\Route::is('dashboard') }}"
-            ></x-navigation.sidebar.item>
+                :active="false"
+            >
+                <x-navigation.sidebar.item
+                    to="/master"
+                    icon="tags"
+                    title="Kategori"
+                    active="{{ \Illuminate\Support\Facades\Route::is('category') }}"
+                ></x-navigation.sidebar.item>
+                <x-navigation.sidebar.item
+                    to="/master"
+                    icon="box"
+                    title="Barang"
+                    active="{{ \Illuminate\Support\Facades\Route::is('item') }}"
+                ></x-navigation.sidebar.item>
+                <x-navigation.sidebar.item
+                    to="/master"
+                    icon="gift"
+                    title="Hadiah"
+                    active="{{ \Illuminate\Support\Facades\Route::is('gift') }}"
+                ></x-navigation.sidebar.item>
+                <x-navigation.sidebar.item
+                    to="/master"
+                    icon="route"
+                    title="Jalur"
+                    active="{{ \Illuminate\Support\Facades\Route::is('gift') }}"
+                ></x-navigation.sidebar.item>
+            </x-navigation.sidebar.item-tree>
             <x-navigation.sidebar.item
                 to="/cashier"
                 icon="shopping-bag"
@@ -37,25 +61,28 @@
                 icon="users"
                 title="Pengguna"
             ></x-navigation.sidebar.item>
-            <div x-data="{open: false}">
-                <div
-                    x-on:click="open = !open"
-                    class="w-full rounded-md flex items-center gap-2 text-xs font-light text-neutral-400 p-3 cursor-pointer transition-all ease-in duration-200 hover:bg-brand-500 hover:text-white">
-                    <i data-lucide="users" class="h-4 aspect-[1/1]"></i>
-                    <span class="w-full flex items-center">
-                        User
-                    </span>
-                </div>
-                <div class="w-full mt-1" x-show="open" x-collapse>
-                    <div
-                        class="w-full rounded-md flex items-center gap-2 text-xs font-light text-neutral-400 p-3 cursor-pointer transition-all ease-in duration-200 hover:bg-brand-500 hover:text-white">
-                        <i data-lucide="users" class="h-4 aspect-[1/1]"></i>
-                        <span class="w-full flex items-center">
-                        User
-                    </span>
-                    </div>
-                </div>
-            </div>
+            <x-navigation.sidebar.item
+                to="/users"
+                icon="contact"
+                title="Member"
+            ></x-navigation.sidebar.item>
+            <x-navigation.sidebar.item
+                to="/users"
+                icon="calendar-check"
+                title="Jadwal"
+            ></x-navigation.sidebar.item>
+            <x-navigation.sidebar.item-tree
+                icon="clipboard-minus"
+                title="Laporan"
+                active="{{ \Illuminate\Support\Facades\Route::is('dashboard') }}"
+            >
+                <x-navigation.sidebar.item
+                    to="/users"
+                    icon="calendar-check"
+                    title="Jadwal"
+                ></x-navigation.sidebar.item>
+            </x-navigation.sidebar.item-tree>
+
         </div>
     </div>
     {{--    <div class="header">--}}

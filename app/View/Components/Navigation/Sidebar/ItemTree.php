@@ -9,20 +9,20 @@ use Illuminate\View\Component;
 class ItemTree extends Component
 {
     public $title;
-    public $to;
-    public $materialIcon;
+    public $icon;
+    public $active;
 
     /**
      * Create a new component instance.
      * @param string $title
-     * @param string $to
-     * @param string $materialIcon
+     * @param string $icon
+     * @param bool $active
      */
-    public function __construct($title = '', $to = '#', $materialIcon = 'circle')
+    public function __construct($title = '', $icon = 'circle', $active = false)
     {
         $this->title = $title;
-        $this->to = $to;
-        $this->materialIcon = $materialIcon;
+        $this->icon = $icon;
+        $this->active = $active;
     }
 
     /**
