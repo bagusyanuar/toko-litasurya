@@ -73,7 +73,7 @@
             ></x-navigation.sidebar.item>
             <x-navigation.sidebar.item-tree
                 icon="clipboard-minus"
-                title="Laporan"
+                title="Laporans"
                 active="{{ \Illuminate\Support\Facades\Route::is('dashboard') }}"
             >
                 <x-navigation.sidebar.item
