@@ -18,7 +18,7 @@ class ItemTree extends Component
      * @param string $icon
      * @param bool $active
      */
-    public function __construct($title = '',  $icon = 'circle', $active = false)
+    public function __construct($title = '', $icon = 'circle', $active = false)
     {
         $this->title = $title;
         $this->icon = $icon;
