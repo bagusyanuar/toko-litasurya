@@ -21,6 +21,7 @@
 
 </head>
 <body class="bg-background">
+    <x-navigation.navbar.wrapper></x-navigation.navbar.wrapper>
     <x-navigation.sidebar.wrapper>
         <x-navigation.sidebar.item
             to="/dashboard"
@@ -34,7 +35,7 @@
             :active="false"
         >
             <x-navigation.sidebar.item
-                to="/master"
+                to="{{ route('category.list') }}"
                 icon="tags"
                 title="Kategori"
                 active="{{ \Illuminate\Support\Facades\Route::is('category') }}"
