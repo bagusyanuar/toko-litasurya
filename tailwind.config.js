@@ -113,6 +113,7 @@ module.exports = {
         './resources/**/*.php',
         './resources/**/*.vue',
         './resources/**/*.twig',
+        "./node_modules/flowbite/**/*.js",
     ],
     plugins: [
         require('@tailwindcss/forms'),

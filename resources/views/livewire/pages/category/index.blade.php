@@ -8,19 +8,9 @@
             <x-typography.section-title
                 title="Data Kategori"
             ></x-typography.section-title>
-            <x-button.button-loading
-                loadingTarget=""
-                loadingText="Loading"
-                x-on:click=""
-                class="flex justify-center items-center"
-            >
-                <div class="w-full flex justify-center items-center">
-                    <i data-lucide="plus" class="h-4 aspect-[1/1]"></i>
-                    <span>New Category</span>
-                </div>
-            </x-button.button-loading>
+            <livewire:pages.category.section.create/>
         </div>
         <x-spacer.divider class="mb-3"></x-spacer.divider>
-        <livewire:pages.category.section.data-list.category-list />
+        <livewire:pages.category.section.category-list/>
     </x-container.card>
 </div>
