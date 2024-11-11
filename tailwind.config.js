@@ -16,6 +16,7 @@ module.exports = {
             },
             boxShadow: {
                 'sidebar': '3px 0 3px -2px rgba(0, 0, 0, 0.2)',
+                'top-navigation': '0 3px 3px -2px rgba(0, 0, 0, 0.2)',
             },
             width: {
                 'sidebar': '215px',
