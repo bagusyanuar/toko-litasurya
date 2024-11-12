@@ -13,19 +13,21 @@
         </tr>
     </x-slot>
     <x-slot name="rows">
-        <tr>
-            <td class="text-xs py-3 px-3 text-center">
-                1
-            </td>
-            <td class="text-xs py-3 px-3 text-center w-[4rem]">
-                -
-            </td>
-            <td class="text-xs py-3 px-3 text-start">
-                Kategori 1
-            </td>
-            <td class="text-xs py-3 px-3 text-center">
-                -
-            </td>
-        </tr>
+        @foreach($data as $datum)
+            <tr>
+                <td class="text-xs py-3 px-3 text-center">
+                    {{ $loop->index + 1 }}
+                </td>
+                <td class="text-xs py-3 px-3 text-center w-[4rem]">
+                    -
+                </td>
+                <td class="text-xs py-3 px-3 text-start">
+                    {{ $datum->name }}
+                </td>
+                <td class="text-xs py-3 px-3 text-center">
+                    -
+                </td>
+            </tr>
+        @endforeach
     </x-slot>
 </x-table.table>

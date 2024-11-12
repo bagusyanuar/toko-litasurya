@@ -9,7 +9,6 @@
     <div class="fixed inset-0 bg-gray-500 bg-opacity-50 z-[150]"
          x-cloak
          x-show="{{ $modalID }}"
-         x-on:click="{{ $modalID }} = false"
     ></div>
     <!-- modal container -->
     <div
@@ -22,7 +21,6 @@
         x-transition:leave="transition ease-in duration-200 transform"
         x-transition:leave-start="translate-y-0 opacity-100"
         x-transition:leave-end="translate-y-[-100%] opacity-0"
-        x-on:click.self="{{ $modalID }} = false"
     >
         <div class="bg-white rounded shadow-lg w-full max-w-md max-h-full">
             <!-- modal header -->
@@ -48,6 +46,13 @@
             <div class="p-4">
                 @if(isset($body))
                     {{ $body }}
+                @endif
+            </div>
+            <!-- modal footer -->
+            <div
+                class="w-full flex items-center justify-end gap-2 px-4 py-3 border-t border-neutral-300">
+                @if(isset($action))
+                    {{ $action }}
                 @endif
             </div>
         </div>

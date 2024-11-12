@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Pages\Category\Section;
 
+use App\Domain\Web\Category\CategoryFilter;
 use App\Services\CategoryService;
 use Livewire\Component;
 use Livewire\Attributes\On;
@@ -22,7 +23,11 @@ class CategoryList extends Component
     public function getDataCategories()
     {
         $this->onLoading = true;
-        $this->service->getDataCategories();
+        $filter = new CategoryFilter('', 1, 10);
+        $serviceResponse = $this->service->getDataCategories($filter);
+        if ($serviceResponse->isSuccess()) {
+            $this->data = $serviceResponse->getData();
+        }
         $this->onLoading = false;
     }
 

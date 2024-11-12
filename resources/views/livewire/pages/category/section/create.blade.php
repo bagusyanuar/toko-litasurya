@@ -23,4 +23,24 @@
             parentClassName="mb-3"
         ></x-input.text.form-text>
     </x-slot>
+    <x-slot name="action">
+        <x-button.button-loading
+            theme="outline"
+            loadingTarget="createNewCategory"
+            loadingText="Loading"
+            x-on:click="modalNewCategory = false"
+            class="flex justify-center items-center"
+            :mutate="false"
+        >
+            <span>Batal</span>
+        </x-button.button-loading>
+        <x-button.button-loading
+            loadingTarget="createNewCategory"
+            loadingText="Loading"
+            x-on:click="$wire.createNewCategory()"
+            class="flex justify-center items-center"
+        >
+            <span>Tambah</span>
+        </x-button.button-loading>
+    </x-slot>
 </x-modal.modal-form>
