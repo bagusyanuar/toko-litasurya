@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Pages\Category\Section;
 
+use App\Domain\Web\Category\CategoryRequest;
 use App\Services\CategoryService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
@@ -13,24 +14,19 @@ class Create extends Component
 {
     use WithFileUploads;
 
+    /** @var $service CategoryService */
     private $service;
-    public $files;
+    /** @var $file UploadedFile | null */
+    public $file;
+    public $name;
 
     public function createNewCategory()
     {
-        $storage_path = public_path('static/image/category');
-        if (!File::exists($storage_path)) {
-            File::makeDirectory($storage_path, 0755, true);
+        $categoryRequest = new CategoryRequest($this->name, $this->file);
+        $serviceResponse = $this->service->createNewCategory($categoryRequest);
+        if (!$serviceResponse->isSuccess()) {
+            dd($serviceResponse->getMessage());
         }
-        /** @var UploadedFile $file */
-        foreach ($this->files as $file) {
-            $extension = $file->getClientOriginalExtension();
-            $image = Uuid::uuid4()->toString() . '.' . $extension;
-            $imageName = $storage_path . '/' . $image;
-            $tempPath = $file->getRealPath();
-            File::move($tempPath, $imageName);
-        }
-        dd('success');
     }
 
     public function boot(CategoryService $categoryService)

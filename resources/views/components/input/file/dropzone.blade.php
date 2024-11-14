@@ -2,6 +2,7 @@
     x-data="{{ $initial }}"
     class="{{ $parentClassName }}"
     x-init="window.dropzoneInstance = $data"
+    wire:ignore
 >
     <label class="text-xs text-neutral-700">{{ $label }}</label>
     <div x-ref="{{ $dropRef }}" class="dropzone"></div>
@@ -43,5 +44,10 @@
     /* Gaya tambahan untuk progress ketika proses upload berlangsung */
     .dropzone .dz-progress.dz-error .dz-upload {
         background-color: #f44336 !important; /* Warna merah jika terjadi error */
+    }
+
+    .dropzone .dz-message {
+        font-size: 12px !important; /* Ukuran font */
+        color: #94a3b8 !important; /* Warna teks */
     }
 </style>

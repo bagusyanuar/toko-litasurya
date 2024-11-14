@@ -3,23 +3,23 @@
 
 namespace App\Domain\Web\Category;
 
+use Illuminate\Http\UploadedFile;
 
 class CategoryRequest
 {
     private $name;
-    private $image = null;
+    private $file = null;
 
     /**
      * CategoryRequest constructor.
      * @param $name
-     * @param null $image
+     * @param UploadedFile $file
      */
-    public function __construct($name, $image)
+    public function __construct($name, $file = null)
     {
         $this->name = $name;
-        $this->image = $image;
+        $this->file = $file;
     }
-
 
     /**
      * @return mixed
@@ -40,22 +40,20 @@ class CategoryRequest
     }
 
     /**
-     * @return null
+     * @return UploadedFile|null
      */
-    public function getImage()
+    public function getFile()
     {
-        return $this->image;
+        return $this->file;
     }
 
     /**
-     * @param null $image
+     * @param UploadedFile|null $file
      * @return CategoryRequest
      */
-    public function setImage($image)
+    public function setFile($file)
     {
-        $this->image = $image;
+        $this->file = $file;
         return $this;
     }
-
-
 }
