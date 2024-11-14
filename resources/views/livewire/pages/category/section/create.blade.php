@@ -62,6 +62,7 @@
                     autoProcessQueue: false,
                     addRemoveLinks: true,
                     acceptedFiles: ".jpg, .png, .jpeg",
+                    uploadMultiple: false,
                     init: function() {
                         this.on("addedfile", file => {
                             console.log("File added:", file);
