@@ -1,4 +1,10 @@
 <div>
+    <x-alert.success
+        message="{{ $sessionMessage }}"
+    ></x-alert.success>
+    <x-alert.error
+        message="{{ $sessionMessage }}"
+    ></x-alert.error>
     <x-typography.page-title
         title="Halaman Kategori"
         class="mb-3"
@@ -8,9 +14,9 @@
             <x-typography.section-title
                 title="Data Kategori"
             ></x-typography.section-title>
-            <livewire:pages.category.section.create/>
+            <livewire:features.category.create />
         </div>
         <x-spacer.divider class="mb-3"></x-spacer.divider>
-        <livewire:pages.category.section.category-list/>
+        <livewire:features.category.lists />
     </x-container.card>
 </div>

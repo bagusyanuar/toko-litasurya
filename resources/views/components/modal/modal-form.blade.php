@@ -1,10 +1,12 @@
-<div class="relative"
+<div class=""
      x-data="{ {{ $modalID }}: false }"
 >
     <!-- modal trigger -->
-@if(isset($trigger))
-    {{ $trigger }}
-@endif
+    @if(isset($trigger))
+        <div class="block">
+            {{ $trigger }}
+        </div>
+    @endif
 <!-- modal backdrop -->
     <div class="fixed inset-0 bg-gray-500 bg-opacity-50 z-[150]"
          x-cloak

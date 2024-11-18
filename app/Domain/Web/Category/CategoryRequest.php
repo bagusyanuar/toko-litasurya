@@ -12,10 +12,10 @@ class CategoryRequest
 
     /**
      * CategoryRequest constructor.
-     * @param $name
+     * @param string $name
      * @param UploadedFile $file
      */
-    public function __construct($name, $file = null)
+    public function __construct($name = '', $file = null)
     {
         $this->name = $name;
         $this->file = $file;

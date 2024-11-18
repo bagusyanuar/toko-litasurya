@@ -13,7 +13,6 @@ class Table extends Component
      */
     public function __construct()
     {
-        //
     }
 
     /**
