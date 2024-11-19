@@ -1,4 +1,4 @@
-<div class="fixed top-0 left-0 shadow-top-navigation bg-background w-full h-14 ps-[theme(width.sidebar)]">
+<div class="fixed top-0 left-0 shadow-top-navigation bg-background w-full h-14 z-[150] ps-[theme(width.sidebar)]">
     <div class="px-3 w-full flex justify-end items-center h-full">
         <div class="flex items-center cursor-pointer gap-2">
             <!-- avatar container -->

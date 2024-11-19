@@ -15,7 +15,7 @@
         </x-slot>
         <x-slot name="rows">
             @foreach($data as $datum)
-                <tr class="border-b border-neutral-300">
+                <tr class="border-b border-neutral-300 relative">
                     <td class="text-xs py-3 px-3 text-center">
                         {{ $loop->index + 1 }}
                     </td>
@@ -35,7 +35,7 @@
                         {{ $datum->name }}
                     </td>
                     <td class="text-xs py-3 px-3 text-center">
-                        <livewire:features.category.table-action />
+                        <livewire:features.category.table-action wire:key="{{ uniqid('table-action-') }}" />
                     </td>
                 </tr>
             @endforeach

@@ -49,7 +49,7 @@
         </div>
         <!-- table data -->
         <div>
-            <div class="custom-table-wrapper border border-neutral-300 rounded-md overflow-x-auto striped">
+            <div class="border border-neutral-300 rounded-md striped overflow-x-auto w-full lg:overflow-y-visible">
                 <table class="custom-table w-full">
                     <thead>
                     @if(isset($header))
