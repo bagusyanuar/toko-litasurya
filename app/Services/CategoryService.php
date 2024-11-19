@@ -89,4 +89,21 @@ class CategoryService implements CategoryInterface
         }
         return $response;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteCategory($id): ServiceResponse
+    {
+        // TODO: Implement deleteCategory() method.
+        $response = new ServiceResponse();
+        try {
+            Category::destroy($id);
+            $response->setMessage('successfully create new category');
+        }catch (\Exception $e) {
+            $response->setSuccess(false)
+                ->setMessage($e->getMessage());
+        }
+        return $response;
+    }
 }

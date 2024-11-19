@@ -38,6 +38,16 @@ class Lists extends Component
         }
         $this->onLoading = false;
     }
+
+    #[On('fetch-categories-no-reload')]
+    public function getDataCategoriesNoReload()
+    {
+        $serviceResponse = $this->service->getDataCategories($this->filter);
+        if ($serviceResponse->isSuccess()) {
+            $this->data = $serviceResponse->getData();
+        }
+    }
+
     public function render()
     {
         return view('livewire.features.category.lists');

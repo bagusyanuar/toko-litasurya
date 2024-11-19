@@ -35,7 +35,11 @@
                         {{ $datum->name }}
                     </td>
                     <td class="text-xs py-3 px-3 text-center">
-                        <livewire:features.category.table-action wire:key="{{ uniqid('table-action-') }}" />
+                        <livewire:features.category.table-action
+                            :idx="$loop->index"
+                            :category="$datum"
+                            wire:key="{{ uniqid('table-action-') }}"
+                        />
                     </td>
                 </tr>
             @endforeach

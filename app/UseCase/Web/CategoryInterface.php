@@ -22,4 +22,10 @@ interface CategoryInterface
      * @return ServiceResponse
      */
     public function createNewCategory(CategoryRequest $categoryRequest): ServiceResponse;
+
+    /**
+     * @param string $id
+     * @return ServiceResponse
+     */
+    public function deleteCategory($id): ServiceResponse;
 }

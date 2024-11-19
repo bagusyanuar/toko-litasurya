@@ -49,8 +49,8 @@
         </div>
         <!-- table data -->
         <div>
-            <div class="border border-neutral-300 rounded-md striped overflow-x-auto w-full lg:overflow-y-visible">
-                <table class="custom-table w-full">
+            <div class="border border-neutral-300 rounded-md striped overflow-x-auto w-full overflow-y-visible">
+                <table class="w-full">
                     <thead>
                     @if(isset($header))
                         {{ $header }}
