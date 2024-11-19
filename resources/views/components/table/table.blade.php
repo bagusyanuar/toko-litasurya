@@ -49,7 +49,7 @@
         </div>
         <!-- table data -->
         <div>
-            <div class="border border-neutral-300 rounded-md striped overflow-x-auto w-full overflow-y-visible">
+            <div class="border border-neutral-300 rounded-md striped overflow-x-auto w-full">
                 <table class="w-full">
                     <thead>
                     @if(isset($header))

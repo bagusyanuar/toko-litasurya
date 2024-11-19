@@ -15,7 +15,7 @@
         </x-slot>
         <x-slot name="rows">
             @foreach($data as $datum)
-                <tr class="border-b border-neutral-300 relative">
+                <tr class="border-b border-neutral-300">
                     <td class="text-xs py-3 px-3 text-center">
                         {{ $loop->index + 1 }}
                     </td>
@@ -35,6 +35,15 @@
                         {{ $datum->name }}
                     </td>
                     <td class="text-xs py-3 px-3 text-center">
+{{--                        <div x-data="{ open: false }">--}}
+{{--                            <button @click="open = !open" class="bg-blue-500 text-white px-4 py-2 rounded">--}}
+{{--                                Options--}}
+{{--                            </button>--}}
+{{--                            <ul x-show="open" @click.outside="open = false" class="absolute bg-white border mt-1 rounded shadow-lg">--}}
+{{--                                <li><button class="block px-4 py-2 text-left" wire:click="archive">Archive</button></li>--}}
+{{--                                <li><button class="block px-4 py-2 text-left" wire:click="delete">Delete</button></li>--}}
+{{--                            </ul>--}}
+{{--                        </div>--}}
                         <livewire:features.category.table-action
                             :idx="$loop->index"
                             :category="$datum"
