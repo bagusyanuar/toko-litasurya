@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,7 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', App\Livewire\Pages\Auth\Login::class)->name('login');
 Route::get('/dashboard', App\Livewire\Pages\Dashboard\Index::class)->name('dashboard');
-Route::group(['prefix' => 'category'], function (){
+Route::group(['prefix' => 'category'], function () {
     Route::get('/', App\Livewire\Pages\Category\Index::class)->name('category.list');
 });
-
