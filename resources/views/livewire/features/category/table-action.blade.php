@@ -1,5 +1,5 @@
 <div
-    class="static"
+    class="relative"
     x-data="{
         open: false,
         initIcons() {
@@ -12,7 +12,7 @@
         <button class="px-4 py-2" wire:ignore x-on:click="open = !open">
             <i data-lucide="ellipsis-vertical" class="h-3 aspect-[1/1]"></i>
         </button>
-        <ul x-show="open" x-on:click.away="open = false" class="absolute bg-white w-48 border mt-1 rounded shadow-lg">
+        <ul x-show="open" x-on:click.away="open = false" class="absolute right-0 top-0 bg-white w-48 border mt-4 rounded shadow-lg">
             <li><button class="block px-4 py-2 text-left" wire:click="archive">Archive</button></li>
             <li><button class="block px-4 py-2 text-left" wire:click="delete">Delete</button></li>
         </ul>

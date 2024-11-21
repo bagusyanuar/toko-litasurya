@@ -20,7 +20,8 @@
         <livewire:features.category.lists/>
     </x-container.card>
 
-{{--    <div class="overflow-x-auto">--}}
+
+    {{--    <div class="overflow-x-auto">--}}
 {{--        <table class="min-w-full">--}}
 {{--            <thead>--}}
 {{--            <tr>--}}
