@@ -7,6 +7,7 @@ namespace App\UseCase\Web;
 use App\Domain\ServiceResponse;
 use App\Domain\Web\Category\CategoryFilter;
 use App\Domain\Web\Category\CategoryRequest;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Collection;
 
 interface CategoryInterface
@@ -28,4 +29,17 @@ interface CategoryInterface
      * @return ServiceResponse
      */
     public function deleteCategory($id): ServiceResponse;
+
+    /**
+     * @param $id
+     * @return ServiceResponse
+     */
+    public function getCategoryByID($id): ServiceResponse;
+
+    /**
+     * @param Category $category
+     * @param CategoryRequest $categoryRequest
+     * @return ServiceResponse
+     */
+    public function updateCategory(Category $category, CategoryRequest $categoryRequest): ServiceResponse;
 }

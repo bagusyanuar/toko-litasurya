@@ -10,16 +10,19 @@ class ServiceResponse
     private $message = '';
     private $data = null;
     private $meta = null;
+    public $code = 200;
 
     /**
      * ServiceResponse constructor.
+     * @param int $code
      * @param bool $success
      * @param string $message
      * @param null $data
      * @param null $meta
      */
-    public function __construct($success = true, $message = '', $data = null, $meta = null)
+    public function __construct($code = 200, $success = true, $message = '', $data = null, $meta = null)
     {
+        $this->code = $code;
         $this->success = $success;
         $this->message = $message;
         $this->data = $data;
@@ -98,4 +101,21 @@ class ServiceResponse
         return $this;
     }
 
+    /**
+     * @return int
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @param int $code
+     * @return ServiceResponse
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+        return $this;
+    }
 }

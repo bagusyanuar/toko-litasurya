@@ -45,7 +45,7 @@
                 </button>
             </div>
             <!-- modal body -->
-            <div class="p-4">
+            <div class="p-4 text-start">
                 @if(isset($body))
                     {{ $body }}
                 @endif

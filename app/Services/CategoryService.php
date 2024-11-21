@@ -7,6 +7,8 @@ namespace App\Services;
 use App\Domain\ServiceResponse;
 use App\Domain\Web\Category\CategoryFilter;
 use App\Domain\Web\Category\CategoryRequest;
+use App\Helpers\FileUpload\FileUpload;
+use App\Helpers\FileUpload\FileUploadRequest;
 use App\Models\Category;
 use App\UseCase\Web\CategoryInterface;
 use Illuminate\Database\Eloquent\Builder;
@@ -45,6 +47,7 @@ class CategoryService implements CategoryInterface
                 ]);
         } catch (\Exception $e) {
             $response->setSuccess(false)
+                ->setCode(500)
                 ->setMessage($e->getMessage());
         }
         return $response;
@@ -62,29 +65,31 @@ class CategoryService implements CategoryInterface
             $path = 'static/image/category';
             $file = $categoryRequest->getFile();
             $imageName = null;
-            $storage_path = public_path($path);
-            if (!File::exists($storage_path)) {
-                File::makeDirectory($storage_path, 0755, true);
-            }
 
-            if ($file instanceof UploadedFile) {
-                $extension = $file->getClientOriginalExtension();
-                $image = Uuid::uuid4()->toString() . '.' . $extension;
-                $imageName = '/' . $path . '/' . $image;
-                $targetPath = $storage_path . '/' . $image;
-                $tempPath = $file->getRealPath();
-                File::move($tempPath, $targetPath);
+            if ($file) {
+                $fileUploadService = new FileUpload();
+                $fileUploadRequest = new FileUploadRequest($path, $file);
+                $fileUploadResponse = $fileUploadService->upload($fileUploadRequest);
+
+                if (!$fileUploadResponse->isSuccess()) {
+                    DB::rollBack();
+                    return $response->setSuccess(false)
+                        ->setCode(500)
+                        ->setMessage($fileUploadResponse->getMessage());
+                }
+                $imageName = $fileUploadResponse->getFileName();
             }
             $data = [
                 'name' => $categoryRequest->getName(),
                 'image' => $imageName
             ];
             Category::create($data);
-            $response->setMessage('successfully create new category');
+            $response->setMessage('successfully create new category')->setCode(201);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             $response->setSuccess(false)
+                ->setCode(500)
                 ->setMessage($e->getMessage());
         }
         return $response;
@@ -100,8 +105,51 @@ class CategoryService implements CategoryInterface
         try {
             Category::destroy($id);
             $response->setMessage('successfully create new category');
+        } catch (\Exception $e) {
+            $response->setSuccess(false)
+                ->setCode(500)
+                ->setMessage($e->getMessage());
+        }
+        return $response;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCategoryByID($id): ServiceResponse
+    {
+        // TODO: Implement getCategoryByID() method.
+        $response = new ServiceResponse();
+        try {
+            $data = Category::with([])
+                ->where('id', '=', $id)
+                ->first();
+            if (!$data) {
+                return $response->setSuccess(false)
+                    ->setCode(404)
+                    ->setMessage('category not found');
+            }
+            $response->setMessage('successfully load data category')
+                ->setData($data);
+        } catch (\Exception $e) {
+            $response->setSuccess(false)
+                ->setCode(500)
+                ->setMessage($e->getMessage());
+        }
+        return $response;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function updateCategory(Category $category, CategoryRequest $categoryRequest): ServiceResponse
+    {
+        // TODO: Implement updateCategory() method.
+        $response = new ServiceResponse();
+        try {
         }catch (\Exception $e) {
             $response->setSuccess(false)
+                ->setCode(500)
                 ->setMessage($e->getMessage());
         }
         return $response;
