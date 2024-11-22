@@ -27,7 +27,7 @@ class FormText extends Component
         if ($id === '') {
             $this->id = uniqid('form-text-');
         }
-        $this->baseClass = 'w-full text-[0.725em] px-[0.825rem] py-[0.45rem] rounded-[4px] rounded-[4px] text-neutral-700 border border-neutral-300 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500 transition duration-300 ease-in-out';
+        $this->baseClass = 'w-full text-[0.725rem] px-[0.825rem] py-[0.45rem] rounded-[4px] rounded-[4px] text-neutral-700 border border-neutral-300 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500 transition duration-300 ease-in-out';
     }
 
     /**

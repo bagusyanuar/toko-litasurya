@@ -31,12 +31,13 @@ class Create extends Component
 
     public function createNewCategory()
     {
-//        $this->categoryRequest->setName($this->name)
-//            ->setFile($this->file);
-//        $serviceResponse = $this->service->createNewCategory($this->categoryRequest);
-//        if (!$serviceResponse->isSuccess()) {
-//            dd($serviceResponse->getMessage());
-//        }
+        $this->categoryRequest->setName($this->name)
+            ->setFile($this->file);
+        $serviceResponse = $this->service->createNewCategory($this->categoryRequest);
+        if (!$serviceResponse->isSuccess()) {
+            $this->dispatch('page-error', true, $serviceResponse->getMessage());
+            return;
+        }
         $this->dispatch('page-success', true, 'Berhasil menyimpan data kategori');
         $this->dispatch('fetch-categories');
     }

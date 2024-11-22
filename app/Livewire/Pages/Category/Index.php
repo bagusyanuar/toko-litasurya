@@ -2,34 +2,12 @@
 
 namespace App\Livewire\Pages\Category;
 
+use App\Helpers\Livewire\PageComponent;
 use Livewire\Component;
 use Livewire\Attributes\On;
 
-class Index extends Component
+class Index extends PageComponent
 {
-    public $hasSuccess = false;
-    public $hasError = false;
-    public $sessionMessage = 'success';
-
-    protected $listeners = [
-        'setSuccess',
-        'setError'
-    ];
-
-    #[On('page-success')]
-    public function setSuccess($value, $message)
-    {
-        $this->hasSuccess = $value;
-        $this->sessionMessage = $message;
-    }
-
-    #[On('page-error')]
-    public function setError($value, $message)
-    {
-        $this->hasError = $value;
-        $this->sessionMessage = $message;
-    }
-
     public function render()
     {
         return view('livewire.pages.category.index');
