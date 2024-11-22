@@ -8,7 +8,9 @@ use Illuminate\View\Component;
 
 class Dropzone extends Component
 {
-    public $initial;
+    public $targetName;
+    public $dispatcher;
+    public $afterDispatch;
     public $dropRef;
     public $parentClassName;
     public $label;
@@ -16,16 +18,23 @@ class Dropzone extends Component
     /**
      * Create a new component instance.
      * @param $dropRef
-     * @param $initial
      * @param string $parentClassName
      * @param string $label
+     * @param string $targetName
+     * @param string $dispatcher
+     * @param string $afterDispatch
      */
-    public function __construct($dropRef, $initial, $parentClassName = '', $label = '')
+    public function __construct($dropRef, $dispatcher, $parentClassName = '', $label = '', $targetName = 'file', $afterDispatch = '')
     {
         $this->dropRef = $dropRef;
-        $this->initial = $initial;
         $this->parentClassName = $parentClassName;
         $this->label = $label;
+        $this->targetName = $targetName;
+        $this->dispatcher = $dispatcher;
+        if ($afterDispatch !== '') {
+            $this->afterDispatch = 'function() { ' . $afterDispatch . ' }';
+        }
+
     }
 
     /**

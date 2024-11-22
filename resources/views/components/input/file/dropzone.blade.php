@@ -1,7 +1,54 @@
 <div
-    x-data="{{ $initial }}"
+    x-data="{
+        dispatcher: '{{ $dispatcher }}',
+        afterDispatch: {{ $afterDispatch }},
+        fileUploadInit() {
+            this.$nextTick(() => {
+                this.dropzone = new Dropzone(this.$refs.{{ $dropRef }}, {
+                    url: '/check',
+                    autoProcessQueue: false,
+                    addRemoveLinks: true,
+                    acceptedFiles: '.jpg, .png, .jpeg',
+                    uploadMultiple: false,
+                    maxFiles: 1,
+                    dictDefaultMessage: 'Tarik gambar yang ingin di upload',
+                    init: function() {
+                        this.on('addedfile', file => {
+                            if (this.files.length > 1) {
+                                this.removeFile(this.files[0]);
+                            }
+                            file.previewElement.querySelector('.dz-filename').style.display = 'none';
+                        });
+                    }
+                });
+            });
+        },
+
+        async uploadEvent() {
+            this.dropzone.disable();
+            const uploadPromises = this.dropzone.files.map(file => {
+                return new Promise((resolve, reject) => {
+                    @this.upload('{{ $targetName }}', file, resolve, reject);
+                });
+            });
+
+            try {
+                await Promise.all(uploadPromises);
+                if(this.dispatcher) {
+                    await @this.call(this.dispatcher);
+                }
+                this.dropzone.removeAllFiles();
+                if(typeof this.afterDispatch === 'function') {
+                    this.afterDispatch();
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+            }
+            this.dropzone.enable();
+        }
+    }"
     class="{{ $parentClassName }}"
-    x-init="window.dropzoneInstance = $data"
+    x-init="window.dropzoneInstance = $data, fileUploadInit()"
     wire:ignore
 >
     <label class="text-xs text-neutral-700">{{ $label }}</label>

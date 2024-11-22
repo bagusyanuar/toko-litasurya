@@ -20,9 +20,10 @@
                 parentClassName="mb-3"
             ></x-input.text.form-text>
             <x-input.file.dropzone
-                dropRef="category{{ $idx }}"
-                initial="fileUploadInitEdit()"
-                dropEvent="processQueue()"
+                dropRef="categoryEdit{{ $idx }}"
+                dispatcher="createNewCategory"
+                afterDispatch="this.modalUpdateCategory{{ $idx }} = false;"
+                targetName="file"
                 label="Gambar Kategori"
             ></x-input.file.dropzone>
         </x-slot>
@@ -55,54 +56,3 @@
         targetName="{{ $category->name }}"
     ></x-table.components.button-delete>
 </div>
-<script>
-    function fileUploadInitEdit() {
-        return {
-            message: null,
-            isUploading: false,
-            init() {
-                this.dropzone = new Dropzone(this.$refs.category, {
-                    url: "/fake-url", // Tidak digunakan
-                    autoProcessQueue: false,
-                    addRemoveLinks: true,
-                    acceptedFiles: ".jpg, .png, .jpeg",
-                    uploadMultiple: false,
-                    maxFiles: 1,
-                    dictDefaultMessage: "Tarik gambar yang ingin di upload",
-                    init: function() {
-                        this.on("addedfile", file => {
-                            if (this.files.length > 1) {
-                                this.removeFile(this.files[0]);
-                            }
-                            file.previewElement.querySelector(".dz-filename").style.display = "none";
-                        });
-                    },
-                });
-            },
-
-            async createCategory() {
-                this.isUploading = true;
-                this.dropzone.disable();
-                const uploadPromises = this.dropzone.files.map(file => {
-                    return new Promise((resolve, reject) => {
-                    @this.upload('file', file, resolve, reject);
-                    });
-                });
-                try {
-                    await Promise.all(uploadPromises);
-                    this.message = 'All files uploaded successfully!';
-                    await @this.call('createNewCategory');
-                    this.modalNewCategory = false;
-                    console.log('cek')
-                    this.dropzone.removeAllFiles();
-                } catch (error) {
-                    console.error('Upload error:', error);
-                    this.message = 'An error occurred during upload';
-                } finally {
-                    this.isUploading = false;
-                }
-                this.dropzone.enable();
-            }
-        }
-    }
-</script>
