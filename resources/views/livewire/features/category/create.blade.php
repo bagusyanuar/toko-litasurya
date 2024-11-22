@@ -91,6 +91,7 @@
                     this.message = 'All files uploaded successfully!';
                     await @this.call('createNewCategory');
                     this.modalNewCategory = false;
+                    console.log('cek')
                     this.dropzone.removeAllFiles();
                 } catch (error) {
                     console.error('Upload error:', error);

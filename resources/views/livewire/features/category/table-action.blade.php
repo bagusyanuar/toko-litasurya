@@ -20,8 +20,8 @@
                 parentClassName="mb-3"
             ></x-input.text.form-text>
             <x-input.file.dropzone
-                dropRef="category"
-                initial="fileUploadInit()"
+                dropRef="category{{ $idx }}"
+                initial="fileUploadInitEdit()"
                 dropEvent="processQueue()"
                 label="Gambar Kategori"
             ></x-input.file.dropzone>
@@ -29,7 +29,7 @@
         <x-slot name="action">
             <x-button.button-loading
                 theme="outline"
-                loadingTarget="createNewCategory"
+                loadingTarget=""
                 loadingText="Loading"
                 x-on:click="modalNewCategory = false"
                 class="flex justify-center items-center"
@@ -38,7 +38,7 @@
                 <span>Batal</span>
             </x-button.button-loading>
             <x-button.button-loading
-                loadingTarget="createNewCategory"
+                loadingTarget=""
                 loadingText="Loading"
                 x-on:click="window.dropzoneInstance.createCategory()"
                 class="flex justify-center items-center"
@@ -56,7 +56,7 @@
     ></x-table.components.button-delete>
 </div>
 <script>
-    function fileUploadInit() {
+    function fileUploadInitEdit() {
         return {
             message: null,
             isUploading: false,
@@ -69,7 +69,7 @@
                     uploadMultiple: false,
                     maxFiles: 1,
                     dictDefaultMessage: "Tarik gambar yang ingin di upload",
-                    init: function () {
+                    init: function() {
                         this.on("addedfile", file => {
                             if (this.files.length > 1) {
                                 this.removeFile(this.files[0]);
@@ -93,6 +93,7 @@
                     this.message = 'All files uploaded successfully!';
                     await @this.call('createNewCategory');
                     this.modalNewCategory = false;
+                    console.log('cek')
                     this.dropzone.removeAllFiles();
                 } catch (error) {
                     console.error('Upload error:', error);
