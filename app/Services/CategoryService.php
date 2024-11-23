@@ -147,6 +147,31 @@ class CategoryService implements CategoryInterface
         // TODO: Implement updateCategory() method.
         $response = new ServiceResponse();
         try {
+            $cat = Category::with([])
+                ->where('id', '=', $category->id)
+                ->first();
+            $path = 'static/image/category';
+            $file = $categoryRequest->getFile();
+            $imageName = null;
+            $data = [
+                'name' => $categoryRequest->getName(),
+            ];
+            if ($categoryRequest->getFile()) {
+                $fileUploadService = new FileUpload();
+                $fileUploadRequest = new FileUploadRequest($path, $file);
+                $fileUploadResponse = $fileUploadService->upload($fileUploadRequest);
+
+                if (!$fileUploadResponse->isSuccess()) {
+                    return $response->setSuccess(false)
+                        ->setCode(500)
+                        ->setMessage($fileUploadResponse->getMessage());
+                }
+                $imageName = $fileUploadResponse->getFileName();
+                $data['image'] = $imageName;
+            }
+            $cat->update($data);
+            $response->setMessage('successfully load data category')
+                ->setData($category->toArray());
         }catch (\Exception $e) {
             $response->setSuccess(false)
                 ->setCode(500)

@@ -21,7 +21,7 @@
             ></x-input.text.form-text>
             <x-input.file.dropzone
                 dropRef="categoryEdit{{ $idx }}"
-                dispatcher="createNewCategory"
+                dispatcher="onUpdateCategory"
                 afterDispatch="this.modalUpdateCategory{{ $idx }} = false;"
                 targetName="file"
                 label="Gambar Kategori"
@@ -32,7 +32,7 @@
                 theme="outline"
                 loadingTarget=""
                 loadingText="Loading"
-                x-on:click="modalNewCategory = false"
+                x-on:click="modalUpdateCategory{{ $idx }} = false"
                 class="flex justify-center items-center"
                 :mutate="false"
             >
@@ -41,7 +41,7 @@
             <x-button.button-loading
                 loadingTarget=""
                 loadingText="Loading"
-                x-on:click="window.dropzoneInstance.createCategory()"
+                x-on:click="window.dropzoneInstance.uploadEvent()"
                 class="flex justify-center items-center"
             >
                 <span>Tambah</span>

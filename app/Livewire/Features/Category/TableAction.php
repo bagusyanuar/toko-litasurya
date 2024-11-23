@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Features\Category;
 
+use App\Domain\Web\Category\CategoryRequest;
 use App\Services\CategoryService;
 use Illuminate\Http\UploadedFile;
 use Livewire\Component;
@@ -40,6 +41,28 @@ class TableAction extends Component
             return;
         }
         $this->dispatch('page-success', true, 'Berhasil menghapus data kategori.');
+        $this->dispatch('fetch-categories-no-reload');
+    }
+
+    public function onUpdateCategory()
+    {
+        $categoryID = $this->category->id;
+        $serviceGetCategory = $this->service->getCategoryByID($categoryID);
+        if (!$serviceGetCategory->isSuccess()) {
+            $this->dispatch('page-error', true, $serviceGetCategory->getMessage());
+            return;
+        }
+
+        $categoryRequest = new CategoryRequest();
+        $categoryRequest->setName($this->name);
+        $category = $serviceGetCategory->getData();
+        $categoryRequest->setName($this->name)->setFile($this->file);
+        $serviceUpdateResponse = $this->service->updateCategory($category, $categoryRequest);
+        if (!$serviceUpdateResponse->isSuccess()) {
+            $this->dispatch('page-error', true, $serviceUpdateResponse->getMessage());
+            return;
+        }
+        $this->dispatch('page-success', true, 'Berhasil merubah data kategori.');
         $this->dispatch('fetch-categories-no-reload');
     }
 
