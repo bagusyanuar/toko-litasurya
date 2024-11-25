@@ -22,6 +22,7 @@
             <x-input.file.dropzone
                 dropRef="categoryEdit{{ $idx }}"
                 dispatcher="onUpdateCategory"
+                dispatchKey="UpdateCategory{{ $idx }}"
                 afterDispatch="this.modalUpdateCategory{{ $idx }} = false;"
                 targetName="file"
                 label="Gambar Kategori"
@@ -30,7 +31,7 @@
         <x-slot name="action">
             <x-button.button-loading
                 theme="outline"
-                loadingTarget=""
+                loadingTarget="onUpdateCategory"
                 loadingText="Loading"
                 x-on:click="modalUpdateCategory{{ $idx }} = false"
                 class="flex justify-center items-center"
@@ -39,12 +40,12 @@
                 <span>Batal</span>
             </x-button.button-loading>
             <x-button.button-loading
-                loadingTarget=""
+                loadingTarget="onUpdateCategory"
                 loadingText="Loading"
-                x-on:click="window.dropzoneInstance.uploadEvent()"
+                x-on:click="window.dropzoneInstanceUpdateCategory{{ $idx }}.eventUpdateCategory{{ $idx }}()"
                 class="flex justify-center items-center"
             >
-                <span>Tambah</span>
+                <span>Simpan</span>
             </x-button.button-loading>
         </x-slot>
     </x-modal.modal-form>

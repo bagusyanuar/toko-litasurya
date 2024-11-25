@@ -17,6 +17,9 @@ class Lists extends Component
 
     public $data = [];
     public $onLoading = true;
+    public $pageLength = [1, 2, 3];
+    public $perPage = 10;
+    public $totalRows = 0;
 
     protected $listeners = [
         'getDataCategories'
@@ -25,7 +28,8 @@ class Lists extends Component
     public function boot(CategoryService $categoryService)
     {
         $this->service = $categoryService;
-        $this->filter = new CategoryFilter('', 1, 10);
+        $this->perPage = $this->pageLength[0];
+        $this->filter = new CategoryFilter('', 1, $this->perPage);
     }
 
     #[On('fetch-categories')]
@@ -35,6 +39,7 @@ class Lists extends Component
         $serviceResponse = $this->service->getDataCategories($this->filter);
         if ($serviceResponse->isSuccess()) {
             $this->data = $serviceResponse->getData();
+            $this->totalRows = $serviceResponse->getMeta()->getTotalRows();
         }
         $this->onLoading = false;
     }
@@ -46,6 +51,12 @@ class Lists extends Component
         if ($serviceResponse->isSuccess()) {
             $this->data = $serviceResponse->getData();
         }
+    }
+
+    public function onPerPageChange()
+    {
+        $this->filter->setPerPage($this->perPage);
+        $this->getDataCategoriesNoReload();
     }
 
     public function render()

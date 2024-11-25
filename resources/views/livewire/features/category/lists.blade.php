@@ -4,6 +4,10 @@
                 $wire.getDataCategories();
             })"
         @fetch-categories.window="$wire.set('onLoading', true)"
+        :pageLength="$pageLength"
+        :totalRows="$totalRows"
+        perPageModel="perPage"
+        onPerPageChange="$wire.onPerPageChange()"
     >
         <x-slot name="header">
             <tr class="bg-brand-50">
@@ -38,7 +42,7 @@
                         <livewire:features.category.table-action
                             :idx="$loop->index"
                             :category="$datum"
-                            wire:key="{{ uniqid('table-action-') }}"
+                            wire:key="{{ uniqid('diagnosis-icd10-'. $loop->index) }}"
                         />
                     </td>
                 </tr>

@@ -5,6 +5,7 @@ namespace App\UseCase\Web;
 
 
 use App\Domain\ServiceResponse;
+use App\Domain\ServiceResponseWithMetaPagination;
 use App\Domain\Web\Category\CategoryFilter;
 use App\Domain\Web\Category\CategoryRequest;
 use App\Models\Category;
@@ -16,7 +17,7 @@ interface CategoryInterface
      * @param CategoryFilter $filter
      * @return ServiceResponse
      */
-    public function getDataCategories(CategoryFilter $filter): ServiceResponse;
+    public function getDataCategories(CategoryFilter $filter): ServiceResponseWithMetaPagination;
 
     /**
      * @param CategoryRequest $categoryRequest

@@ -18,6 +18,7 @@ class TableAction extends Component
     public $idx;
     public $category;
     public $name;
+    public $id;
 
     /** @var $service CategoryService */
     private $service;
@@ -30,6 +31,7 @@ class TableAction extends Component
     public function mount()
     {
         $this->name = $this->category->name;
+        $this->id = $this->category->id;
     }
 
     public function onDeleteCategory()
@@ -52,7 +54,6 @@ class TableAction extends Component
             $this->dispatch('page-error', true, $serviceGetCategory->getMessage());
             return;
         }
-
         $categoryRequest = new CategoryRequest();
         $categoryRequest->setName($this->name);
         $category = $serviceGetCategory->getData();

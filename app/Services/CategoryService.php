@@ -4,7 +4,9 @@
 namespace App\Services;
 
 
+use App\Domain\MetaPagination;
 use App\Domain\ServiceResponse;
+use App\Domain\ServiceResponseWithMetaPagination;
 use App\Domain\Web\Category\CategoryFilter;
 use App\Domain\Web\Category\CategoryRequest;
 use App\Helpers\FileUpload\FileUpload;
@@ -20,14 +22,15 @@ use Ramsey\Uuid\Uuid;
 
 class CategoryService implements CategoryInterface
 {
+    private $targetPathImage = 'static/image/category';
 
     /**
      * @inheritDoc
      */
-    public function getDataCategories(CategoryFilter $filter): ServiceResponse
+    public function getDataCategories(CategoryFilter $filter): ServiceResponseWithMetaPagination
     {
         // TODO: Implement getDataCategories() method.
-        $response = new ServiceResponse();
+        $response = new ServiceResponseWithMetaPagination();
         try {
             $query = Category::with([]);
             if ($filter->getParam() !== '') {
@@ -38,13 +41,11 @@ class CategoryService implements CategoryInterface
             $data = $query->offset($offset)
                 ->limit($filter->getPerPage())
                 ->get();
+
+            $metaPagination = new MetaPagination($filter->getPage(), $filter->getPerPage(), $totalRows);
             $response->setMessage('successfully load data category')
                 ->setData($data)
-                ->setMeta([
-                    'page' => $filter->getPage(),
-                    'per_page' => $filter->getPerPage(),
-                    'total_rows' => $totalRows
-                ]);
+                ->setMeta($metaPagination);
         } catch (\Exception $e) {
             $response->setSuccess(false)
                 ->setCode(500)
@@ -62,13 +63,12 @@ class CategoryService implements CategoryInterface
         $response = new ServiceResponse();
         DB::beginTransaction();
         try {
-            $path = 'static/image/category';
             $file = $categoryRequest->getFile();
             $imageName = null;
 
             if ($file) {
                 $fileUploadService = new FileUpload();
-                $fileUploadRequest = new FileUploadRequest($path, $file);
+                $fileUploadRequest = new FileUploadRequest($this->targetPathImage, $file);
                 $fileUploadResponse = $fileUploadService->upload($fileUploadRequest);
 
                 if (!$fileUploadResponse->isSuccess()) {
@@ -132,6 +132,7 @@ class CategoryService implements CategoryInterface
             $response->setMessage('successfully load data category')
                 ->setData($data);
         } catch (\Exception $e) {
+            dd($e->getMessage());
             $response->setSuccess(false)
                 ->setCode(500)
                 ->setMessage($e->getMessage());
@@ -147,10 +148,6 @@ class CategoryService implements CategoryInterface
         // TODO: Implement updateCategory() method.
         $response = new ServiceResponse();
         try {
-            $cat = Category::with([])
-                ->where('id', '=', $category->id)
-                ->first();
-            $path = 'static/image/category';
             $file = $categoryRequest->getFile();
             $imageName = null;
             $data = [
@@ -158,7 +155,7 @@ class CategoryService implements CategoryInterface
             ];
             if ($categoryRequest->getFile()) {
                 $fileUploadService = new FileUpload();
-                $fileUploadRequest = new FileUploadRequest($path, $file);
+                $fileUploadRequest = new FileUploadRequest($this->targetPathImage, $file);
                 $fileUploadResponse = $fileUploadService->upload($fileUploadRequest);
 
                 if (!$fileUploadResponse->isSuccess()) {
@@ -169,8 +166,8 @@ class CategoryService implements CategoryInterface
                 $imageName = $fileUploadResponse->getFileName();
                 $data['image'] = $imageName;
             }
-            $cat->update($data);
-            $response->setMessage('successfully load data category')
+            $category->update($data);
+            $response->setMessage('successfully update data category')
                 ->setData($category->toArray());
         }catch (\Exception $e) {
             $response->setSuccess(false)

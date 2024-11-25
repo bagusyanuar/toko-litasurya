@@ -27,9 +27,11 @@
         <x-input.file.dropzone
             dropRef="category"
             dispatcher="createNewCategory"
+            dispatchKey="CreateCategory"
             afterDispatch="this.modalNewCategory = false;"
             targetName="file"
             label="Gambar Kategori"
+            wire:key="{{ uniqid('create-category-') }}"
         ></x-input.file.dropzone>
     </x-slot>
     <x-slot name="action">
@@ -46,7 +48,7 @@
         <x-button.button-loading
             loadingTarget="createNewCategory"
             loadingText="Loading"
-            x-on:click="window.dropzoneInstance.uploadEvent()"
+            x-on:click="window.dropzoneInstanceCreateCategory.eventCreateCategory()"
             class="flex justify-center items-center"
         >
             <span>Tambah</span>

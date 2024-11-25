@@ -1,6 +1,11 @@
 <div
     class=""
-    x-data="{ {{ $modalKey }}: false }"
+    x-data="{ {{ $modalKey }}: false,
+            initIcons() {
+               setTimeout(() => { lucide.createIcons(); }, 0);
+            }
+    }"
+    x-init="initIcons()"
 >
     <button
         type="button"
@@ -79,8 +84,3 @@
         </div>
     </div>
 </div>
-
-{{--Apakah anda yakin ingin menghapus kategori "<span--}}
-{{--    class="font-semibold">{{ $category->name }}</span>"? Kategori yang telah dihapus--}}
-{{--tidak akan dapat--}}
-{{--ditampilkan lagi--}}

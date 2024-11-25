@@ -32,10 +32,11 @@
             <div class="flex items-center">
                 <span class="text-xs text-neutral-500 me-2">Menampilkan</span>
                 <select
-                    @change=""
+                    x-on:change="$wire.set('{{ $perPageModel }}', $event.target.value); {{ $onPerPageChange }}"
+                    wire:model="{{ $perPageModel }}"
                     class="border border-neutral-500 rounded-[4px] text-xs px-1 py-1 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500"
                 >
-                    @foreach([10, 50, 100] as $pl)
+                    @foreach($pageLength as $pl)
                         <option value="{{ $pl }}">{{ $pl }}</option>
                     @endforeach
                 </select>
@@ -65,7 +66,10 @@
             </div>
         </div>
         <!-- table pagination -->
-        <div class="flex justify-end w-full mt-1">
+        <div class="flex justify-between items-center w-full mt-1">
+            <div>
+                <span class="text-xs text-neutral-500">Total data {{ $totalRows }}</span>
+            </div>
             <div class="flex items-center gap-1 py-1.5 px-1.5" x-data="{page: 1}">
                 <a href="#" x-on:click.prevent=""
                    class="text-brand-500 cursor-pointer h-6 w-6 rounded-[4px] flex items-center justify-center hover:text-white hover:bg-brand-500 transition-all duration-300 ease-in-out">

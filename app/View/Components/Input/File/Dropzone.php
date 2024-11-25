@@ -10,6 +10,7 @@ class Dropzone extends Component
 {
     public $targetName;
     public $dispatcher;
+    public $dispatchKey;
     public $afterDispatch;
     public $dropRef;
     public $parentClassName;
@@ -18,19 +19,21 @@ class Dropzone extends Component
     /**
      * Create a new component instance.
      * @param $dropRef
+     * @param string $dispatcher
+     * @param $dispatchKey
      * @param string $parentClassName
      * @param string $label
      * @param string $targetName
-     * @param string $dispatcher
      * @param string $afterDispatch
      */
-    public function __construct($dropRef, $dispatcher, $parentClassName = '', $label = '', $targetName = 'file', $afterDispatch = '')
+    public function __construct($dropRef, $dispatcher, $dispatchKey, $parentClassName = '', $label = '', $targetName = 'file', $afterDispatch = '')
     {
         $this->dropRef = $dropRef;
         $this->parentClassName = $parentClassName;
         $this->label = $label;
         $this->targetName = $targetName;
         $this->dispatcher = $dispatcher;
+        $this->dispatchKey = $dispatchKey;
         if ($afterDispatch !== '') {
             $this->afterDispatch = 'function() { ' . $afterDispatch . ' }';
         }
