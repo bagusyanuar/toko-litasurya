@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Pages\Category;
 
+use App\Helpers\Livewire\PageComponent;
 use Livewire\Component;
+use Livewire\Attributes\On;
 
-class Index extends Component
+class Index extends PageComponent
 {
     public function render()
     {

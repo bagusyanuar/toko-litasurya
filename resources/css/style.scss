@@ -137,3 +137,9 @@ body {
         background-color: #94a3b8; /* Warna thumb saat hover */
     }
 }
+
+.custom-table-wrapper {
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    max-height: none;
+}

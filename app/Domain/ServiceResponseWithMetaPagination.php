@@ -4,29 +4,48 @@
 namespace App\Domain;
 
 
-class ServiceResponse
+class ServiceResponseWithMetaPagination
 {
+    /**
+     * @var bool $success
+     */
     private $success = true;
+
+    /**
+     * @var string $message
+     */
     private $message = '';
+
+    /**
+     * @var mixed $data
+     */
     private $data = null;
+
+    /**
+     * @var MetaPagination $meta
+     */
     private $meta = null;
+
+    /**
+     * @var int $code
+     */
     public $code = 200;
 
     /**
-     * ServiceResponse constructor.
-     * @param int $code
+     * ServiceResponseWithMetaPagination constructor.
      * @param bool $success
      * @param string $message
-     * @param null $data
-     * @param null $meta
+     * @param mixed $data
+     * @param MetaPagination $meta
+     * @param int $code
      */
-    public function __construct($code = 200, $success = true, $message = '', $data = null, $meta = null)
+    public function __construct($success = true, $message = '', $data = null, MetaPagination $meta = null, $code = 200)
     {
-        $this->code = $code;
         $this->success = $success;
         $this->message = $message;
         $this->data = $data;
         $this->meta = $meta;
+        $this->code = $code;
     }
 
     /**
@@ -39,7 +58,7 @@ class ServiceResponse
 
     /**
      * @param bool $success
-     * @return ServiceResponse
+     * @return ServiceResponseWithMetaPagination
      */
     public function setSuccess($success)
     {
@@ -57,7 +76,7 @@ class ServiceResponse
 
     /**
      * @param string $message
-     * @return ServiceResponse
+     * @return ServiceResponseWithMetaPagination
      */
     public function setMessage($message)
     {
@@ -66,7 +85,7 @@ class ServiceResponse
     }
 
     /**
-     * @return null
+     * @return mixed
      */
     public function getData()
     {
@@ -74,8 +93,8 @@ class ServiceResponse
     }
 
     /**
-     * @param null $data
-     * @return ServiceResponse
+     * @param mixed $data
+     * @return ServiceResponseWithMetaPagination
      */
     public function setData($data)
     {
@@ -84,7 +103,7 @@ class ServiceResponse
     }
 
     /**
-     * @return null
+     * @return MetaPagination
      */
     public function getMeta()
     {
@@ -92,8 +111,8 @@ class ServiceResponse
     }
 
     /**
-     * @param null $meta
-     * @return ServiceResponse
+     * @param MetaPagination $meta
+     * @return ServiceResponseWithMetaPagination
      */
     public function setMeta($meta)
     {
@@ -111,7 +130,7 @@ class ServiceResponse
 
     /**
      * @param int $code
-     * @return ServiceResponse
+     * @return ServiceResponseWithMetaPagination
      */
     public function setCode($code)
     {

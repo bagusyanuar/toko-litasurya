@@ -1,4 +1,4 @@
-<div class="fixed top-0 left-0 h-screen shadow-sidebar w-sidebar flex flex-col bg-background">
+<div class="fixed top-0 left-0 h-screen shadow-sidebar w-sidebar flex flex-col bg-background z-[151]">
     <!-- sidebar header -->
     <div class="w-full px-3">
         <div class="w-full h-20 flex justify-center items-center border-b border-neutral-300 mb-3 ">

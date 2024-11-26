@@ -1,11 +1,79 @@
 <div
-    x-data="{{ $initial }}"
+    x-data="{
+        dispatcher: '{{ $dispatcher }}',
+        afterDispatch: {{ $afterDispatch }},
+        dz: null,
+        dzOnLoading: false,
+        fileUploadInit() {
+            this.$nextTick(() => {
+                this.dz = new Dropzone(this.$refs.{{ $dropRef }}, {
+                    url: '/check',
+                    autoProcessQueue: false,
+                    addRemoveLinks: true,
+                    acceptedFiles: '.jpg, .png, .jpeg',
+                    uploadMultiple: false,
+                    maxFiles: 1,
+                    dictDefaultMessage: 'Tarik gambar yang ingin di upload',
+                    init: function() {
+                        this.on('addedfile', file => {
+                            if (this.files.length > 1) {
+                                this.removeFile(this.files[0]);
+                            }
+                            file.previewElement.querySelector('.dz-filename').style.display = 'none';
+                        });
+                    }
+                });
+            });
+        },
+        initMethod() {
+            this.uploadMethod('{{ $dispatchKey }}');
+        },
+        uploadMethod(key) {
+            this[`event${key}`] = async () => {
+                this.dz.disable();
+                this.dzOnLoading = true;
+
+                const uploadPromises = this.dz.files.map(file => {
+                    return new Promise((resolve, reject) => {
+                        @this.upload('{{ $targetName }}', file, resolve, reject);
+                    });
+                });
+
+
+                try {
+
+                    await Promise.all(uploadPromises);
+                    if(this.dispatcher) {
+                        await @this.call(this.dispatcher);
+                    }
+                    this.dz.removeAllFiles();
+                    if(typeof this.afterDispatch === 'function') {
+                        this.afterDispatch();
+                    }
+                } catch (error) {
+                    console.error('Upload error:', error);
+                } finally {
+                    this.dzOnLoading = false;
+                    this.dz.enable();
+                }
+            }
+        }
+    }"
     class="{{ $parentClassName }}"
-    x-init="window.dropzoneInstance = $data"
+    x-init="window.dropzoneInstance{{ $dispatchKey }} = $data, fileUploadInit(), initMethod()"
     wire:ignore
 >
     <label class="text-xs text-neutral-700">{{ $label }}</label>
-    <div x-ref="{{ $dropRef }}" class="dropzone"></div>
+    <div class="relative w-full h-full">
+        <div x-ref="{{ $dropRef }}" class="dropzone"></div>
+        <div
+            x-show="dzOnLoading"
+            class="absolute inset-0 z-[20] bg-gray-900 bg-opacity-50 flex items-center justify-center text-white text-sm font-semibold"
+            x-cloak
+        >
+            Sedang melakukan upload...
+        </div>
+    </div>
 </div>
 
 
@@ -49,5 +117,9 @@
     .dropzone .dz-message {
         font-size: 12px !important; /* Ukuran font */
         color: #94a3b8 !important; /* Warna teks */
+    }
+
+    .dz-error-mark {
+        display: none !important;
     }
 </style>

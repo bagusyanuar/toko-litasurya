@@ -1,18 +1,19 @@
-<div class="relative"
+<div class=""
      x-data="{ {{ $modalID }}: false }"
 >
     <!-- modal trigger -->
-@if(isset($trigger))
-    {{ $trigger }}
-@endif
+    @if(isset($trigger))
+        <div class="block">
+            {{ $trigger }}
+        </div>
+    @endif
 <!-- modal backdrop -->
-    <div class="fixed inset-0 bg-gray-500 bg-opacity-50 z-[150]"
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-50 z-[250]"
          x-cloak
          x-show="{{ $modalID }}"
     ></div>
     <!-- modal container -->
     <div
-        class="fixed inset-0 z-[151] flex items-center justify-center"
         x-cloak
         x-show="{{ $modalID }}"
         x-transition:enter="transition ease-out duration-300 transform"
@@ -21,8 +22,9 @@
         x-transition:leave="transition ease-in duration-200 transform"
         x-transition:leave-start="translate-y-0 opacity-100"
         x-transition:leave-end="translate-y-[-100%] opacity-0"
+        class="fixed top-8 left-1/2 transform -translate-x-1/2 z-[251] flex items-center justify-center"
     >
-        <div class="bg-white rounded shadow-lg w-full max-w-md max-h-full">
+        <div class="bg-white rounded shadow-lg w-[350px] max-h-full">
             <!-- modal header -->
             <div
                 class="flex items-center justify-between px-4 py-3 border-b border-neutral-300 rounded-t">
@@ -43,7 +45,7 @@
                 </button>
             </div>
             <!-- modal body -->
-            <div class="p-4">
+            <div class="p-4 text-start">
                 @if(isset($body))
                     {{ $body }}
                 @endif
