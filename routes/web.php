@@ -18,4 +18,5 @@ Route::get('/dashboard', App\Livewire\Pages\Dashboard\Index::class)->name('dashb
 Route::group(['prefix' => 'category'], function (){
     Route::get('/', App\Livewire\Pages\Category\Index::class)->name('category.list');
 });
+Route::get('/item', \App\Livewire\Pages\Item\Index::class)->name('item.list');
 

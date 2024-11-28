@@ -117,7 +117,10 @@ class Lists extends Component
 
     public function onSearch()
     {
-        dd($this->param);
+        $this->filter
+            ->setParam($this->param)
+            ->setPage(1);
+        $this->getDataCategoriesNoReload();
     }
 
 

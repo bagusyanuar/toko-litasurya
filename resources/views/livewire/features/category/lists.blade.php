@@ -18,10 +18,11 @@
         onFirstPageChange="$wire.onFirstPage()"
     >
         <x-slot name="extensions">
-            <div x-data="{ param: $wire.entangle('param') }">
-                <input x-model="param" type="text"
-                       x-on:input.debounce.500ms="param = $event.target.value; $wire.onSearch()"/>
-            </div>
+            <x-table.components.search
+                paramModel="param"
+                dispatcher="onSearch"
+                placeholder="cari..."
+            ></x-table.components.search>
         </x-slot>
         <x-slot name="header">
             <tr class="bg-brand-50">

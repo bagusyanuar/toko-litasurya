@@ -32,7 +32,7 @@ class CategoryService implements CategoryInterface
         // TODO: Implement getDataCategories() method.
         $response = new ServiceResponseWithMetaPagination();
         try {
-            $query = Category::with([])->where('name', '=', 'askjaskgl');
+            $query = Category::with([]);
             if ($filter->getParam() !== '') {
                 $query->where('name', 'LIKE', '%' . $filter->getParam() . '%');
             }
