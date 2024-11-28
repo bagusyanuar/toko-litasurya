@@ -58,9 +58,9 @@
                     @endif
                     </thead>
                     <tbody>
-                    @if(isset($rows))
-                        {{ $rows }}
-                    @endif
+                        @if(isset($rows))
+                            {{ $rows }}
+                        @endif
                     </tbody>
                 </table>
             </div>
@@ -73,7 +73,7 @@
             <div class="flex items-center gap-1 py-1.5 px-1.5" x-data="{page: 1, lastPage: 0}">
                 @if($currentPage <= 1)
                     <a href="#" x-on:click.prevent=""
-                       class="text-brand-300 cursor-default h-6 w-6 rounded-[4px] flex items-center justify-center">
+                       class="text-brand-100 cursor-default h-6 w-6 rounded-[4px] flex items-center justify-center">
                         <span class="material-symbols-outlined text-[1em]">
                             first_page
                         </span>
@@ -88,7 +88,7 @@
                 @endif
                 @if($currentPage <= 1)
                     <a href="#" x-on:click.prevent=""
-                       class="text-brand-300 cursor-default h-6 w-6 rounded-[4px] flex items-center justify-center">
+                       class="text-brand-100 cursor-default h-6 w-6 rounded-[4px] flex items-center justify-center">
                         <span class="material-symbols-outlined text-[1em]">
                             chevron_left
                         </span>
@@ -128,7 +128,7 @@
                     </a>
                 @else
                     <a href="#" x-on:click.prevent=""
-                       class="text-brand-300 cursor-default h-6 w-6 rounded-[4px] flex items-center justify-center">
+                       class="text-brand-100 cursor-default h-6 w-6 rounded-[4px] flex items-center justify-center">
                         <span class="material-symbols-outlined text-[1em]">
                             chevron_right
                         </span>
@@ -143,7 +143,7 @@
                     </a>
                 @else
                     <a href="#" x-on:click.prevent=""
-                       class="text-brand-300 cursor-default h-6 w-6 rounded-[4px] flex items-center justify-center">
+                       class="text-brand-100 cursor-default h-6 w-6 rounded-[4px] flex items-center justify-center">
                         <span class="material-symbols-outlined text-[1em]">
                             last_page
                         </span>

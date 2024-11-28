@@ -3,6 +3,7 @@
 namespace App\Livewire\Features\Category;
 
 use App\Domain\Web\Category\CategoryFilter;
+use App\Helpers\Pagination\Paginate;
 use App\Services\CategoryService;
 use Livewire\Component;
 use Livewire\Attributes\On;
@@ -18,8 +19,8 @@ class Lists extends Component
     public $data = [];
     public $onLoading = true;
     public $param = '';
-    public $pageLength = [1, 2, 3];
-    public $perPage = 1;
+    public $pageLength = Paginate::PAGE_LENGTH;
+    public $perPage = Paginate::PAGE_LENGTH[0];
     public $totalRows = 0;
     public $currentPage = 1;
     public $totalPage = 0;
@@ -50,6 +51,22 @@ class Lists extends Component
     #[On('fetch-categories-no-reload')]
     public function getDataCategoriesNoReload()
     {
+        $serviceResponse = $this->service->getDataCategories($this->filter);
+        if ($serviceResponse->isSuccess()) {
+            $this->data = $serviceResponse->getData();
+            if (count($this->data) <= 0 && $this->currentPage > 1) {
+                $this->forceToPreviousPage();
+            } else {
+                $this->totalRows = $serviceResponse->getMeta()->getTotalRows();
+                $this->currentPage = $serviceResponse->getMeta()->getPage();
+            }
+        }
+    }
+
+    private function forceToPreviousPage()
+    {
+        $this->currentPage = $this->currentPage - 1;
+        $this->filter->setPage($this->currentPage);
         $serviceResponse = $this->service->getDataCategories($this->filter);
         if ($serviceResponse->isSuccess()) {
             $this->data = $serviceResponse->getData();

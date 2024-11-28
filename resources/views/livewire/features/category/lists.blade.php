@@ -19,7 +19,8 @@
     >
         <x-slot name="extensions">
             <div x-data="{ param: $wire.entangle('param') }">
-                <input x-model="param" type="text" x-on:input.debounce.500ms="param = $event.target.value; $wire.onSearch()" />
+                <input x-model="param" type="text"
+                       x-on:input.debounce.500ms="param = $event.target.value; $wire.onSearch()"/>
             </div>
         </x-slot>
         <x-slot name="header">
@@ -31,7 +32,7 @@
             </tr>
         </x-slot>
         <x-slot name="rows">
-            @foreach($data as $datum)
+            @forelse($data as $datum)
                 <tr class="border-b border-neutral-300">
                     <td class="text-xs py-3 px-3 text-center">
                         {{ ($currentPage - 1) * $perPage + ($loop->index + 1) }}
@@ -59,7 +60,13 @@
                         />
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="4">
+                        <x-table.components.empty-table></x-table.components.empty-table>
+                    </td>
+                </tr>
+            @endforelse
         </x-slot>
     </x-table.table>
 </section>
