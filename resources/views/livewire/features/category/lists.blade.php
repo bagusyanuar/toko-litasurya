@@ -6,9 +6,22 @@
         @fetch-categories.window="$wire.set('onLoading', true)"
         :pageLength="$pageLength"
         :totalRows="$totalRows"
+        :currentPage="$currentPage"
+        :perPage="$perPage"
         perPageModel="perPage"
+        currentPageModel="currentPage"
         onPerPageChange="$wire.onPerPageChange()"
+        onPageChange="$wire.onPageChange()"
+        onNextPageChange="$wire.onNextPage()"
+        onLastPageChange="$wire.onLastPage(lastPage)"
+        onPreviousPageChange="$wire.onPreviousPage()"
+        onFirstPageChange="$wire.onFirstPage()"
     >
+        <x-slot name="extensions">
+            <div x-data="{ param: $wire.entangle('param') }">
+                <input x-model="param" type="text" x-on:input.debounce.500ms="param = $event.target.value; $wire.onSearch()" />
+            </div>
+        </x-slot>
         <x-slot name="header">
             <tr class="bg-brand-50">
                 <th class="py-4 px-3 text-center text-xs font-semibold w-[50px]">No</th>
@@ -21,7 +34,7 @@
             @foreach($data as $datum)
                 <tr class="border-b border-neutral-300">
                     <td class="text-xs py-3 px-3 text-center">
-                        {{ $loop->index + 1 }}
+                        {{ ($currentPage - 1) * $perPage + ($loop->index + 1) }}
                     </td>
                     <td class="text-xs py-3 px-3 text-center w-[4rem]">
                         <div class="w-full flex items-center justify-center">

@@ -17,9 +17,12 @@ class Lists extends Component
 
     public $data = [];
     public $onLoading = true;
+    public $param = '';
     public $pageLength = [1, 2, 3];
-    public $perPage = 10;
+    public $perPage = 1;
     public $totalRows = 0;
+    public $currentPage = 1;
+    public $totalPage = 0;
 
     protected $listeners = [
         'getDataCategories'
@@ -28,8 +31,7 @@ class Lists extends Component
     public function boot(CategoryService $categoryService)
     {
         $this->service = $categoryService;
-        $this->perPage = $this->pageLength[0];
-        $this->filter = new CategoryFilter('', 1, $this->perPage);
+        $this->filter = new CategoryFilter($this->param, $this->currentPage, $this->perPage);
     }
 
     #[On('fetch-categories')]
@@ -40,6 +42,7 @@ class Lists extends Component
         if ($serviceResponse->isSuccess()) {
             $this->data = $serviceResponse->getData();
             $this->totalRows = $serviceResponse->getMeta()->getTotalRows();
+            $this->currentPage = $serviceResponse->getMeta()->getPage();
         }
         $this->onLoading = false;
     }
@@ -50,14 +53,56 @@ class Lists extends Component
         $serviceResponse = $this->service->getDataCategories($this->filter);
         if ($serviceResponse->isSuccess()) {
             $this->data = $serviceResponse->getData();
+            $this->totalRows = $serviceResponse->getMeta()->getTotalRows();
+            $this->currentPage = $serviceResponse->getMeta()->getPage();
         }
     }
 
     public function onPerPageChange()
     {
+        $this->currentPage = 1;
         $this->filter->setPerPage($this->perPage);
+        $this->filter->setPage($this->currentPage);
         $this->getDataCategoriesNoReload();
     }
+
+    public function onPageChange()
+    {
+        $this->filter->setPage($this->currentPage);
+        $this->getDataCategoriesNoReload();
+    }
+
+    public function onNextPage()
+    {
+        $targetPage = $this->currentPage + 1;
+        $this->filter->setPage($targetPage);
+        $this->getDataCategoriesNoReload();
+    }
+
+    public function onLastPage($page)
+    {
+        $this->filter->setPage($page);
+        $this->getDataCategoriesNoReload();
+    }
+
+    public function onPreviousPage()
+    {
+        $targetPage = $this->currentPage - 1;
+        $this->filter->setPage($targetPage);
+        $this->getDataCategoriesNoReload();
+    }
+
+    public function onFirstPage()
+    {
+        $this->filter->setPage(1);
+        $this->getDataCategoriesNoReload();
+    }
+
+    public function onSearch()
+    {
+        dd($this->param);
+    }
+
 
     public function render()
     {
