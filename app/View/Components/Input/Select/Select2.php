@@ -11,17 +11,23 @@ class Select2 extends Component
     public $baseClass;
     public $id;
     public $options = [];
+    public $label;
+    public $model;
 
     /**
      * Create a new component instance.
+     * @param $model
      * @param string $id
      * @param array $options
+     * @param string $label
      */
-    public function __construct($id = '', $options = [])
+    public function __construct($model, $id = '', $options = [], $label = '')
     {
+        $this->model = $model;
         $this->id = $id;
         $this->options = $options;
-        $this->baseClass = '!text-[0.725rem] text-neutral-700 rounded-[4px] border !border-neutral-300 outline-none focus:outline-none focus:ring-0 !focus:border-neutral-500 transition duration-300 ease-in-out';
+        $this->label = $label;
+        $this->baseClass = 'w-full !text-[0.725rem] !flex !items-center !px-[0.825rem] !py-[0.45rem] !h-[2.523rem] text-neutral-700 rounded-[4px] border !border-neutral-300 outline-none focus:outline-none focus:ring-0 !focus:border-neutral-500 transition duration-300 ease-in-out';
     }
 
     /**

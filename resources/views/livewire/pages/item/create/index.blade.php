@@ -29,9 +29,12 @@
                     parentClassName="mb-3"
                 ></x-input.text.form-text>
                 <x-input.select.select2
+                    model="category"
+                    label="Kategori"
                     id="categoryID"
                     :options="$categoryOptions"
                 ></x-input.select.select2>
+                <button x-on:click="$wire.onSave()">cek</button>
             </div>
             <div class="flex-1">
                 <p class="mb-0 font-semibold text-neutral-500 text-xs">
