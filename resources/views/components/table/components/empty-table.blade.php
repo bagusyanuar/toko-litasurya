@@ -6,7 +6,7 @@
     }"
     x-init="initIcons()"
     class="w-full flex flex-col justify-center items-center h-64"
-    wire:ignore.self
+    wire:ignore
 >
     <div>
         <i data-lucide="hard-drive" class="text-neutral-300 h-[24px] aspect-[1/1]"></i>

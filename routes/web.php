@@ -15,8 +15,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', App\Livewire\Pages\Auth\Login::class)->name('login');
 Route::get('/dashboard', App\Livewire\Pages\Dashboard\Index::class)->name('dashboard');
-Route::group(['prefix' => 'category'], function (){
-    Route::get('/', App\Livewire\Pages\Category\Index::class)->name('category.list');
+Route::get('/category', App\Livewire\Pages\Category\Index::class)->name('category.list');
+Route::group(['prefix' => 'item'], function () {
+    Route::get('/', \App\Livewire\Pages\Item\Index::class)->name('item.list');
+    Route::get('/create', \App\Livewire\Pages\Item\Create\Index::class)->name('item.create');
 });
-Route::get('/item', \App\Livewire\Pages\Item\Index::class)->name('item.list');
 

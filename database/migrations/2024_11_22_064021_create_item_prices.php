@@ -16,6 +16,7 @@ return new class extends Migration
             $table->uuid('item_id');
             $table->integer('price')->default(0);
             $table->string('unit');
+            $table->text('description')->nullable();
             $table->timestamps();
             $table->foreign('item_id')
                 ->references('id')

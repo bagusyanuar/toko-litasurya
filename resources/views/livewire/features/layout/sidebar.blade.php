@@ -8,7 +8,7 @@
     <x-navigation.sidebar.item-tree
         icon="database"
         title="Master"
-        active="{{ in_array(\Illuminate\Support\Facades\Route::currentRouteName(), $masterRoutes) ? 'true' : 'false'  }}"
+        active="{{ Str::startsWith(\Illuminate\Support\Facades\Route::currentRouteName(), $masterGroup) }}"
     >
         <x-navigation.sidebar.item
             to="{{ route('category.list') }}"
@@ -20,7 +20,7 @@
             to="{{ route('item.list') }}"
             icon="box"
             title="Barang"
-            active="{{ \Illuminate\Support\Facades\Route::is('item.list') }}"
+            active="{{ \Illuminate\Support\Facades\Route::is('item.*') }}"
         ></x-navigation.sidebar.item>
         <x-navigation.sidebar.item
             to="/master"
