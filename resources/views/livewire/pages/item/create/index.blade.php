@@ -28,6 +28,10 @@
                     wire:model="name"
                     parentClassName="mb-3"
                 ></x-input.text.form-text>
+                <x-input.select.select2
+                    id="categoryID"
+                    :options="$categoryOptions"
+                ></x-input.select.select2>
             </div>
             <div class="flex-1">
                 <p class="mb-0 font-semibold text-neutral-500 text-xs">
