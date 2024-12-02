@@ -3,6 +3,7 @@
     wire:ignore
     x-init="$nextTick(() => {
         element = $('#{{ $id }}').select2();
+        $('#{{ $id }}').next('.select2-container').addClass('!w-full');
         $('#{{ $id }}').next('.select2-container').find('.select2-selection--single').addClass('{{ $baseClass }}');
         $('#{{ $id }}').next('.select2-container').find('.select2-selection--single').find('.select2-selection__rendered').addClass('!px-[0] !leading-[2]');
         $('#{{ $id }}').next('.select2-container').find('.select2-selection--single').find('.select2-selection__arrow').addClass('!top-1/2 !h-[0]');
