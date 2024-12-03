@@ -16,6 +16,7 @@ return new class extends Migration
             $table->uuid('category_id')->nullable();
             $table->string('name');
             $table->text('image')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
             $table->foreign('category_id')
                 ->references('id')

@@ -15,7 +15,7 @@ interface CategoryInterface
 {
     /**
      * @param CategoryFilter $filter
-     * @return ServiceResponse
+     * @return ServiceResponseWithMetaPagination
      */
     public function getDataCategories(CategoryFilter $filter): ServiceResponseWithMetaPagination;
 

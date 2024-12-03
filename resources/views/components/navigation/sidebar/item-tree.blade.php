@@ -12,7 +12,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
         </svg>
     </div>
-    <div class="w-full mt-1" x-show="open" x-collapse>
+    <div class="w-full mt-1 flex flex-col gap-1" x-show="open" x-collapse>
         {{ $slot }}
     </div>
 </div>

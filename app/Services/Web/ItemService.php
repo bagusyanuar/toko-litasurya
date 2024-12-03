@@ -1,52 +1,45 @@
 <?php
 
 
-namespace App\Services;
+namespace App\Services\Web;
 
 
 use App\Domain\MetaPagination;
 use App\Domain\ServiceResponse;
 use App\Domain\ServiceResponseWithMetaPagination;
-use App\Domain\Web\Category\CategoryFilter;
-use App\Domain\Web\Category\CategoryRequest;
+use App\Domain\Web\Item\ItemFilter;
+use App\Domain\Web\Item\ItemRequest;
 use App\Helpers\FileUpload\FileUpload;
 use App\Helpers\FileUpload\FileUploadRequest;
-use App\Models\Category;
-use App\UseCase\Web\CategoryInterface;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\UploadedFile;
+use App\Models\Item;
+use App\Usecase\Web\ItemInterface;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use Ramsey\Uuid\Uuid;
 
-class CategoryService implements CategoryInterface
+class ItemService implements ItemInterface
 {
-    private $targetPathImage = 'static/image/category';
-
+    private $targetPathImage = 'static/image/item';
     /**
      * @inheritDoc
      */
-    public function getDataCategories(CategoryFilter $filter): ServiceResponseWithMetaPagination
+    public function getDataItems(ItemFilter $filter): ServiceResponseWithMetaPagination
     {
-        // TODO: Implement getDataCategories() method.
+        // TODO: Implement getDataItems() method.
         $response = new ServiceResponseWithMetaPagination();
         try {
-            $query = Category::with([]);
+            $query = Item::with(['category']);
             if ($filter->getParam() !== '') {
-                $query->where('name', 'LIKE', '%' . $filter->getParam() . '%');
+                $query->where('name', 'LIKE', "%{$filter->getParam()}%");
             }
             $offset = ($filter->getPage() - 1) * $filter->getPerPage();
             $totalRows = $query->count();
             $data = $query->offset($offset)
                 ->limit($filter->getPerPage())
                 ->get();
-
             $metaPagination = new MetaPagination($filter->getPage(), $filter->getPerPage(), $totalRows);
-            $response->setMessage('successfully load data category')
+            $response->setMessage('successfully retrieve data items')
                 ->setData($data)
                 ->setMeta($metaPagination);
-        } catch (\Exception $e) {
+        }catch (\Exception $e) {
             $response->setSuccess(false)
                 ->setCode(500)
                 ->setMessage($e->getMessage());
@@ -57,15 +50,14 @@ class CategoryService implements CategoryInterface
     /**
      * @inheritDoc
      */
-    public function createNewCategory(CategoryRequest $categoryRequest): ServiceResponse
+    public function createNewItem(ItemRequest $itemRequest): ServiceResponse
     {
-        // TODO: Implement createNewCategory() method.
+        // TODO: Implement createNewItem() method.
         $response = new ServiceResponse();
         DB::beginTransaction();
         try {
-            $file = $categoryRequest->getFile();
+            $file = $itemRequest->getFile();
             $imageName = null;
-
             if ($file) {
                 $fileUploadService = new FileUpload();
                 $fileUploadRequest = new FileUploadRequest($this->targetPathImage, $file);
@@ -80,13 +72,15 @@ class CategoryService implements CategoryInterface
                 $imageName = $fileUploadResponse->getFileName();
             }
             $data = [
-                'name' => $categoryRequest->getName(),
-                'image' => $imageName
+                'category_id' => $itemRequest->getCategoryID(),
+                'name' => $itemRequest->getName(),
+                'image' => $imageName,
+                'description' => $itemRequest->getDescription(),
             ];
-            Category::create($data);
-            $response->setMessage('successfully create new category')->setCode(201);
+            Item::create($data);
+            $response->setMessage('successfully create new item')->setCode(201);
             DB::commit();
-        } catch (\Exception $e) {
+        }catch (\Exception $e) {
             DB::rollBack();
             $response->setSuccess(false)
                 ->setCode(500)
@@ -98,38 +92,20 @@ class CategoryService implements CategoryInterface
     /**
      * @inheritDoc
      */
-    public function deleteCategory($id): ServiceResponse
+    public function getItemByID($id): ServiceResponse
     {
-        // TODO: Implement deleteCategory() method.
+        // TODO: Implement getItemByID() method.
         $response = new ServiceResponse();
         try {
-            Category::destroy($id);
-            $response->setMessage('successfully create new category');
-        } catch (\Exception $e) {
-            $response->setSuccess(false)
-                ->setCode(500)
-                ->setMessage($e->getMessage());
-        }
-        return $response;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getCategoryByID($id): ServiceResponse
-    {
-        // TODO: Implement getCategoryByID() method.
-        $response = new ServiceResponse();
-        try {
-            $data = Category::with([])
+            $data = Item::with(['category'])
                 ->where('id', '=', $id)
                 ->first();
             if (!$data) {
                 return $response->setSuccess(false)
                     ->setCode(404)
-                    ->setMessage('category not found');
+                    ->setMessage('item not found');
             }
-            $response->setMessage('successfully load data category')
+            $response->setMessage('successfully get data item')
                 ->setData($data);
         } catch (\Exception $e) {
             $response->setSuccess(false)
@@ -142,17 +118,19 @@ class CategoryService implements CategoryInterface
     /**
      * @inheritDoc
      */
-    public function updateCategory(Category $category, CategoryRequest $categoryRequest): ServiceResponse
+    public function updateItem(Item $item, ItemRequest $itemRequest): ServiceResponse
     {
-        // TODO: Implement updateCategory() method.
+        // TODO: Implement updateItem() method.
         $response = new ServiceResponse();
         try {
-            $file = $categoryRequest->getFile();
+            $file = $itemRequest->getFile();
             $imageName = null;
             $data = [
-                'name' => $categoryRequest->getName(),
+                'category_id' => $itemRequest->getCategoryID(),
+                'name' => $itemRequest->getName(),
+                'description' => $itemRequest->getDescription(),
             ];
-            if ($categoryRequest->getFile()) {
+            if ($file) {
                 $fileUploadService = new FileUpload();
                 $fileUploadRequest = new FileUploadRequest($this->targetPathImage, $file);
                 $fileUploadResponse = $fileUploadService->upload($fileUploadRequest);
@@ -165,10 +143,27 @@ class CategoryService implements CategoryInterface
                 $imageName = $fileUploadResponse->getFileName();
                 $data['image'] = $imageName;
             }
-            $category->update($data);
-            $response->setMessage('successfully update data category')
-                ->setData($category->toArray());
+            $item->update($data);
+            $response->setMessage('successfully update data item');
         }catch (\Exception $e) {
+            $response->setSuccess(false)
+                ->setCode(500)
+                ->setMessage($e->getMessage());
+        }
+        return $response;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteItem(Item $item): ServiceResponse
+    {
+        // TODO: Implement deleteItem() method.
+        $response = new ServiceResponse();
+        try {
+            $item->delete();
+            $response->setMessage('successfully delete item');
+        } catch (\Exception $e) {
             $response->setSuccess(false)
                 ->setCode(500)
                 ->setMessage($e->getMessage());

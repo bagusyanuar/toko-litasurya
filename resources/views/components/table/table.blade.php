@@ -58,9 +58,9 @@
                     @endif
                     </thead>
                     <tbody>
-                    @if(isset($rows))
-                        {{ $rows }}
-                    @endif
+                        @if(isset($rows))
+                            {{ $rows }}
+                        @endif
                     </tbody>
                 </table>
             </div>
@@ -70,37 +70,85 @@
             <div>
                 <span class="text-xs text-neutral-500">Total data {{ $totalRows }}</span>
             </div>
-            <div class="flex items-center gap-1 py-1.5 px-1.5" x-data="{page: 1}">
-                <a href="#" x-on:click.prevent=""
-                   class="text-brand-500 cursor-pointer h-6 w-6 rounded-[4px] flex items-center justify-center hover:text-white hover:bg-brand-500 transition-all duration-300 ease-in-out">
-                <span class="material-symbols-outlined text-[1em]">
-                    first_page
-                </span>
-                </a>
-                <a href="#" x-on:click.prevent=""
-                   class="text-brand-500 cursor-pointer h-6 w-6 rounded-[4px] flex items-center justify-center hover:text-white hover:bg-brand-500 transition-all duration-300 ease-in-out">
-                <span class="material-symbols-outlined text-[1em]">
-                    chevron_left
-                </span>
-                </a>
-                <a href="#" x-on:click.prevent=""
-                   class="bg-brand-500 cursor-pointer text-white h-6 w-6 rounded-[4px] flex items-center justify-center">
-                <span class="text-[0.8em]">
-                    1
-                </span>
-                </a>
-                <a href="#" x-on:click.prevent=""
-                   class="text-brand-500 cursor-pointer h-6 w-6 rounded-[4px] flex items-center justify-center hover:text-white hover:bg-brand-500 transition-all duration-300 ease-in-out">
-                <span class="material-symbols-outlined text-[1em]">
-                    chevron_right
-                </span>
-                </a>
-                <a href="#" x-on:click.prevent=""
-                   class="text-brand-500 cursor-pointer h-6 w-6 rounded-[4px] flex items-center justify-center hover:text-white hover:bg-brand-500 transition-all duration-300 ease-in-out">
-                <span class="material-symbols-outlined text-[1em]">
-                    last_page
-                </span>
-                </a>
+            <div class="flex items-center gap-1 py-1.5 px-1.5" x-data="{page: 1, lastPage: 0}">
+                @if($currentPage <= 1)
+                    <a href="#" x-on:click.prevent=""
+                       class="text-brand-100 cursor-default h-6 w-6 rounded-[4px] flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[1em]">
+                            first_page
+                        </span>
+                    </a>
+                @else
+                    <a href="#" x-on:click.prevent="{{ $onFirstPageChange }}"
+                       class="text-brand-500 cursor-pointer h-6 w-6 rounded-[4px] flex items-center justify-center hover:text-white hover:bg-brand-500 transition-all duration-300 ease-in-out">
+                        <span class="material-symbols-outlined text-[1em]">
+                            first_page
+                        </span>
+                    </a>
+                @endif
+                @if($currentPage <= 1)
+                    <a href="#" x-on:click.prevent=""
+                       class="text-brand-100 cursor-default h-6 w-6 rounded-[4px] flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[1em]">
+                            chevron_left
+                        </span>
+                    </a>
+                @else
+                    <a href="#" x-on:click.prevent="{{ $onPreviousPageChange }}"
+                       class="text-brand-500 cursor-pointer h-6 w-6 rounded-[4px] flex items-center justify-center hover:text-white hover:bg-brand-500 transition-all duration-300 ease-in-out">
+                        <span class="material-symbols-outlined text-[1em]">
+                            chevron_left
+                        </span>
+                    </a>
+                @endif
+                @foreach($pageRange as $pr)
+                    @if($currentPage == $pr)
+                        <a href="#" x-on:click.prevent=""
+                           class="bg-brand-500 cursor-pointer text-white h-6 w-6 rounded-[4px] flex items-center justify-center">
+                            <span class="text-[0.8em]">
+                                {{ $pr }}
+                            </span>
+                        </a>
+                    @else
+                        <a href="#"
+                           x-on:click.prevent="$wire.set('{{ $currentPageModel }}', {{ $pr }}); {{ $onPageChange }}"
+                           class="bg-white cursor-pointer text-brand-500 h-6 w-6 rounded-[4px] flex items-center justify-center hover:text-white hover:bg-brand-500 transition-all duration-300 ease-in-out">
+                            <span class="text-[0.8em]">
+                                {{ $pr }}
+                            </span>
+                        </a>
+                    @endif
+                @endforeach
+                @if($currentPage < $totalPage)
+                    <a href="#" x-on:click.prevent="{{ $onNextPageChange }}"
+                       class="text-brand-500 cursor-pointer h-6 w-6 rounded-[4px] flex items-center justify-center hover:text-white hover:bg-brand-500 transition-all duration-300 ease-in-out">
+                        <span class="material-symbols-outlined text-[1em]">
+                            chevron_right
+                        </span>
+                    </a>
+                @else
+                    <a href="#" x-on:click.prevent=""
+                       class="text-brand-100 cursor-default h-6 w-6 rounded-[4px] flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[1em]">
+                            chevron_right
+                        </span>
+                    </a>
+                @endif
+                @if($currentPage < $totalPage)
+                    <a href="#" x-on:click.prevent="lastPage = {{ $totalPage }}; {{ $onLastPageChange }}"
+                       class="text-brand-500 cursor-pointer h-6 w-6 rounded-[4px] flex items-center justify-center hover:text-white hover:bg-brand-500 transition-all duration-300 ease-in-out">
+                        <span class="material-symbols-outlined text-[1em]">
+                            last_page
+                        </span>
+                    </a>
+                @else
+                    <a href="#" x-on:click.prevent=""
+                       class="text-brand-100 cursor-default h-6 w-6 rounded-[4px] flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[1em]">
+                            last_page
+                        </span>
+                    </a>
+                @endif
             </div>
         </div>
     </div>

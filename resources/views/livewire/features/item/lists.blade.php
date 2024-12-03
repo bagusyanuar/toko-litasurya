@@ -1,7 +1,7 @@
-<section id="section-table-categories">
+<section id="section-table-item">
     <x-table.table
         x-init="$nextTick(() => {
-                $wire.getDataCategories();
+                $wire.getDataItems();
             })"
         @fetch-categories.window="$wire.set('onLoading', true)"
         :pageLength="$pageLength"
@@ -28,7 +28,9 @@
             <tr class="bg-brand-50">
                 <th class="py-4 px-3 text-center text-xs font-semibold w-[50px]">No</th>
                 <th class="py-4 px-3 text-center text-xs font-semibold w-[8rem]">Gambar</th>
-                <th class="py-4 px-3 text-start text-xs font-semibold">Nama Kategori</th>
+                <th class="py-4 px-3 text-center text-xs font-semibold w-[8rem]">Kategori</th>
+                <th class="py-4 px-3 text-start text-xs font-semibold">Nama Barang</th>
+                <th class="py-4 px-3 text-center text-xs font-semibold w-[8rem]">Harga</th>
                 <th class="py-4 px-3 text-center text-xs font-semibold w-[120px]">Aksi</th>
             </tr>
         </x-slot>
@@ -51,19 +53,25 @@
                         </div>
                     </td>
                     <td class="text-xs py-3 px-3 text-start">
+                        {{ $datum->category->name }}
+                    </td>
+                    <td class="text-xs py-3 px-3 text-start">
                         {{ $datum->name }}
                     </td>
+                    <td class="text-xs py-3 px-3 text-start">
+                        <span>-</span>
+                    </td>
                     <td class="text-xs py-3 px-3 text-center">
-                        <livewire:features.category.table-action
-                            :idx="$loop->index"
-                            :category="$datum"
-                            wire:key="{{ uniqid('diagnosis-icd10-'. $loop->index) }}"
-                        />
+{{--                        <livewire:features.category.table-action--}}
+{{--                            :idx="$loop->index"--}}
+{{--                            :category="$datum"--}}
+{{--                            wire:key="{{ uniqid('diagnosis-icd10-'. $loop->index) }}"--}}
+{{--                        />--}}
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4">
+                    <td colspan="6">
                         <x-table.components.empty-table></x-table.components.empty-table>
                     </td>
                 </tr>

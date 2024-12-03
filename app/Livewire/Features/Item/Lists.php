@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Livewire\Features\Category;
+namespace App\Livewire\Features\Item;
 
-use App\Domain\Web\Category\CategoryFilter;
+use App\Domain\Web\Item\ItemFilter;
 use App\Helpers\Pagination\Paginate;
-use App\Services\CategoryService;
+use App\Services\Web\ItemService;
 use Livewire\Component;
-    use Livewire\Attributes\On;
+use Livewire\Attributes\On;
 
 class Lists extends Component
 {
-    /** @var $service CategoryService */
-    protected $service;
+    /** @var ItemService $service */
+    private $service;
 
-    /** @var $filter CategoryFilter */
-    protected $filter;
+    /** @var ItemFilter $filter */
+    private $filter;
 
     public $data = [];
     public $onLoading = true;
@@ -25,21 +25,17 @@ class Lists extends Component
     public $currentPage = 1;
     public $totalPage = 0;
 
-    protected $listeners = [
-        'getDataCategories'
-    ];
-
-    public function boot(CategoryService $categoryService)
+    public function boot(ItemService $service)
     {
-        $this->service = $categoryService;
-        $this->filter = new CategoryFilter($this->param, $this->currentPage, $this->perPage);
+        $this->service = $service;
+        $this->filter = new ItemFilter($this->param, $this->currentPage, $this->perPage);
     }
 
-    #[On('fetch-categories')]
-    public function getDataCategories()
+    #[On('fetch-items')]
+    public function getDataItems()
     {
         $this->onLoading = true;
-        $serviceResponse = $this->service->getDataCategories($this->filter);
+        $serviceResponse = $this->service->getDataItems($this->filter);
         if ($serviceResponse->isSuccess()) {
             $this->data = $serviceResponse->getData();
             $this->totalRows = $serviceResponse->getMeta()->getTotalRows();
@@ -48,10 +44,10 @@ class Lists extends Component
         $this->onLoading = false;
     }
 
-    #[On('fetch-categories-no-reload')]
-    public function getDataCategoriesNoReload()
+    #[On('fetch-items-no-reload')]
+    public function getDataItemsNoReload()
     {
-        $serviceResponse = $this->service->getDataCategories($this->filter);
+        $serviceResponse = $this->service->getDataItems($this->filter);
         if ($serviceResponse->isSuccess()) {
             $this->data = $serviceResponse->getData();
             if (count($this->data) <= 0 && $this->currentPage > 1) {
@@ -67,7 +63,7 @@ class Lists extends Component
     {
         $this->currentPage = $this->currentPage - 1;
         $this->filter->setPage($this->currentPage);
-        $serviceResponse = $this->service->getDataCategories($this->filter);
+        $serviceResponse = $this->service->getDataItems($this->filter);
         if ($serviceResponse->isSuccess()) {
             $this->data = $serviceResponse->getData();
             $this->totalRows = $serviceResponse->getMeta()->getTotalRows();
@@ -80,39 +76,39 @@ class Lists extends Component
         $this->currentPage = 1;
         $this->filter->setPerPage($this->perPage);
         $this->filter->setPage($this->currentPage);
-        $this->getDataCategoriesNoReload();
+        $this->getDataItemsNoReload();
     }
 
     public function onPageChange()
     {
         $this->filter->setPage($this->currentPage);
-        $this->getDataCategoriesNoReload();
+        $this->getDataItemsNoReload();
     }
 
     public function onNextPage()
     {
         $targetPage = $this->currentPage + 1;
         $this->filter->setPage($targetPage);
-        $this->getDataCategoriesNoReload();
+        $this->getDataItemsNoReload();
     }
 
     public function onLastPage($page)
     {
         $this->filter->setPage($page);
-        $this->getDataCategoriesNoReload();
+        $this->getDataItemsNoReload();
     }
 
     public function onPreviousPage()
     {
         $targetPage = $this->currentPage - 1;
         $this->filter->setPage($targetPage);
-        $this->getDataCategoriesNoReload();
+        $this->getDataItemsNoReload();
     }
 
     public function onFirstPage()
     {
         $this->filter->setPage(1);
-        $this->getDataCategoriesNoReload();
+        $this->getDataItemsNoReload();
     }
 
     public function onSearch()
@@ -120,12 +116,11 @@ class Lists extends Component
         $this->filter
             ->setParam($this->param)
             ->setPage(1);
-        $this->getDataCategoriesNoReload();
+        $this->getDataItemsNoReload();
     }
-
 
     public function render()
     {
-        return view('livewire.features.category.lists');
+        return view('livewire.features.item.lists');
     }
 }

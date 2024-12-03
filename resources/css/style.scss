@@ -143,3 +143,30 @@ body {
     overflow-y: visible !important;
     max-height: none;
 }
+
+.select2-search__field {
+    border-radius: 4px;
+    padding: 0.324rem 0.525rem !important;
+    font-size: 0.725rem;
+    &:focus {
+        box-shadow: none;
+        border: 1px solid $primaryColor;
+    }
+}
+
+.select2-results__options {
+    font-size: 0.725rem !important;
+
+    .select2-results__option {
+        padding: 0.65rem 0.525rem !important;
+        &.select2-results__option--selected {
+            background-color: color-mix(in srgb, 80% white , $primaryColor) !important;
+            color: #1E293B !important;
+        }
+
+        &.select2-results__option--highlighted {
+            background-color: $primaryColor !important;
+            color: white !important;
+        }
+    }
+}

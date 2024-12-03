@@ -6,6 +6,7 @@ namespace App\Helpers\Pagination;
 
 class Paginate
 {
+    const PAGE_LENGTH = [10, 25, 50];
     public static function paginate($totalRecords, $perPage, $currentPage ,$maxPageRange = 5): PaginationResponse {
         $totalPage = ceil($totalRecords / $perPage);
         $halfRange = floor($maxPageRange / 2);
