@@ -90,7 +90,7 @@
                     <x-input.text.form-text
                         id="cartonPriceDescription"
                         label="Isi Karton"
-                        placeholder="Keterangan isi karton"
+                        placeholder="Keterangan"
                         wire:model="cartonPriceDescription"
                         parentClassName="w-full"
                     ></x-input.text.form-text>
@@ -108,13 +108,17 @@
                     <x-input.text.form-text
                         id="cartonPriceDescription"
                         label="Isi Karton"
-                        placeholder="Keterangan isi karton"
+                        placeholder="Keterangan"
                         wire:model="cartonPriceDescription"
                         parentClassName="w-full"
                     ></x-input.text.form-text>
                 </div>
-
+                <div class="flex justify-end w-full">
+                    <x-button.button>Tambah</x-button.button>
+                </div>
             </div>
         </div>
+        <x-spacer.divider class="mb-3"></x-spacer.divider>
+
     </x-container.card>
 </div>
