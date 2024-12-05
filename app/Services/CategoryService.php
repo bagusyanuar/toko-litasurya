@@ -65,7 +65,6 @@ class CategoryService implements CategoryInterface
         try {
             $file = $categoryRequest->getFile();
             $imageName = null;
-
             if ($file) {
                 $fileUploadService = new FileUpload();
                 $fileUploadRequest = new FileUploadRequest($this->targetPathImage, $file);
@@ -168,7 +167,26 @@ class CategoryService implements CategoryInterface
             $category->update($data);
             $response->setMessage('successfully update data category')
                 ->setData($category->toArray());
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
+            $response->setSuccess(false)
+                ->setCode(500)
+                ->setMessage($e->getMessage());
+        }
+        return $response;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDataCategoriesNoPagination(): ServiceResponse
+    {
+        // TODO: Implement getDataCategoriesNoPagination() method.
+        $response = new ServiceResponse();
+        try {
+            $data = Category::with([])->get();
+            $response->setMessage('successfully get data category')
+                ->setData($data);
+        } catch (\Exception $e) {
             $response->setSuccess(false)
                 ->setCode(500)
                 ->setMessage($e->getMessage());

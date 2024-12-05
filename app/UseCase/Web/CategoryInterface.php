@@ -43,4 +43,9 @@ interface CategoryInterface
      * @return ServiceResponse
      */
     public function updateCategory(Category $category, CategoryRequest $categoryRequest): ServiceResponse;
+
+    /**
+     * @return ServiceResponse
+     */
+    public function getDataCategoriesNoPagination(): ServiceResponse;
 }
