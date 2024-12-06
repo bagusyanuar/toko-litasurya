@@ -24,26 +24,35 @@ class FormCreate extends Component
     public $description;
     /** @var UploadedFile | null $image */
     public $image;
-    public $retailPrice;
-    public $dozenPrice;
 
     public $prices = [
         [
             'key' => 'retail',
             'value' => 0,
+            'plu' => '',
             'description' => ''
         ],
         [
             'key' => 'dozen',
             'value' => 0,
+            'plu' => '',
             'description' => ''
         ],
         [
             'key' => 'carton',
             'value' => 0,
+            'plu' => '',
+            'description' => ''
+        ],
+        [
+            'key' => 'trader',
+            'value' => 0,
+            'plu' => '',
             'description' => ''
         ],
     ];
+
+    public $step = 1;
 
     public function boot(CategoryService $categoryService, ItemService $itemService)
     {
@@ -63,6 +72,16 @@ class FormCreate extends Component
                 array_push($this->categoryOptions, $option);
             }
         }
+    }
+
+    public function createNewItem()
+    {
+        sleep(2);
+    }
+
+    public function goToStep($step)
+    {
+        $this->step = $step;
     }
 
     public function cek()

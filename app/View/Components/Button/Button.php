@@ -46,14 +46,14 @@ class Button extends Component
 
         switch ($size) {
             case 'small':
-                $this->baseClass .= ' text-[0.725em] px-[1.05rem] py-[0.6rem] rounded-[4px]';
+                $this->baseClass .= ' text-[0.725rem] px-[1rem] py-[0.575rem] rounded-[4px]';
                 break;
             case 'extra-small':
-                $this->baseClass .= ' text-[0.625em] px-[1rem] py-[0.525rem] rounded-[4px]';
+                $this->baseClass .= ' text-[0.625rem] px-[1rem] py-[0.525rem] rounded-[4px]';
                 break;
             case 'normal':
             default:
-                $this->baseClass .= ' text-[0.875em] px-[1.25rem] py-[0.75rem] rounded-[4px]';
+                $this->baseClass .= ' text-[0.825rem] px-[1.25rem] py-[0.75rem] rounded-[4px]';
                 break;
         }
     }

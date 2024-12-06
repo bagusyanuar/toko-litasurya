@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('item_prices', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('item_id');
+            $table->string('price_list_unit')->unique()->nullable();
             $table->integer('price')->default(0);
             $table->string('unit');
             $table->text('description')->nullable();
