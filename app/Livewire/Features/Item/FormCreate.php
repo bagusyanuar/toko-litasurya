@@ -4,6 +4,7 @@ namespace App\Livewire\Features\Item;
 
 use App\Domain\Web\Item\ItemPriceRequest;
 use App\Domain\Web\Item\ItemRequest;
+use App\Helpers\Constant\Pricing;
 use App\Services\CategoryService;
 use App\Services\Web\ItemService;
 use Illuminate\Http\UploadedFile;
@@ -27,32 +28,7 @@ class FormCreate extends Component
     /** @var UploadedFile | null $image */
     public $image;
 
-    public $prices = [
-        [
-            'key' => 'retail',
-            'value' => 0,
-            'plu' => '',
-            'description' => ''
-        ],
-        [
-            'key' => 'dozen',
-            'value' => 0,
-            'plu' => '',
-            'description' => ''
-        ],
-        [
-            'key' => 'carton',
-            'value' => 0,
-            'plu' => '',
-            'description' => ''
-        ],
-        [
-            'key' => 'trader',
-            'value' => 0,
-            'plu' => '',
-            'description' => ''
-        ],
-    ];
+    public $prices = Pricing::INITIAL_PRICING;
 
     public $step = 1;
 
@@ -91,7 +67,7 @@ class FormCreate extends Component
         /** @var ItemPriceRequest[] $itemPriceRequests */
         $itemPriceRequests = [];
         foreach ($this->prices as $price) {
-            $itemPrice = str_replace('.', '', $price['value']);
+            $itemPrice = (int) str_replace('.', '', $price['value']);
             $itemPriceRequest = new ItemPriceRequest(
                 '',
                 $price['plu'],
@@ -114,17 +90,23 @@ class FormCreate extends Component
             return;
         }
         $this->dispatch('page-success', true, 'Berhasil menyimpan data barang');
+        $this->resetFormField();
+        $this->goToStep(1);
     }
 
+    private function resetFormField()
+    {
+        $this->name = '';
+        $this->category = null;
+        $this->description = '';
+        $this->image = null;
+        $this->prices = Pricing::INITIAL_PRICING;
+    }
     public function goToStep($step)
     {
         $this->step = $step;
     }
 
-    public function cek()
-    {
-        dd($this->prices);
-    }
     public function render()
     {
         return view('livewire.features.item.form-create');

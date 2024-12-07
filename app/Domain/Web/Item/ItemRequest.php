@@ -37,6 +37,7 @@ class ItemRequest
         $this->name = $name;
         $this->file = $file;
         $this->description = $description;
+        $this->prices = $prices;
     }
 
     /**
