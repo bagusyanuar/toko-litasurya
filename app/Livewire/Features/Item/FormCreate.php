@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Features\Item;
 
+use App\Domain\Web\Item\ItemPriceRequest;
+use App\Domain\Web\Item\ItemRequest;
 use App\Services\CategoryService;
 use App\Services\Web\ItemService;
 use Illuminate\Http\UploadedFile;
@@ -64,7 +66,12 @@ class FormCreate extends Component
     {
         $categoryResponse = $this->categoryService->getDataCategoriesNoPagination();
         if($categoryResponse->isSuccess()) {
-            $this->categoryOptions = [];
+            $this->categoryOptions = [
+                [
+                    'value' => '',
+                    'text' => '-- pilih kategori --'
+                ]
+            ];
             $data = $categoryResponse->getData();
             foreach ($data as $datum) {
                 $option['value'] = $datum->id;
@@ -76,7 +83,37 @@ class FormCreate extends Component
 
     public function createNewItem()
     {
-        sleep(2);
+        $categoryID = $this->category['id'];
+        $name = $this->name;
+        $image = $this->image;
+        $description = $this->description;
+
+        /** @var ItemPriceRequest[] $itemPriceRequests */
+        $itemPriceRequests = [];
+        foreach ($this->prices as $price) {
+            $itemPrice = str_replace('.', '', $price['value']);
+            $itemPriceRequest = new ItemPriceRequest(
+                '',
+                $price['plu'],
+                $itemPrice,
+                $price['key'],
+                $price['description']
+            );
+            array_push($itemPriceRequests, $itemPriceRequest);
+        }
+        $itemRequest = new ItemRequest(
+            $categoryID,
+            $name,
+            $image,
+            $description,
+            $itemPriceRequests
+        );
+        $itemServiceResponse = $this->itemService->createNewItem($itemRequest);
+        if (!$itemServiceResponse->isSuccess()) {
+            $this->dispatch('page-error', true, $itemServiceResponse->getMessage());
+            return;
+        }
+        $this->dispatch('page-success', true, 'Berhasil menyimpan data barang');
     }
 
     public function goToStep($step)

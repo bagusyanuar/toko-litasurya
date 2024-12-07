@@ -20,14 +20,18 @@ class ItemRequest
     /** @var string $description */
     private $description;
 
+    /** @var ItemPriceRequest[] $prices */
+    private $prices;
+
     /**
      * ItemRequest constructor.
      * @param string $categoryID
      * @param string $name
      * @param UploadedFile|null $file
      * @param string $description
+     * @param array $prices
      */
-    public function __construct($categoryID = '', $name = '', UploadedFile $file = null, $description = '')
+    public function __construct($categoryID = '', $name = '', UploadedFile $file = null, $description = '', $prices = [])
     {
         $this->categoryID = $categoryID;
         $this->name = $name;
@@ -104,6 +108,24 @@ class ItemRequest
     public function setDescription($description)
     {
         $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * @return ItemPriceRequest[]
+     */
+    public function getPrices()
+    {
+        return $this->prices;
+    }
+
+    /**
+     * @param ItemPriceRequest[] $prices
+     * @return ItemRequest
+     */
+    public function setPrices($prices)
+    {
+        $this->prices = $prices;
         return $this;
     }
 }

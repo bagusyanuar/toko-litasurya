@@ -8,10 +8,12 @@ use App\Domain\MetaPagination;
 use App\Domain\ServiceResponse;
 use App\Domain\ServiceResponseWithMetaPagination;
 use App\Domain\Web\Item\ItemFilter;
+use App\Domain\Web\Item\ItemPriceRequest;
 use App\Domain\Web\Item\ItemRequest;
 use App\Helpers\FileUpload\FileUpload;
 use App\Helpers\FileUpload\FileUploadRequest;
 use App\Models\Item;
+use App\Models\ItemPrice;
 use App\Usecase\Web\ItemInterface;
 use Illuminate\Support\Facades\DB;
 
@@ -62,7 +64,6 @@ class ItemService implements ItemInterface
                 $fileUploadService = new FileUpload();
                 $fileUploadRequest = new FileUploadRequest($this->targetPathImage, $file);
                 $fileUploadResponse = $fileUploadService->upload($fileUploadRequest);
-
                 if (!$fileUploadResponse->isSuccess()) {
                     DB::rollBack();
                     return $response->setSuccess(false)
@@ -77,7 +78,18 @@ class ItemService implements ItemInterface
                 'image' => $imageName,
                 'description' => $itemRequest->getDescription(),
             ];
-            Item::create($data);
+            $item = Item::create($data);
+            $prices = $itemRequest->getPrices();
+            foreach ($prices as $price) {
+                $dataPrice = [
+                    'item_id' => $item->id,
+                    'price_list_unit' => $price->getPriceListUnit(),
+                    'price' => $price->getPrice(),
+                    'unit' => $price->getUnit(),
+                    'description' => $price->getDescription()
+                ];
+                ItemPrice::create($dataPrice);
+            }
             $response->setMessage('successfully create new item')->setCode(201);
             DB::commit();
         }catch (\Exception $e) {
