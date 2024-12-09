@@ -18,6 +18,7 @@ return new class extends Migration
             $table->uuid('item_id')->nullable();
             $table->integer('qty')->default(0);
             $table->integer('price')->default(0);
+            $table->string('unit');
             $table->integer('total')->default(0);
             $table->timestamps();
             $table->foreign('transaction_id')
