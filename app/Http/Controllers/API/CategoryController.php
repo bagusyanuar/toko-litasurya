@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
 use App\Models\Category;
-use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -38,5 +38,24 @@ class CategoryController extends Controller
                 'error' => $e->getMessage() // Untuk debugging, jangan tampilkan di produksi
             ], 500); // 500: Internal Server Error
         }
+    }
+
+    public function getCart($transaction_id)
+    {
+        // Ambil data cart berdasarkan transaction_id
+        $carts = Cart::where('transaction_id', $transaction_id)->get();
+
+        // Cek apakah ada data cart
+        if ($carts->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No items found in the cart for this transaction.',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data'    => $carts,
+        ], 200);
     }
 }

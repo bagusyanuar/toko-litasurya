@@ -35,7 +35,7 @@ class ItemController extends Controller
             }
 
             // Query data item
-            $query = Item::with('category');
+            $query = Item::with(['category', 'prices']);
 
             // Filter kategori jika parameter category_id diberikan
             if ($categoryId) {
@@ -87,7 +87,7 @@ class ItemController extends Controller
     {
         try {
             // Cari item berdasarkan ID
-            $item = Item::with('category') // Termasuk relasi kategori (jika ada)
+            $item = Item::with(['category', 'prices']) // Termasuk relasi kategori (jika ada)
                 ->find($id);
 
             // Jika item tidak ditemukan, kembalikan response 404
