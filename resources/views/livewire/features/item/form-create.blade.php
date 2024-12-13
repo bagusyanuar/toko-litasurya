@@ -1,4 +1,5 @@
 <div x-data="{ currentStep: $wire.entangle('step') }">
+    <x-examples.button></x-examples.button>
     <div class="flex items-center w-full mb-5">
         <div class="flex items-center text-brand-500">
             <div class="w-8 aspect-[1/1] flex items-center justify-center border-2 border-blue-600 rounded-full">1</div>
@@ -39,11 +40,11 @@
                 parentClassName="mb-1"
             ></x-input.textarea.form-textarea>
             <x-input.file.dropzone
-                dropRef="category"
-                dispatcher="createNewCategory"
-                dispatchKey="CreateCategory"
+                dropRef="item"
+                dispatcher="createNewItem"
+                dispatchKey="CreateItem"
                 afterDispatch="null"
-                targetName="file"
+                targetName="image"
                 label="Gambar Barang"
                 wire:key="{{ uniqid('create-item-') }}"
             ></x-input.file.dropzone>
@@ -258,9 +259,7 @@
                             <button
                                 wire:loading.attr="disabled"
                                 wire:target="createNewItem"
-                                x-on:click="$wire.createNewItem().then(() => {
-                                    modalSave = false;
-                                })"
+                                x-on:click="window.dropzoneInstanceCreateItem.eventCreateItem()"
                                 class="flex gap-1 py-2 px-3.5 text-xs border border-brand-500 text-white bg-brand-500 rounded-[4px] hover:bg-brand-700 hover:border-brand-700 transition-all duration-200 ease-in"
                             >
                                 <div
