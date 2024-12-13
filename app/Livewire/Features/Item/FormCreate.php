@@ -32,6 +32,13 @@ class FormCreate extends Component
 
     public $step = 1;
 
+    public $exampleLoading = false;
+
+    public function loadingProcess()
+    {
+        sleep(2);
+    }
+
     public function boot(CategoryService $categoryService, ItemService $itemService)
     {
         $this->categoryService = $categoryService;
@@ -102,6 +109,7 @@ class FormCreate extends Component
         $this->image = null;
         $this->prices = Pricing::INITIAL_PRICING;
     }
+
     public function goToStep($step)
     {
         $this->step = $step;

@@ -1,4 +1,5 @@
 <div x-data="{ currentStep: $wire.entangle('step') }">
+    <x-examples.button></x-examples.button>
     <div class="flex items-center w-full mb-5">
         <div class="flex items-center text-brand-500">
             <div class="w-8 aspect-[1/1] flex items-center justify-center border-2 border-blue-600 rounded-full">1</div>
