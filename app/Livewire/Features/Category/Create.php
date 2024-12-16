@@ -7,6 +7,7 @@ use App\Services\CategoryService;
 use Illuminate\Http\UploadedFile;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\Attributes\On;
 
 class Create extends Component
 {
@@ -40,6 +41,12 @@ class Create extends Component
         }
         $this->dispatch('page-success', true, 'Berhasil menyimpan data kategori');
         $this->dispatch('fetch-categories');
+    }
+
+    #[On('check')]
+    public function check()
+    {
+        sleep(2);
     }
 
     public function render()

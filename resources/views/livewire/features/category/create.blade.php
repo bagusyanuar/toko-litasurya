@@ -36,16 +36,12 @@
         ></x-input.file.dropzone>
     </x-slot>
     <x-slot name="action">
-        <div x-data>
-            <button
-                @click="$store.categoryState.setLoading(true)"
-                :disabled="$store.categoryState.loading"
-                class="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
-            >
-                <span x-show="!$store.categoryState.loading">Submit</span>
-                <span x-show="$store.categoryState.loading">Loading...</span>
-            </button>
-        </div>
+        <livewire:component.button.button-process
+            text="Simpan"
+            store="category"
+            loadingState="loading"
+            storeEvent="onSubmit()"
+        />
 {{--        <x-button.button-loading--}}
 {{--            theme="outline"--}}
 {{--            loadingTarget="window.dropzoneInstanceCreateCategory.eventCreateCategory()"--}}
@@ -66,11 +62,16 @@
 </x-modal.modal-form>
 <script>
     document.addEventListener('alpine:init', () => {
-        Alpine.store('categoryState', {
+        Alpine.store('category', {
             loading: false,
             setLoading(value) {
                 this.loading = value;
+            },
+            async onSubmit() {
+                this.loading = true;
+                await @this.call('check');
+                this.loading = false;
             }
         })
-    })
+    });
 </script>
