@@ -15,6 +15,7 @@ class Dropzone extends Component
     public $dropRef;
     public $parentClassName;
     public $label;
+    public $loadingKey;
 
     /**
      * Create a new component instance.
@@ -25,8 +26,9 @@ class Dropzone extends Component
      * @param string $label
      * @param string $targetName
      * @param string $afterDispatch
+     * @param string $loadingKey
      */
-    public function __construct($dropRef, $dispatcher, $dispatchKey, $parentClassName = '', $label = '', $targetName = 'file', $afterDispatch = '')
+    public function __construct($dropRef, $dispatcher, $dispatchKey, $parentClassName = '', $label = '', $targetName = 'file', $afterDispatch = '', $loadingKey = 'loading')
     {
         $this->dropRef = $dropRef;
         $this->parentClassName = $parentClassName;
@@ -34,6 +36,7 @@ class Dropzone extends Component
         $this->targetName = $targetName;
         $this->dispatcher = $dispatcher;
         $this->dispatchKey = $dispatchKey;
+        $this->loadingKey = $loadingKey;
         if ($afterDispatch !== '') {
             $this->afterDispatch = 'function() { ' . $afterDispatch . ' }';
         }

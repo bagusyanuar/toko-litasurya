@@ -26,6 +26,7 @@
         ></x-input.text.form-text>
         <x-input.file.dropzone
             dropRef="category"
+            loadingKey="category-loading"
             dispatcher="createNewCategory"
             dispatchKey="CreateCategory"
             afterDispatch="this.modalNewCategory = false;"
@@ -35,23 +36,41 @@
         ></x-input.file.dropzone>
     </x-slot>
     <x-slot name="action">
-        <x-button.button-loading
-            theme="outline"
-            loadingTarget="createNewCategory"
-            loadingText="Loading"
-            x-on:click="modalNewCategory = false"
-            class="flex justify-center items-center"
-            :mutate="false"
-        >
-            <span>Batal</span>
-        </x-button.button-loading>
-        <x-button.button-loading
-            loadingTarget="createNewCategory"
-            loadingText="Loading"
-            x-on:click="window.dropzoneInstanceCreateCategory.eventCreateCategory()"
-            class="flex justify-center items-center"
-        >
-            <span>Tambah</span>
-        </x-button.button-loading>
+        <div x-data>
+            <button
+                @click="$store.categoryState.setLoading(true)"
+                :disabled="$store.categoryState.loading"
+                class="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
+            >
+                <span x-show="!$store.categoryState.loading">Submit</span>
+                <span x-show="$store.categoryState.loading">Loading...</span>
+            </button>
+        </div>
+{{--        <x-button.button-loading--}}
+{{--            theme="outline"--}}
+{{--            loadingTarget="window.dropzoneInstanceCreateCategory.eventCreateCategory()"--}}
+{{--            loadingText="Loading"--}}
+{{--            x-on:click="modalNewCategory = false"--}}
+{{--            class="flex justify-center items-center"--}}
+{{--            :mutate="false"--}}
+{{--        >--}}
+{{--            <span>Batal</span>--}}
+{{--        </x-button.button-loading>--}}
+{{--        <x-button.button-dropzone--}}
+{{--            dropEvent="window.dropzoneInstanceCreateCategory.eventCreateCategory()"--}}
+{{--            loadingKey="category-loading"--}}
+{{--        >--}}
+{{--            <span>Tambah</span>--}}
+{{--        </x-button.button-dropzone>--}}
     </x-slot>
 </x-modal.modal-form>
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.store('categoryState', {
+            loading: false,
+            setLoading(value) {
+                this.loading = value;
+            }
+        })
+    })
+</script>
