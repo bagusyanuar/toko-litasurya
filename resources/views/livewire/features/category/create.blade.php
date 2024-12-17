@@ -73,53 +73,55 @@
 {{--        --}}{{--        </x-button.button-dropzone>--}}
 {{--    </x-slot>--}}
 {{--</x-modal.modal-form>--}}
-<x-modal.ui-modal-form
-    open="$store.category.modalCreate"
-    handleClose="$store.category.setCloseModal()"
->
-    <x-slot name="trigger">
-        <x-button.ui-button
-            x-on:click="$store.category.setOpenModal()"
-            wire:ignore
-        >
-            <div class="w-full flex justify-center items-center">
-                <i data-lucide="plus" class="h-4 aspect-[1/1]"></i>
-                <span>Tambah Kategori</span>
-            </div>
-        </x-button.ui-button>
-    </x-slot>
-    <x-slot name="body">
-        <x-input.text.ui-form-text
-            id="name"
-            label="Nama Kategori"
-            placeholder="Nama Kategori"
-            wire:model="name"
-            parentClassName="mb-3"
-            x-bind:disabled="$store.category.loading"
-        ></x-input.text.ui-form-text>
-    </x-slot>
-    <x-slot name="action">
-        <x-button.ui-button-loading
-            fill="outlined"
-            x-bind:disabled="$store.category.loading"
-            x-on:click="modalNewCategory = false;"
-        >
-            <span>Batal</span>
-        </x-button.ui-button-loading>
-        <x-button.ui-button-loading
-            fill="contained"
-            x-on:click="$store.category.onSubmit()"
-            x-bind:disabled="$store.category.loading"
-        >
-            <template x-if="!$store.category.loading">
-                <span>Simpan</span>
-            </template>
-            <template x-if="$store.category.loading">
-                <x-loader.button-loader></x-loader.button-loader>
-            </template>
-        </x-button.ui-button-loading>
-    </x-slot>
-</x-modal.ui-modal-form>
+<div data-id="createComponent">
+    <x-modal.ui-modal-form
+        open="$store.category.modalCreate"
+        handleClose="$store.category.setCloseModal()"
+    >
+        <x-slot name="trigger">
+            <x-button.ui-button
+                x-on:click="$store.category.setOpenModal()"
+                wire:ignore
+            >
+                <div class="w-full flex justify-center items-center">
+                    <i data-lucide="plus" class="h-4 aspect-[1/1]"></i>
+                    <span>Tambah Kategori</span>
+                </div>
+            </x-button.ui-button>
+        </x-slot>
+        <x-slot name="body">
+            <x-input.text.ui-form-text
+                id="name"
+                label="Nama Kategori"
+                placeholder="Nama Kategori"
+                wire:model="name"
+                parentClassName="mb-3"
+                x-bind:disabled="$store.category.loading"
+            ></x-input.text.ui-form-text>
+        </x-slot>
+        <x-slot name="action">
+            <x-button.ui-button-loading
+                fill="outlined"
+                x-bind:disabled="$store.category.loading"
+                x-on:click="modalNewCategory = false;"
+            >
+                <span>Batal</span>
+            </x-button.ui-button-loading>
+            <x-button.ui-button-loading
+                fill="contained"
+                x-on:click="$store.category.onSubmit()"
+                x-bind:disabled="$store.category.loading"
+            >
+                <template x-if="!$store.category.loading">
+                    <span>Simpan</span>
+                </template>
+                <template x-if="$store.category.loading">
+                    <x-loader.button-loader></x-loader.button-loader>
+                </template>
+            </x-button.ui-button-loading>
+        </x-slot>
+    </x-modal.ui-modal-form>
+</div>
 <script>
     document.addEventListener('alpine:init', () => {
         Alpine.store('category', {
@@ -135,8 +137,10 @@
                 this.modalCreate = false;
             },
             async onSubmit() {
+                const componentID = document.querySelector('[wire\\:id]')?.getAttribute('wire:id');
                 this.loading = true;
-                await @this.call('check');
+                await window.Livewire.find(componentID).call('check');
+                // await @this.call('check');
                 this.loading = false;
 
             },
