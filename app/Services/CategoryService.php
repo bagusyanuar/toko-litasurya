@@ -11,6 +11,7 @@ use App\Domain\Web\Category\CategoryFilter;
 use App\Domain\Web\Category\CategoryRequest;
 use App\Helpers\FileUpload\FileUpload;
 use App\Helpers\FileUpload\FileUploadRequest;
+use App\Helpers\Validator\ValidatorResponse;
 use App\Models\Category;
 use App\UseCase\Web\CategoryInterface;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,11 +19,14 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
 use Ramsey\Uuid\Uuid;
 
 class CategoryService implements CategoryInterface
 {
     private $targetPathImage = 'static/image/category';
+
 
     /**
      * @inheritDoc
@@ -54,6 +58,20 @@ class CategoryService implements CategoryInterface
         return $response;
     }
 
+    private function validate(CategoryRequest $categoryRequest): ValidatorResponse
+    {
+        $response = new ValidatorResponse(true, new MessageBag([]));
+        $validator = Validator::make(
+            ['name' => $categoryRequest->getName()],
+            ['name' => 'required']
+        );
+        if ($validator->fails()) {
+            return $response->setSuccess(false)
+                ->setMessage($validator->errors());
+        }
+        return $response;
+    }
+
     /**
      * @inheritDoc
      */
@@ -63,6 +81,14 @@ class CategoryService implements CategoryInterface
         $response = new ServiceResponse();
         DB::beginTransaction();
         try {
+            //validator
+            $validator = $this->validate($categoryRequest);
+            if (!$validator->isSuccess()) {
+                return $response->setSuccess(false)
+                    ->setCode(400)
+                    ->setData($validator->getMessage())
+                    ->setMessage('bad request');
+            }
             $file = $categoryRequest->getFile();
             $imageName = null;
             if ($file) {

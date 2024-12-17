@@ -10,16 +10,19 @@ class UiModalForm extends Component
 {
     public $open;
     public $handleClose;
+    public $title;
 
     /**
      * UiModalForm constructor.
      * @param bool $open
      * @param string $handleClose
+     * @param string $title
      */
-    public function __construct($open = false, $handleClose = '')
+    public function __construct($open = false, $handleClose = '', $title = 'Form Title')
     {
         $this->open = $open;
         $this->handleClose = $handleClose;
+        $this->title = $title;
     }
 
     /**

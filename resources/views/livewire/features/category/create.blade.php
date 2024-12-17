@@ -1,3 +1,58 @@
+<div data-component-id="category-create">
+    <x-modal.ui-modal-form
+        title="Form Tambah Kategori"
+        open="$store.categoryCreate.modalCreate"
+        handleClose="$store.categoryCreate.setCloseModal()"
+    >
+        <x-slot name="trigger">
+            <x-button.ui-button
+                x-on:click="$store.categoryCreate.setOpenModal()"
+                wire:ignore
+            >
+                <div class="w-full flex justify-center items-center">
+                    <i data-lucide="plus" class="h-4 aspect-[1/1]"></i>
+                    <span>Tambah Kategori</span>
+                </div>
+            </x-button.ui-button>
+        </x-slot>
+        <x-slot name="body">
+            <x-input.text.ui-form-text
+                id="name"
+                label="Nama Kategori"
+                placeholder="Nama Kategori"
+                wire:model="name"
+                parentClassName="mb-3"
+                x-bind:disabled="$store.categoryCreate.loading"
+            ></x-input.text.ui-form-text>
+        </x-slot>
+        <x-slot name="action">
+            <x-button.ui-button-loading
+                fill="outlined"
+                x-bind:disabled="$store.categoryCreate.loading"
+                x-on:click="$store.categoryCreate.setCloseModal()"
+            >
+                <span>Batal</span>
+            </x-button.ui-button-loading>
+            <x-button.ui-button-loading
+                fill="contained"
+                x-on:click="$store.categoryCreate.onSubmit()"
+                x-bind:disabled="$store.categoryCreate.loading"
+            >
+                <template x-if="!$store.categoryCreate.loading">
+                    <span>Simpan</span>
+                </template>
+                <template x-if="$store.categoryCreate.loading">
+                    <x-loader.button-loader></x-loader.button-loader>
+                </template>
+            </x-button.ui-button-loading>
+        </x-slot>
+    </x-modal.ui-modal-form>
+</div>
+@push('scripts')
+    @vite('resources/js/features/category/create.js')
+@endpush
+
+
 {{--<x-modal.modal-form--}}
 {{--    modalID="modalNewCategory"--}}
 {{--    formTitle="Tambah Kategori"--}}
@@ -73,77 +128,3 @@
 {{--        --}}{{--        </x-button.button-dropzone>--}}
 {{--    </x-slot>--}}
 {{--</x-modal.modal-form>--}}
-<div data-id="createComponent">
-    <x-modal.ui-modal-form
-        open="$store.category.modalCreate"
-        handleClose="$store.category.setCloseModal()"
-    >
-        <x-slot name="trigger">
-            <x-button.ui-button
-                x-on:click="$store.category.setOpenModal()"
-                wire:ignore
-            >
-                <div class="w-full flex justify-center items-center">
-                    <i data-lucide="plus" class="h-4 aspect-[1/1]"></i>
-                    <span>Tambah Kategori</span>
-                </div>
-            </x-button.ui-button>
-        </x-slot>
-        <x-slot name="body">
-            <x-input.text.ui-form-text
-                id="name"
-                label="Nama Kategori"
-                placeholder="Nama Kategori"
-                wire:model="name"
-                parentClassName="mb-3"
-                x-bind:disabled="$store.category.loading"
-            ></x-input.text.ui-form-text>
-        </x-slot>
-        <x-slot name="action">
-            <x-button.ui-button-loading
-                fill="outlined"
-                x-bind:disabled="$store.category.loading"
-                x-on:click="modalNewCategory = false;"
-            >
-                <span>Batal</span>
-            </x-button.ui-button-loading>
-            <x-button.ui-button-loading
-                fill="contained"
-                x-on:click="$store.category.onSubmit()"
-                x-bind:disabled="$store.category.loading"
-            >
-                <template x-if="!$store.category.loading">
-                    <span>Simpan</span>
-                </template>
-                <template x-if="$store.category.loading">
-                    <x-loader.button-loader></x-loader.button-loader>
-                </template>
-            </x-button.ui-button-loading>
-        </x-slot>
-    </x-modal.ui-modal-form>
-</div>
-<script>
-    document.addEventListener('alpine:init', () => {
-        Alpine.store('category', {
-            loading: false,
-            modalCreate: false,
-            setLoading(value) {
-                this.loading = value;
-            },
-            setOpenModal() {
-                this.modalCreate = true;
-            },
-            setCloseModal() {
-                this.modalCreate = false;
-            },
-            async onSubmit() {
-                const componentID = document.querySelector('[wire\\:id]')?.getAttribute('wire:id');
-                this.loading = true;
-                await window.Livewire.find(componentID).call('check');
-                // await @this.call('check');
-                this.loading = false;
-
-            },
-        })
-    });
-</script>
