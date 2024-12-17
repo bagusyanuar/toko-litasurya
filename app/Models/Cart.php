@@ -20,5 +20,16 @@ class Cart extends Model
         'qty',
         'price',
         'total',
+        'unit',
     ];
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
+    }
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class, 'item_id');
+    }
 }
