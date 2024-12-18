@@ -13,14 +13,20 @@ return new class extends Migration
     {
         Schema::create('carts', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('user_id')->nullable();
             $table->uuid('transaction_id')->nullable();
             $table->uuid('customer_id')->nullable();
             $table->uuid('item_id')->nullable();
+            $table->integer('request_qty')->default(0);
             $table->integer('qty')->default(0);
             $table->integer('price')->default(0);
             $table->string('unit');
             $table->integer('total')->default(0);
+            $table->string('status');
             $table->timestamps();
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
             $table->foreign('transaction_id')
                 ->references('id')
                 ->on('transactions');

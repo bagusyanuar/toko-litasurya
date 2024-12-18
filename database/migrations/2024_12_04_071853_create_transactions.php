@@ -13,11 +13,16 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('user_id')->nullable();
             $table->uuid('customer_id')->nullable();
             $table->string('reference_number');
             $table->date('date');
             $table->integer('total')->default(0);
+            $table->string('status');
             $table->timestamps();
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
             $table->foreign('customer_id')
                 ->references('id')
                 ->on('customers')
