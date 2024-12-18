@@ -12,14 +12,18 @@ class UiFormText extends Component
     public $parentClassName;
     public $id;
     public $label;
+    public $validatorKey;
+    public $validatorField;
 
     /**
      * UiFormText constructor.
      * @param string $id
      * @param string $label
      * @param string $parentClassName
+     * @param string $validatorKey
+     * @param string $validatorField
      */
-    public function __construct($id = '', $label = 'Form Label', $parentClassName = '')
+    public function __construct($id = '', $label = 'Form Label', $parentClassName = '', $validatorKey = '', $validatorField = '')
     {
         $this->id = $id;
         $this->label = $label;
@@ -27,7 +31,11 @@ class UiFormText extends Component
         if ($id === '') {
             $this->id = uniqid('form-text-');
         }
-        $this->baseClass = 'w-full bg-white text-[0.725rem] px-[0.825rem] py-[0.45rem] rounded-[4px] text-neutral-700 border border-neutral-300 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500 transition duration-300 ease-in-out disabled:border-neutral-300 disabled:text-neutral-300 disabled:bg-neutral-50';
+        $themeClass = 'border-neutral-300 focus:border-neutral-500';
+        $this->baseClass = 'w-full bg-white text-[0.725rem] px-[0.825rem] py-[0.45rem] rounded-[4px] text-neutral-700 border outline-none focus:outline-none focus:ring-0 transition duration-300 ease-in-out disabled:border-neutral-300 disabled:text-neutral-300 disabled:bg-neutral-50';
+        $this->baseClass = implode(' ', [$this->baseClass, $themeClass]);
+        $this->validatorField = $validatorField;
+        $this->validatorKey = $validatorKey;
     }
 
     /**

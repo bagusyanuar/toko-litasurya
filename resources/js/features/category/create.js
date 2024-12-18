@@ -2,6 +2,7 @@ document.addEventListener('alpine:init', () => {
     Alpine.store('categoryCreate', {
         loading: false,
         modalCreate: false,
+        validator: {},
         setLoading(value) {
             this.loading = value;
         },
@@ -14,7 +15,11 @@ document.addEventListener('alpine:init', () => {
         async onSubmit() {
             const componentID = document.querySelector('[data-component-id="category-create"]')?.getAttribute('wire:id');
             this.loading = true;
-            await window.Livewire.find(componentID).call('createNewCategory');
+            let response = await window.Livewire.find(componentID).call('createNewCategory');
+            console.log(response.status);
+            if (response['status'] === 400) {
+                this.validator = response.data;
+            }
             this.loading = false;
         },
     })

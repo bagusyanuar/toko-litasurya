@@ -23,6 +23,8 @@
                 wire:model="name"
                 parentClassName="mb-3"
                 x-bind:disabled="$store.categoryCreate.loading"
+                validatorKey="$store.categoryCreate.validator"
+                validatorField="name"
             ></x-input.text.ui-form-text>
         </x-slot>
         <x-slot name="action">
