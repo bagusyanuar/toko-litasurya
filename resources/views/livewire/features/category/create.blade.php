@@ -30,9 +30,7 @@
             ></x-input.text.ui-form-text>
             <x-input.file.ui-dropzone
                 label="Gambar"
-                dropData="imageCategory"
-                dropInit="initDropzone"
-                dropRef="dropCategory"
+                dropID="dropCategory"
                 dropLoading="$store.categoryCreate.loading"
             >
             </x-input.file.ui-dropzone>

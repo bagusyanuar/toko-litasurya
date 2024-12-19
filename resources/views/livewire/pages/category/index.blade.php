@@ -1,10 +1,8 @@
 <div>
-    <x-alert.success
-        message="{{ $sessionMessage }}"
-    ></x-alert.success>
-    <x-alert.error
-        message="{{ $sessionMessage }}"
-    ></x-alert.error>
+    <x-alert.ui-alert
+        show="$store.categoryIndex.notification"
+        handleClose="$store.categoryIndex.setNotification(false)"
+    ></x-alert.ui-alert>
     <x-typography.page-title
         title="Halaman Kategori"
         class="mb-3"
@@ -20,5 +18,9 @@
         <livewire:features.category.lists/>
     </x-container.card>
 </div>
+@push('scripts')
+    @vite('resources/js/features/category/index.js')
+@endpush
+
 
 
