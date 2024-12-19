@@ -35,5 +35,6 @@
     lucide.createIcons();
 </script>
 @livewireScripts
+@stack('scripts')
 </body>
 </html>

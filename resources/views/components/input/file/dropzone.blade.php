@@ -2,6 +2,7 @@
     x-data="{
         dispatcher: '{{ $dispatcher }}',
         afterDispatch: {{ $afterDispatch }},
+        loadingKey: '{{ $loadingKey }}',
         dz: null,
         dzOnLoading: false,
         fileUploadInit() {
@@ -39,18 +40,25 @@
                     });
                 });
 
-
                 try {
-
+                    if (this.loadingKey !== '') {
+                        $dispatch(`${this.loadingKey}-start`)
+                    }
                     await Promise.all(uploadPromises);
                     if(this.dispatcher) {
                         await @this.call(this.dispatcher);
                     }
                     this.dz.removeAllFiles();
+                    if (this.loadingKey !== '') {
+                        $dispatch(`${this.loadingKey}-end`)
+                    }
                     if(typeof this.afterDispatch === 'function') {
                         this.afterDispatch();
                     }
                 } catch (error) {
+                    if (this.loadingKey !== '') {
+                        $dispatch(`${this.loadingKey}-end`)
+                    }
                     console.error('Upload error:', error);
                 } finally {
                     this.dzOnLoading = false;

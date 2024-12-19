@@ -14,9 +14,11 @@
             <x-typography.section-title
                 title="Data Kategori"
             ></x-typography.section-title>
-            <livewire:features.category.create/>
+            <livewire:features.category.create wire:id="createComponent"/>
         </div>
         <x-spacer.divider class="mb-3"></x-spacer.divider>
         <livewire:features.category.lists/>
     </x-container.card>
 </div>
+
+
