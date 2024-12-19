@@ -58,8 +58,8 @@ class Create extends Component
                 $serviceResponse->getData()
             );
         }
-        $this->dispatch('page-success', true, 'Berhasil menyimpan data kategori');
-        $this->dispatch('fetch-categories');
+//        $this->dispatch('page-success', true, 'Berhasil menyimpan data kategori');
+//        $this->dispatch('fetch-categories');
         return AlpineResponse::toResponse(
             true,
             200,

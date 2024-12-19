@@ -1,4 +1,6 @@
-<div data-component-id="category-create">
+<div
+    data-component-id="category-create"
+>
     <x-modal.ui-modal-form
         title="Form Tambah Kategori"
         open="$store.categoryCreate.modalCreate"
@@ -27,8 +29,11 @@
                 validatorField="name"
             ></x-input.text.ui-form-text>
             <x-input.file.ui-dropzone
+                label="Gambar"
                 dropData="imageCategory"
-                dropInit="initDropzone()"
+                dropInit="initDropzone"
+                dropRef="dropCategory"
+                dropLoading="$store.categoryCreate.loading"
             >
             </x-input.file.ui-dropzone>
         </x-slot>
