@@ -26,6 +26,11 @@
                 validatorKey="$store.categoryCreate.validator"
                 validatorField="name"
             ></x-input.text.ui-form-text>
+            <x-input.file.ui-dropzone
+                dropData="imageCategory"
+                dropInit="initDropzone()"
+            >
+            </x-input.file.ui-dropzone>
         </x-slot>
         <x-slot name="action">
             <x-button.ui-button-loading
