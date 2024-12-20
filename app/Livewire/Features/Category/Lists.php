@@ -38,14 +38,12 @@ class Lists extends Component
     #[On('fetch-categories')]
     public function getDataCategories()
     {
-        $this->onLoading = true;
         $serviceResponse = $this->service->getDataCategories($this->filter);
         if ($serviceResponse->isSuccess()) {
             $this->data = $serviceResponse->getData();
             $this->totalRows = $serviceResponse->getMeta()->getTotalRows();
             $this->currentPage = $serviceResponse->getMeta()->getPage();
         }
-        $this->onLoading = false;
     }
 
     #[On('fetch-categories-no-reload')]

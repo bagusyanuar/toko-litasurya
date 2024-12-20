@@ -8,6 +8,13 @@
     x-transition:leave-end="translate-x-full opacity-0"
     class="fixed top-5 right-5 bg-white h-16 w-72 flex rounded shadow-lg z-[200]"
     style="display: none;"
+    x-init="
+        $watch('{{ $show }}', value => {
+            if(value) {
+                setTimeout(() =>  { {{ $handleClose }} }, {{ $timeToClose }})
+            }
+        })
+    "
 >
     <div
         class="w-1.5 h-full bg-green-500 rounded-tl rounded-bl"

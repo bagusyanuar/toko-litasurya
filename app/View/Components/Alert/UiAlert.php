@@ -10,16 +10,19 @@ class UiAlert extends Component
 {
     public $show;
     public $handleClose;
+    public $timeToClose;
 
     /**
      * Create a new component instance.
      * @param bool $show
      * @param string $handleClose
+     * @param int $timeToClose
      */
-    public function __construct($show = false, $handleClose = '')
+    public function __construct($show = false, $handleClose = '', $timeToClose = 1000)
     {
         $this->show = $show;
         $this->handleClose = $handleClose;
+        $this->timeToClose = $timeToClose;
     }
 
     /**

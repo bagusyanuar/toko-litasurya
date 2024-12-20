@@ -2,6 +2,7 @@
     <x-alert.ui-alert
         show="$store.categoryIndex.notification"
         handleClose="$store.categoryIndex.setNotification(false)"
+        timeToClose="2000"
     ></x-alert.ui-alert>
     <x-typography.page-title
         title="Halaman Kategori"
