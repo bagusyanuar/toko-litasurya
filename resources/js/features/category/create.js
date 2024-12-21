@@ -53,6 +53,7 @@ document.addEventListener('alpine:init', () => {
             this.loading = false;
             this.dz.enable();
             this.modalCreate = false;
+            await Alpine.store('categoryList').getData();
             Alpine.store('categoryIndex').setNotification(true);
         },
     });

@@ -15,12 +15,8 @@ document.addEventListener('alpine:init', () => {
             this.loading = value;
         },
         async getData() {
-            // const componentID = document.querySelector('[data-component-id="category-list"]')?.getAttribute('wire:id');
-            // console.log(componentID);
-            // this.loading = true;
-            // let response = await window.Livewire.find(componentID).call('getDataCategories');
-            // // await window.Livewire.find(componentID).call('getDataCategories');
-            // this.loading = false;
+            const componentID = document.querySelector('[data-component-id="category-list"]')?.getAttribute('wire:id');
+            await window.Livewire.find(componentID).call('getDataCategories');
         }
     })
 });
