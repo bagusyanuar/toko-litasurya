@@ -15,19 +15,19 @@
                 chevron_left
             </span>
         </a>
-        <template x-for="page in {{ $shownPages }}">
-            <div>
+        <template
+            x-data="{ currentPage: {{ $currentPage }} }"
+            x-for="page in {{ $shownPages }}"
+        >
+            <div x-effect="console.log(currentPage, page)">
                 <a
-                    x-show="{{ $currentPage }} !== page"
                     href="#"
                     x-on:click.prevent="{{ $onPageChange }}"
-                    class="bg-white cursor-pointer text-brand-500 h-6 w-6 rounded-[4px] flex items-center justify-center hover:text-white hover:bg-brand-500 transition-all duration-300 ease-in-out">
-                    <span class="text-[0.8rem]" x-text="page"></span>
-                </a>
-                <a
-                    x-show="{{ $currentPage }} === page"
-                    href="#" x-on:click.prevent=""
-                    class="bg-brand-500 cursor-pointer text-white h-6 w-6 rounded-[4px] flex items-center justify-center">
+                    x-bind:class="{
+                       'bg-brand-500 cursor-pointer text-white h-6 w-6 rounded-[4px] flex items-center justify-center': currentPage === page,
+                       'bg-white cursor-pointer text-brand-500 h-6 w-6 rounded-[4px] flex items-center justify-center hover:text-white hover:bg-brand-500 transition-all duration-300 ease-in-out': currentPage !== page
+                   }"
+                >
                     <span class="text-[0.8rem]" x-text="page"></span>
                 </a>
             </div>

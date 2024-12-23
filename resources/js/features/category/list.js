@@ -21,7 +21,6 @@ document.addEventListener('alpine:init', () => {
                         this.page = currentPage;
                         this.totalRecords = totalRecords;
                         const {totalPages, shownPages} = paginate(this.totalRecords, this.perPage, this.page);
-                        console.log(shownPages);
                         this.totalPage = totalPages;
                         this.shownPages = shownPages;
                     }).finally(() => {
@@ -47,9 +46,9 @@ document.addEventListener('alpine:init', () => {
         },
         onPageChangeHandler(page) {
             this.page = page;
-            const {totalPages, shownPages} = paginate(this.totalRecords, this.perPage, this.page);
+            const {totalPages, shownPages} = paginate(this.totalRecords, this.perPage, page);
             this.shownPages = shownPages;
-            console.log(page);
+            console.log(page, shownPages);
         },
         async getData() {
             const componentID = document.querySelector('[data-component-id="category-list"]')?.getAttribute('wire:id');
