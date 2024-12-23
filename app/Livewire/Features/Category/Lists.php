@@ -3,6 +3,7 @@
 namespace App\Livewire\Features\Category;
 
 use App\Domain\Web\Category\CategoryFilter;
+use App\Helpers\Alpine\AlpineResponse;
 use App\Helpers\Pagination\Paginate;
 use App\Services\CategoryService;
 use Livewire\Component;
@@ -44,7 +45,12 @@ class Lists extends Component
             $this->data = $serviceResponse->getData();
             $this->totalRows = $serviceResponse->getMeta()->getTotalRows();
             $this->currentPage = $serviceResponse->getMeta()->getPage();
+            return AlpineResponse::toResponse(true, 200, 'success', [
+                'total_rows' => $this->totalRows,
+                'current_page' => $this->currentPage,
+            ]);
         }
+        return AlpineResponse::toResponse(false, 500, "internal server error", null);
     }
 
     #[On('fetch-categories-no-reload')]

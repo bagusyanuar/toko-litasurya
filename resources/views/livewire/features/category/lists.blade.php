@@ -56,6 +56,12 @@
             <x-table.components.ui-pagination
                 currentPage="$store.categoryList.page"
                 totalPage="$store.categoryList.totalPage"
+                onFirstPageChange="$store.categoryList.onFirstPageHandler()"
+                onPreviousPageChange="$store.categoryList.onPreviousPageHandler()"
+                onNextPageChange="$store.categoryList.onNextPageHandler()"
+                onLastPageChange="$store.categoryList.onLastPageHandler()"
+                onPageChange="$store.categoryList.onPageChangeHandler(page)"
+                shownPages="$store.categoryList.shownPages"
             ></x-table.components.ui-pagination>
         </x-slot>
     </x-table.ui-table>
