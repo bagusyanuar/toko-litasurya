@@ -1,21 +1,40 @@
 <div>
     <div
-        class="border border-neutral-300 rounded-md striped w-full overflow-x-auto"
+        class="w-full"
         x-show="!{{ $onLoading }}"
         x-cloak=""
     >
-        <table class="w-full">
-            <thead>
-            @if(isset($header))
-                {{ $header }}
-            @endif
-            </thead>
-            <tbody>
-            @if(isset($rows))
-                {{ $rows }}
-            @endif
-            </tbody>
-        </table>
+        <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center">
+                <span class="text-xs text-neutral-500 me-2">Menampilkan</span>
+                <select
+                    class="border border-neutral-500 rounded-[4px] text-xs px-1 py-1 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500"
+                    x-on:change="{{ $onPerPageChange }}"
+                >
+                    <template x-for="vPL in $store.categoryList.pageLength">
+                        <option :value="vPL" x-text="vPL"></option>
+                    </template>
+                </select>
+                <span class="text-xs text-neutral-500 ms-2">Data</span>
+            </div>
+        </div>
+        <div class="border border-neutral-300 rounded-md striped w-full overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                @if(isset($header))
+                    {{ $header }}
+                @endif
+                </thead>
+                <tbody>
+                @if(isset($rows))
+                    {{ $rows }}
+                @endif
+                </tbody>
+            </table>
+        </div>
+        @if(isset($pagination))
+            {{ $pagination }}
+        @endif
     </div>
     <div
         class="w-full h-[300px] flex flex-col items-center justify-center"

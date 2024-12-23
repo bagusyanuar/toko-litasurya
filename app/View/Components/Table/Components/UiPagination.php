@@ -1,0 +1,55 @@
+<?php
+
+namespace App\View\Components\Table\Components;
+
+use Closure;
+use Illuminate\Contracts\View\View;
+use Illuminate\View\Component;
+
+class UiPagination extends Component
+{
+    public $currentPage;
+    public $totalPage;
+    public $onFirstPageChange;
+    public $onPreviousPageChange;
+    public $onNextPageChange;
+    public $onLastPageChange;
+    public $onPageChange;
+
+    /**
+     * Create a new component instance.
+     * @param int $currentPage
+     * @param int $totalPage
+     * @param string $onFirstPageChange
+     * @param string $onPreviousPageChange
+     * @param string $onNextPageChange
+     * @param string $onLastPageChange
+     * @param string $onPageChange
+     */
+    public function __construct(
+        $currentPage = 0,
+        $totalPage = 0,
+        $onFirstPageChange = '',
+        $onPreviousPageChange = '',
+        $onNextPageChange = '',
+        $onLastPageChange = '',
+        $onPageChange = ''
+    )
+    {
+        $this->currentPage = $currentPage;
+        $this->totalPage = $totalPage;
+        $this->onFirstPageChange = $onFirstPageChange;
+        $this->onPreviousPageChange = $onPreviousPageChange;
+        $this->onNextPageChange = $onNextPageChange;
+        $this->onLastPageChange = $onLastPageChange;
+        $this->onPageChange = $onPageChange;
+    }
+
+    /**
+     * Get the view / contents that represent the component.
+     */
+    public function render(): View|Closure|string
+    {
+        return view('components.table.components.ui-pagination');
+    }
+}

@@ -4,6 +4,9 @@
 >
     <x-table.ui-table
         onLoading="$store.categoryList.loading"
+        onPerPageChange="$store.categoryList.setPerPage($event.target.value)"
+        currentPage="$store.categoryList.page"
+        totalPage="$store.categoryList.totalPage"
     >
         <x-slot name="header">
             <tr class="bg-brand-50">
@@ -48,6 +51,12 @@
                     </td>
                 </tr>
             @endforeach
+        </x-slot>
+        <x-slot name="pagination">
+            <x-table.components.ui-pagination
+                currentPage="$store.categoryList.page"
+                totalPage="$store.categoryList.totalPage"
+            ></x-table.components.ui-pagination>
         </x-slot>
     </x-table.ui-table>
     {{--    <x-table.table--}}

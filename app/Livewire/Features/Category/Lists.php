@@ -36,8 +36,9 @@ class Lists extends Component
     }
 
     #[On('fetch-categories')]
-    public function getDataCategories()
+    public function getDataCategories($page, $perPage)
     {
+//        dd($page, $perPage);
         $serviceResponse = $this->service->getDataCategories($this->filter);
         if ($serviceResponse->isSuccess()) {
             $this->data = $serviceResponse->getData();
