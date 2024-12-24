@@ -47,7 +47,6 @@ class UiPagination extends Component
         $this->onNextPageChange = $onNextPageChange;
         $this->onLastPageChange = $onLastPageChange;
         $this->onPageChange = $onPageChange;
-//        dd(is_array($this->shownPages), $this->shownPages);
     }
 
     /**

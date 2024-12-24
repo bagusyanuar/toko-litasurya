@@ -48,12 +48,11 @@ document.addEventListener('alpine:init', () => {
             this.page = page;
             const {totalPages, shownPages} = paginate(this.totalRecords, this.perPage, page);
             this.shownPages = shownPages;
-            console.log(page, shownPages);
         },
         async getData() {
             const componentID = document.querySelector('[data-component-id="category-list"]')?.getAttribute('wire:id');
             await window.Livewire.find(componentID).call('getDataCategories');
         }
-    })
+    });
 });
 

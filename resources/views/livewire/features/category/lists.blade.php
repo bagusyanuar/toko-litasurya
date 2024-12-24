@@ -2,7 +2,6 @@
     id="section-table-categories"
     data-component-id="category-list"
 >
-    <span x-text="$store.categoryList.shownPages"></span>
     <x-table.ui-table
         onLoading="$store.categoryList.loading"
         onPerPageChange="$store.categoryList.setPerPage($event.target.value)"
