@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->app['router']->aliasMiddleware('jwt.auth', \Tymon\JWTAuth\Http\Middleware\Authenticate::class);
+        $this->app['router']->aliasMiddleware('jwt.refresh', \Tymon\JWTAuth\Http\Middleware\RefreshToken::class);
     }
 }

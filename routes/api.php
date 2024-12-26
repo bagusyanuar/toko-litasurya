@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\ItemController;
 use App\Http\Controllers\API\CartController;
@@ -9,30 +10,45 @@ use App\Http\Controllers\API\TransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
 
-Route::get('/categories', [CategoryController::class, 'index']);
+Route::group(['middleware' => 'jwt.auth'], function () {
+    Route::get('/categories', [CategoryController::class, 'index']);
+
+    Route::group(['prefix' => 'carts'], function () {
+        Route::post('/', [CartController::class, 'store']);
+        Route::get('/{transaction_id}', [CartController::class, 'getCart']);
+        Route::post('/upload', [TransactionController::class, 'uploadCart']);
+    });
 
 
-// CART AND TRANSACTIONS
-Route::post('/carts', [CartController::class, 'store']);
-Route::get('/carts/{transaction_id}', [CartController::class, 'getCart']);
-Route::post('/cart/upload', [TransactionController::class, 'uploadCart']);
-Route::get('/transactions', [TransactionController::class, 'index']);
-Route::get('/transaction/{id}', [TransactionController::class, 'show']);
-Route::post('/transactions/{id}/complete', [TransactionController::class, 'markAsComplete']);
-Route::get('/transaction/total/today/{user_id}', [TransactionController::class, 'getTotalTransactionsToday']);
+    Route::group(['prefix' => 'transactions'], function () {
+        Route::get('/', [TransactionController::class, 'index']);
+        Route::get('/{id}', [TransactionController::class, 'show']);
+        Route::post('/{id}/complete', [TransactionController::class, 'markAsComplete']);
+        Route::get('/total/today/{user_id}', [TransactionController::class, 'getTotalTransactionsToday']);
+    });
 
-Route::get('/target-today', [DailyTargetController::class, 'getTodayTarget']);
-Route::post('/target', [DailyTargetController::class, 'createTarget']);
 
-Route::prefix('items')->group(function () {
-    Route::get('/', [ItemController::class, 'index']); // Semua item dengan filter/pagination
-    Route::get('/category/{categoryId}', [ItemController::class, 'indexByCategory']); // Item berdasarkan kategori
-    Route::get('/{id}', [ItemController::class, 'show']); // Detail item
+    Route::get('/target-today', [DailyTargetController::class, 'getTodayTarget']);
+
+    Route::prefix('items')->group(function () {
+        Route::get('/', [ItemController::class, 'index']); // Semua item dengan filter/pagination
+        Route::get('/category/{categoryId}', [ItemController::class, 'indexByCategory']); // Item berdasarkan kategori
+        Route::get('/{id}', [ItemController::class, 'show']); // Detail item
+    });
+
+    //CUSTOMERS
+    Route::get('/customers/toko', [CustomerController::class, 'getTokoCustomers']);
 });
 
-//CUSTOMERS
-Route::get('/customers/toko', [CustomerController::class, 'getTokoCustomers']);
+
+
+
+
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('logout', [AuthController::class, 'logout'])->middleware('auth.jwt');
+    Route::get('me', [AuthController::class, 'me'])->middleware('auth.jwt');
+    Route::post('refresh', [AuthController::class, 'refresh'])->middleware('auth.jwt');
+});

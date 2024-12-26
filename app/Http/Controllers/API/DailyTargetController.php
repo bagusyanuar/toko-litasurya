@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\DailyTarget;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Str;
 
 class DailyTargetController extends Controller
 {
@@ -15,70 +16,42 @@ class DailyTargetController extends Controller
      */
     public function getTodayTarget()
     {
-        // Mengambil target terakhir berdasarkan tanggal (sorted descending)
-        $lastTarget = DailyTarget::orderBy('date', 'desc')->first();
+        // Pastikan target hari ini ada
+        $todayTarget = $this->createTargetIfNotExists();
 
-        // Jika ada target, kita kembalikan target tersebut
-        if ($lastTarget) {
-            return response()->json([
-                'status' => 'success',
-                'data' => $lastTarget,
-            ], 200);
-        }
-
-        // Jika tidak ada target sebelumnya, kembalikan error
+        // Kembalikan target hari ini
         return response()->json([
-            'status' => 'error',
-
-            'message' => 'Target tidak ditemukan',
-        ], 404);
+            'status' => 'success',
+            'data' => $todayTarget,
+        ], 200);
     }
 
     /**
-     * Menyimpan target baru untuk hari ini.
+     * Membuat target baru untuk hari ini jika belum ada.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return DailyTarget
      */
-    public function createTarget(Request $request)
+    private function createTargetIfNotExists()
     {
-        $request->validate([
-            'date' => 'required|date',
-            'amount' => 'required|integer',
-        ]);
+        $uuid = str_replace('-', '', Str::uuid()->toString());
+        $today = \Carbon\Carbon::now()->format('Y-m-d'); // Tanggal hari ini
 
         // Cek apakah target untuk hari ini sudah ada
-        $today = \Carbon\Carbon::now()->format('Y-m-d'); // Mendapatkan tanggal hari ini
         $existingTarget = DailyTarget::whereDate('date', $today)->first();
 
-        // Jika target hari ini sudah ada, kembalikan response
         if ($existingTarget) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Target untuk hari ini sudah ada.',
-            ], 400);
+            return $existingTarget; // Jika sudah ada, kembalikan data tersebut
         }
 
-        // Jika target hari ini belum ada, ambil target kemarin
+        // Ambil target terakhir sebagai referensi
         $lastTarget = DailyTarget::orderBy('date', 'desc')->first();
+        $amount = $lastTarget ? $lastTarget->amount : 0; // Jika tidak ada target terakhir, gunakan 0
 
-        // Jika ada target sebelumnya, gunakan nilai target tersebut untuk hari ini
-        if ($lastTarget) {
-            $amount = $lastTarget->amount; // Ambil jumlah target kemarin
-        } else {
-            // Jika tidak ada target sebelumnya, kita set jumlah target default (misalnya 0 atau nilai lainnya)
-            $amount = 0; // Ganti dengan nilai default sesuai kebutuhan
-        }
-
-        // Membuat target baru dengan nilai yang sama seperti target kemarin atau default
-        $target = DailyTarget::create([
-            'date' => $today, // Target untuk hari ini
+        // Buat target baru untuk hari ini
+        return DailyTarget::create([
+            'id' => $uuid, // ID unik
+            'date' => $today,
             'amount' => $amount,
         ]);
-
-        return response()->json([
-            'status' => 'success',
-            'data' => $target,
-        ], 201);
     }
 }
