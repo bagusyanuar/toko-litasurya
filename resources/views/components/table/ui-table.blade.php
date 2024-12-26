@@ -18,7 +18,7 @@
                 <span class="text-xs text-neutral-500 ms-2">Data</span>
             </div>
         </div>
-        <div class="border border-neutral-300 rounded-md striped w-full overflow-x-auto">
+        <div class="border border-neutral-300 rounded-md striped w-full overflow-x-auto overflow-y-hidden" >
             <table class="w-full">
                 <thead>
                 @if(isset($header))
