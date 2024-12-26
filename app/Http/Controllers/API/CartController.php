@@ -12,10 +12,12 @@ class CartController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'transaction_id' => 'nullable|exists:transactions,id', // Ubah validasi agar nullable
-            'item_id'        => 'required',
-            'qty'            => 'required|integer|min:1',
-            'price'          => 'required|integer|min:0',
+            'user_id'         => 'required|exists:users,id',      // Menambahkan validasi untuk user_id
+            'transaction_id'  => 'nullable|exists:transactions,id', // Ubah validasi agar nullable
+            'customer_id'     => 'required|exists:customers,id',   // Menambahkan validasi untuk customer_id
+            'item_id'         => 'required|exists:items,id',       // Menambahkan validasi untuk item_id
+            'qty'             => 'required|integer|min:1',
+            'price'           => 'required|integer|min:0',
         ]);
 
         // Periksa apakah transaction_id ada atau tidak
@@ -37,12 +39,16 @@ class CartController extends Controller
 
         // Simpan data ke tabel carts
         $cart = Cart::create([
-            'id'              => $cartId, // ID cart dengan format baru
+            'id'              => $cartId,         // ID cart dengan format baru
+            'user_id'         => $request->user_id,      // Menambahkan user_id
             'transaction_id'  => $transaction_id,
+            'customer_id'     => $request->customer_id,   // Menambahkan customer_id
             'item_id'         => $request->item_id,
             'qty'             => $request->qty,
+            'request_qty'     => $request->qty,
             'price'           => $request->price,
             'total'           => $total,
+            'status'          => 'pending',        // Set status default "pending"
         ]);
 
         return response()->json([
