@@ -4,6 +4,29 @@ document.addEventListener('alpine:init', () => {
         modalCreate: false,
         validator: {},
         dz: null,
+        init() {
+            this.initDropzone();
+        },
+        initDropzone(){
+            const elDrop = document.getElementById('dropCategory');
+            this.dz = new Dropzone(elDrop, {
+                url: '/check',
+                autoProcessQueue: false,
+                addRemoveLinks: true,
+                acceptedFiles: '.jpg, .png, .jpeg',
+                uploadMultiple: false,
+                maxFiles: 1,
+                dictDefaultMessage: 'Tarik gambar yang ingin di upload',
+                init: function() {
+                    this.on('addedfile', file => {
+                        if (this.files.length > 1) {
+                            this.removeFile(this.files[0]);
+                        }
+                        file.previewElement.querySelector('.dz-filename').style.display = 'none';
+                    });
+                }
+            });
+        },
         setLoading(value) {
             this.loading = value;
         },
@@ -14,40 +37,24 @@ document.addEventListener('alpine:init', () => {
             this.modalCreate = false;
         },
         async onSubmit() {
-
-            // const componentID = document.querySelector('[data-component-id="category-create"]')?.getAttribute('wire:id');
-            // this.loading = true;
-            // let response = await window.Livewire.find(componentID).call('createNewCategory');
-            // if (response['status'] === 400) {
-            //     this.validator = response.data;
-            // }
-            // this.loading = false;
+            const componentID = document.querySelector('[data-component-id="category-create"]')?.getAttribute('wire:id');
+            this.dz.disable();
+            this.loading = true;
+            const uploadPromises = this.dz.files.map(file => {
+                return new Promise((resolve, reject) => {
+                    window.Livewire.find(componentID).upload('file', file, resolve, reject)
+                });
+            });
+            let res = await Promise.all(uploadPromises);
+            let response = await window.Livewire.find(componentID).call('createNewCategory');
+            if (response['status'] === 400) {
+                this.validator = response.data;
+            }
+            this.loading = false;
+            this.dz.enable();
+            this.modalCreate = false;
+            await Alpine.store('categoryList').getData();
+            Alpine.store('categoryIndex').setNotification(true);
         },
     });
-
-    Alpine.data('imageCategory', () => ({
-        dz: null,
-        initDropzone() {
-            this.$nextTick(() => {
-                this.dz = new Dropzone(this.$refs.dropRef, {
-                    url: '/check',
-                    autoProcessQueue: false,
-                    addRemoveLinks: true,
-                    acceptedFiles: '.jpg, .png, .jpeg',
-                    uploadMultiple: false,
-                    maxFiles: 1,
-                    dictDefaultMessage: 'Tarik gambar yang ingin di upload',
-                    init: function() {
-                        this.on('addedfile', file => {
-                            if (this.files.length > 1) {
-                                this.removeFile(this.files[0]);
-                            }
-                            file.previewElement.querySelector('.dz-filename').style.display = 'none';
-                        });
-                    }
-                });
-                Alpine.store('categoryCreate').dz = this.dz;
-            })
-        }
-    }))
 });

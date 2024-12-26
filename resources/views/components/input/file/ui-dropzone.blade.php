@@ -1,13 +1,11 @@
 <div
-    x-data="{{ $dropData }}"
-    x-init="{{ $dropInit }}"
     class="{{ $parentClassName }}"
     wire:ignore
 >
     <label class="text-xs text-neutral-700">{{ $label }}</label>
     <div class="relative w-full h-full">
-        <div x-ref="dropRef" class="dropzone"></div>
-        <template x-if="false">
+        <div class="dropzone" id="{{ $dropID }}"></div>
+        <template x-if="{{ $dropLoading }}">
             <div
                 class="absolute inset-0 z-[20] bg-gray-900 bg-opacity-50 flex items-center justify-center text-white text-sm font-semibold"
                 x-cloak
