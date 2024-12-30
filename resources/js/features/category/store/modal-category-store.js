@@ -1,5 +1,5 @@
 document.addEventListener('alpine:init', () => {
-    Alpine.store('modalCategory', {
+    Alpine.store('modalCategoryStore', {
         componentID: document.querySelector('[data-component-id="modal-category"]')?.getAttribute('wire:id'),
         isOpen: false,
         setOpenModal() {
@@ -15,17 +15,4 @@ document.addEventListener('alpine:init', () => {
             }
         }
     });
-
-    Alpine.bind('modalBind', () => ({
-        'x-data': () => ({
-            text: 'aktif',
-            toggle(){
-                if (this.text === 'aktif') {
-                    this.text = 'tidak aktif'
-                } else {
-                    this.text = 'aktif'
-                }
-            }
-        })
-    }))
 });

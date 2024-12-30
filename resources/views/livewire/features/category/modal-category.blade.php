@@ -3,8 +3,8 @@
 >
     <x-modal.ui-modal-form
         title="Form Tambah Kategori"
-        open="$store.modalCategory.isOpen"
-        handleClose="$store.modalCategory.setCloseModal()"
+        open="$store.modalCategoryStore.isOpen"
+        handleClose="$store.modalCategoryStore.setCloseModal()"
     >
         <x-slot name="body">
             <x-input.text.ui-form-text

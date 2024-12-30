@@ -58,5 +58,5 @@
     </x-table.ui-table>
 </section>
 @push('scripts')
-    @vite('resources/js/features/category/list.js')
+    @vite(['resources/js/features/category/list.js', 'resources/js/features/category/bind/table-action-bind.js'])
 @endpush

@@ -18,10 +18,10 @@
         <x-spacer.divider class="mb-3"></x-spacer.divider>
         <livewire:features.category.lists/>
     </x-container.card>
-    <livewire:features.category.modal-category />
+    <livewire:features.category.modal-category/>
 </div>
 @push('scripts')
-    @vite(['resources/js/features/category/index.js', 'resources/js/features/category/modalCategory.js'])
+    @vite(['resources/js/features/category/index.js', 'resources/js/features/category/store/modal-category-store.js'])
 @endpush
 
 
