@@ -32,7 +32,7 @@
         x-on:click.away="open = false"
         x-transition
         x-cloak
-        class="fixed z-50 text-sm text-gray-500 bg-white border border-gray-200 rounded-lg shadow-sm dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"
+        class="fixed z-50 text-sm text-gray-500 bg-white border border-gray-200 rounded-md shadow-sm dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"
         x-bind:style="{
             top: buttonRect.bottom + 10 + window.scrollY + 'px',
             right: window.innerWidth - buttonRect.right + 'px'

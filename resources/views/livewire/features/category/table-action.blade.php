@@ -1,59 +1,29 @@
 <div
-    class="flex items-center justify-center gap-1"
+    class="w-full flex justify-center"
+    x-data="{
+        initIcons() {
+           setTimeout(() => { lucide.createIcons(); }, 0);
+        }
+    }"
+    x-init="initIcons()"
 >
-    <x-modal.modal-form
-        modalID="modalUpdateCategory{{ $idx }}"
-        formTitle="Edit Kategori"
-    >
-        <x-slot name="trigger">
-            <x-table.components.button-edit
-                x-on:click="modalUpdateCategory{{ $idx }} = true"
+    <x-table.components.ui-table-action>
+        <div class="flex flex-col py-1 justify-start items-start">
+            <div
+                class="flex items-center justify-start gap-1 w-full text-xs px-2 py-1.5 cursor-pointer hover:bg-neutral-50"
+                x-on:click="open = false;"
             >
-            </x-table.components.button-edit>
-        </x-slot>
-        <x-slot name="body">
-            <x-input.text.form-text
-                id="name"
-                label="Nama Kategori"
-                placeholder="Nama Kategori"
-                wire:model="name"
-                parentClassName="mb-3"
-            ></x-input.text.form-text>
-            <x-input.file.dropzone
-                dropRef="categoryEdit{{ $idx }}"
-                dispatcher="onUpdateCategory"
-                dispatchKey="UpdateCategory{{ $idx }}"
-                afterDispatch="this.modalUpdateCategory{{ $idx }} = false;"
-                targetName="file"
-                label="Gambar Kategori"
-            ></x-input.file.dropzone>
-        </x-slot>
-        <x-slot name="action">
-            <x-button.button-loading
-                theme="outline"
-                loadingTarget="onUpdateCategory"
-                loadingText="Loading"
-                x-on:click="modalUpdateCategory{{ $idx }} = false"
-                class="flex justify-center items-center"
-                :mutate="false"
-            >
-                <span>Batal</span>
-            </x-button.button-loading>
-            <x-button.button-loading
-                loadingTarget="onUpdateCategory"
-                loadingText="Loading"
-                x-on:click="window.dropzoneInstanceUpdateCategory{{ $idx }}.eventUpdateCategory{{ $idx }}()"
-                class="flex justify-center items-center"
-            >
-                <span>Simpan</span>
-            </x-button.button-loading>
-        </x-slot>
-    </x-modal.modal-form>
-    <x-table.components.button-delete
-        modalKey="modalDeleteCategory{{ $idx }}"
-        processTarget="$wire.onDeleteCategory()"
-        processTargetLoading="onDeleteCategory"
-        targetMenu="Kategori"
-        targetName="{{ $category->name }}"
-    ></x-table.components.button-delete>
+                <div wire:ignore>
+                    <i data-lucide="pencil" class="text-neutral-500 h-3 aspect-[1/1]"></i>
+                </div>
+                <span>Edit</span>
+            </div>
+            <div class="flex items-center justify-start gap-1 w-full text-xs px-2 py-1.5 cursor-pointer hover:bg-neutral-50">
+                <div wire:ignore>
+                    <i data-lucide="trash" class="text-neutral-500 h-3 aspect-[1/1]"></i>
+                </div>
+                <span>Delete</span>
+            </div>
+        </div>
+    </x-table.components.ui-table-action>
 </div>

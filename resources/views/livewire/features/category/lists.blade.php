@@ -38,11 +38,7 @@
                         {{ $datum->name }}
                     </td>
                     <td class="py-3 px-3 text-center">
-                        <div class="w-full flex justify-center">
-                            <x-table.components.ui-table-action>
-                                <div class="p-4">Test</div>
-                            </x-table.components.ui-table-action>
-                        </div>
+                        <livewire:features.category.table-action :category="$datum" wire:key="{{ uniqid('table-action-') }}" />
                     </td>
                 </tr>
             @endforeach
@@ -60,117 +56,6 @@
             ></x-table.components.ui-pagination>
         </x-slot>
     </x-table.ui-table>
-
-{{--    <div--}}
-{{--        x-data="{--}}
-{{--                                open: false,--}}
-{{--                                buttonRect: {},--}}
-{{--                                popOverRect: {},--}}
-{{--                                updatePosition() {--}}
-{{--                                    this.buttonRect = this.$refs.button.getBoundingClientRect();--}}
-{{--                                }--}}
-{{--                            }"--}}
-{{--        x-init="buttonRect = $refs.button.getBoundingClientRect();"--}}
-{{--        x-on:resize.window="updatePosition"--}}
-{{--        class="">--}}
-{{--        <button--}}
-{{--            x-ref="button"--}}
-{{--            @click="open = !open; if ($refs.button && $refs.pop) {--}}
-{{--                                    buttonRect = $refs.button.getBoundingClientRect();--}}
-{{--                                    popOverRect = $refs.pop.getBoundingClientRect();--}}
-{{--                                    console.log(buttonRect);--}}
-{{--                                    console.log(window.scrollY);--}}
-{{--                                }"--}}
-{{--            type="button"--}}
-{{--            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">--}}
-{{--            Click popover--}}
-{{--        </button>--}}
-
-{{--        <div x-ref="pop" x-show="open" @click.away="open = false" x-transition--}}
-{{--             class="fixed z-50 w-[240px] text-sm text-gray-500 bg-white border border-gray-200 rounded-lg shadow-sm dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"--}}
-{{--             x-bind:style="{--}}
-{{--                                    top: buttonRect.bottom + 10 + window.scrollY + 'px',--}}
-{{--                                    left: buttonRect.left + window.scrollX + 'px'--}}
-{{--                                }">--}}
-{{--            <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">--}}
-{{--                <h3 class="font-semibold text-gray-900 dark:text-white">Popover click</h3>--}}
-{{--            </div>--}}
-{{--            <div class="px-3 py-2">--}}
-{{--                <p>And here's some amazing content. It's very engaging. Right?</p>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
-    {{--    <x-table.table--}}
-    {{--        x-init="$nextTick(() => {--}}
-    {{--                $wire.getDataCategories();--}}
-    {{--            })"--}}
-    {{--        @fetch-categories.window="$wire.set('onLoading', true)"--}}
-    {{--        :pageLength="$pageLength"--}}
-    {{--        :totalRows="$totalRows"--}}
-    {{--        :currentPage="$currentPage"--}}
-    {{--        :perPage="$perPage"--}}
-    {{--        perPageModel="perPage"--}}
-    {{--        currentPageModel="currentPage"--}}
-    {{--        onPerPageChange="$wire.onPerPageChange()"--}}
-    {{--        onPageChange="$wire.onPageChange()"--}}
-    {{--        onNextPageChange="$wire.onNextPage()"--}}
-    {{--        onLastPageChange="$wire.onLastPage(lastPage)"--}}
-    {{--        onPreviousPageChange="$wire.onPreviousPage()"--}}
-    {{--        onFirstPageChange="$wire.onFirstPage()"--}}
-    {{--    >--}}
-    {{--        <x-slot name="extensions">--}}
-    {{--            <x-table.components.search--}}
-    {{--                paramModel="param"--}}
-    {{--                dispatcher="onSearch"--}}
-    {{--                placeholder="cari..."--}}
-    {{--            ></x-table.components.search>--}}
-    {{--        </x-slot>--}}
-    {{--        <x-slot name="header">--}}
-    {{--            <tr class="bg-brand-50">--}}
-    {{--                <th class="py-4 px-3 text-center text-xs font-semibold w-[50px]">No</th>--}}
-    {{--                <th class="py-4 px-3 text-center text-xs font-semibold w-[8rem]">Gambar</th>--}}
-    {{--                <th class="py-4 px-3 text-start text-xs font-semibold">Nama Kategori</th>--}}
-    {{--                <th class="py-4 px-3 text-center text-xs font-semibold w-[120px]">Aksi</th>--}}
-    {{--            </tr>--}}
-    {{--        </x-slot>--}}
-    {{--        <x-slot name="rows">--}}
-    {{--            @forelse($data as $datum)--}}
-    {{--                <tr class="border-b border-neutral-300">--}}
-    {{--                    <td class="text-xs py-3 px-3 text-center">--}}
-    {{--                        {{ ($currentPage - 1) * $perPage + ($loop->index + 1) }}--}}
-    {{--                    </td>--}}
-    {{--                    <td class="text-xs py-3 px-3 text-center w-[4rem]">--}}
-    {{--                        <div class="w-full flex items-center justify-center">--}}
-    {{--                            <div--}}
-    {{--                                class="w-12 aspect-[1/1] border border-neutral-300 rounded-sm p-1 flex items-center justify-center">--}}
-    {{--                                <img--}}
-    {{--                                    src="{{ asset($datum->image) }}"--}}
-    {{--                                    alt=""--}}
-    {{--                                    class="w-full h-full object-cover object-center cursor-pointer"--}}
-    {{--                                >--}}
-    {{--                            </div>--}}
-    {{--                        </div>--}}
-    {{--                    </td>--}}
-    {{--                    <td class="text-xs py-3 px-3 text-start">--}}
-    {{--                        {{ $datum->name }}--}}
-    {{--                    </td>--}}
-    {{--                    <td class="text-xs py-3 px-3 text-center">--}}
-    {{--                        <livewire:features.category.table-action--}}
-    {{--                            :idx="$loop->index"--}}
-    {{--                            :category="$datum"--}}
-    {{--                            wire:key="{{ uniqid('diagnosis-icd10-'. $loop->index) }}"--}}
-    {{--                        />--}}
-    {{--                    </td>--}}
-    {{--                </tr>--}}
-    {{--            @empty--}}
-    {{--                <tr>--}}
-    {{--                    <td colspan="4">--}}
-    {{--                        <x-table.components.empty-table></x-table.components.empty-table>--}}
-    {{--                    </td>--}}
-    {{--                </tr>--}}
-    {{--            @endforelse--}}
-    {{--        </x-slot>--}}
-    {{--    </x-table.table>--}}
 </section>
 @push('scripts')
     @vite('resources/js/features/category/list.js')

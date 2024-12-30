@@ -1,9 +1,9 @@
 <div>
-    @if(isset($trigger))
-        <div class="block">
-            {{ $trigger }}
-        </div>
-    @endif
+{{--    @if(isset($trigger))--}}
+{{--        <div class="block">--}}
+{{--            {{ $trigger }}--}}
+{{--        </div>--}}
+{{--    @endif--}}
     <div class="fixed inset-0 bg-gray-500 bg-opacity-50 z-[250]"
          x-cloak
          x-show="{{ $open }}"
