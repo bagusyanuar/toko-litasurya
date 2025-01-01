@@ -22,7 +22,7 @@
         <div class="bg-white rounded shadow-lg w-[350px] max-h-full">
             <div
                 class="flex items-center justify-between px-4 py-3 border-b border-neutral-300 rounded-t">
-                <span class="text-neutral-700 text-sm font-semibold">{{ $title }}</span>
+                <span class="text-neutral-700 text-sm font-semibold" x-text="{{ $title }}"></span>
                 <button
                     type="button"
                     x-on:click="{{ $handleClose }}"

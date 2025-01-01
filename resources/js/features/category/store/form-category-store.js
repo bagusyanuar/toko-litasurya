@@ -1,7 +1,6 @@
 document.addEventListener('alpine:init', () => {
-    Alpine.store('modalCategoryStore', {
-        componentID: document.querySelector('[data-component-id="modal-category"]')?.getAttribute('wire:id'),
-        formComponentID: document.querySelector('[data-component-id="form-category"]')?.getAttribute('wire:id'),
+    Alpine.store('formCategoryStore', {
+        componentID: document.querySelector('[data-component-id="form-category"]')?.getAttribute('wire:id'),
         isOpen: false,
         title: '',
         dz: null,
@@ -48,18 +47,24 @@ document.addEventListener('alpine:init', () => {
             this.loading = true;
             const uploadPromises = this.dz.files.map(file => {
                 return new Promise((resolve, reject) => {
-                    window.Livewire.find(this.formComponentID).upload('file', file, resolve, reject)
+                    window.Livewire.find(this.componentID).upload('file', file, resolve, reject)
                 });
             });
             await Promise.all(uploadPromises);
-            let response = await window.Livewire.find(this.formComponentID).call('create');
-            console.log(response);
-            // if (response['status'] === 400) {
-            //     this.validator = response.data;
-            // }
+            let response = await window.Livewire.find(this.componentID).call('create');
             this.loading = false;
             this.dz.enable();
-            // this.isOpen = false;
+            switch (response['status']) {
+                case 400:
+                    this.validator = response.data;
+                    break;
+                case 200:
+                    this.dz.removeAllFiles();
+                    this.isOpen = false;
+                    break;
+                default:
+                    break;
+            }
         }
     });
 });

@@ -13,15 +13,23 @@
             <x-typography.section-title
                 title="Data Kategori"
             ></x-typography.section-title>
-            <livewire:features.category.create wire:id="createComponent"/>
+            <x-button.ui-button
+                x-on:click="$store.formCategoryStore.setOpenModal()"
+                wire:ignore
+            >
+                <div class="w-full flex justify-center items-center">
+                    <i data-lucide="plus" class="h-4 aspect-[1/1]"></i>
+                    <span>Tambah Kategori</span>
+                </div>
+            </x-button.ui-button>
         </div>
         <x-spacer.divider class="mb-3"></x-spacer.divider>
         <livewire:features.category.lists/>
     </x-container.card>
-    <livewire:features.category.modal-category/>
+    <livewire:features.category.form-category/>
 </div>
 @push('scripts')
-    @vite(['resources/js/features/category/index.js', 'resources/js/features/category/store/modal-category-store.js'])
+    @vite(['resources/js/features/category/index.js', 'resources/js/features/category/store/form-category-store.js'])
 @endpush
 
 
