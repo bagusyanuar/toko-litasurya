@@ -20,7 +20,7 @@ document.addEventListener('alpine:init', () => {
 
     Alpine.bind('popOverBind', () => ({
         'x-show': 'open',
-        'x-on:click.away': 'open = false;',
+        'x-on:click.away': '$store.formCategoryStore.popOverClosable ? open = false : \'\';',
         'x-transition': true,
         'x-cloak': true,
         ':style': `

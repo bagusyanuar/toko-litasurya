@@ -63,6 +63,17 @@ class FormCategory extends Component
             null);
     }
 
+    public function getCategory($id)
+    {
+        $this->name = $id;
+        sleep(2);
+        return AlpineResponse::toResponse(
+            true,
+            200,
+            'Berhasil menyimpan data kategori',
+            null);
+    }
+
     public function render()
     {
         return view('livewire.features.category.form-category');

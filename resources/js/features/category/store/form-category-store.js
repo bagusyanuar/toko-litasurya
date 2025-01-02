@@ -6,6 +6,8 @@ document.addEventListener('alpine:init', () => {
         dz: null,
         validator: {},
         loading: false,
+        loadingGetCategory: false,
+        popOverClosable: true,
         init() {
             this.initFileUpload();
         },
@@ -17,10 +19,16 @@ document.addEventListener('alpine:init', () => {
             this.isOpen = false;
         },
         async getCategory(id) {
+            this.loadingGetCategory = true;
+            this.popOverClosable = false;
             const res = await window.Livewire.find(this.componentID).call('getCategory', id);
             if (res['status'] === 200 ) {
                 this.isOpen = true;
             }
+            this.loadingGetCategory = false;
+            this.popOverClosable = true;
+            this.setOpenModal('Form Edit Kategori')
+
         },
         initFileUpload() {
             const elDrop = document.getElementById('dropCategory');
@@ -42,7 +50,7 @@ document.addEventListener('alpine:init', () => {
                 }
             });
         },
-        async mutate() {
+        async mutate(type = 'create') {
             this.dz.disable();
             this.loading = true;
             const uploadPromises = this.dz.files.map(file => {
