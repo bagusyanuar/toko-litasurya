@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Exception;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 
@@ -48,6 +49,22 @@ class AuthController extends Controller
         ]);
 
         return response()->json(['message' => 'User registered successfully'], 201);
+    }
+
+    public function getUserData()
+    {
+        try {
+            // Mendapatkan token dari header dan memverifikasi pengguna
+            $user = JWTAuth::parseToken()->authenticate();
+
+            // Memuat data `sales` terkait menggunakan eager loading
+            $userWithSales = $user->load('sales');
+
+            // Mengembalikan data pengguna termasuk data sales
+            return response()->json(['data' => $userWithSales]);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
     }
 
     /**

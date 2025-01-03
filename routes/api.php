@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AttendanceController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\ItemController;
@@ -13,12 +14,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'jwt.auth'], function () {
     Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/profile', [AuthController::class, 'getUserData']);
 
     Route::group(['prefix' => 'carts'], function () {
         Route::post('/', [CartController::class, 'store']);
         Route::get('/{transaction_id}', [CartController::class, 'getCart']);
         Route::post('/upload', [TransactionController::class, 'uploadCart']);
     });
+
 
 
     Route::group(['prefix' => 'transactions'], function () {
@@ -39,6 +42,10 @@ Route::group(['middleware' => 'jwt.auth'], function () {
 
     //CUSTOMERS
     Route::get('/customers/toko', [CustomerController::class, 'getTokoCustomers']);
+
+    Route::get('/attendance/weekly-schedule', [AttendanceController::class, 'getWeeklySchedule']);
+    Route::get('/attendance/today-schedule', [AttendanceController::class, 'getTodaySchedule']);
+    Route::post('/attendance/store', [AttendanceController::class, 'store']);
 });
 
 
