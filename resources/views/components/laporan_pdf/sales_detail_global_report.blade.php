@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Global Transaksi Kasir</title>
+    <title>Laporan Global Transaksi Sales</title>
     <style>
         @page {
             margin: 0;
@@ -131,7 +131,6 @@
 </head>
 
 <body>
-
     <div class="header">
         <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
@@ -154,18 +153,37 @@
             </tr>
         </table>
     </div>
+
     <div>
-        <p style="color: #555; margin: 0; font-weight: bold">LAPORAN KASIR</p>
+        <p style="color: #555; margin: 0; font-weight: bold">LAPORAN SALES</p>
         <p style="margin: 0; font-size: 14px; color: #777;">Periode: {{ $startDate }} - {{ $endDate }}</p>
     </div>
+
     @foreach ($transactionsByDate as $date => $transactions)
         <div class="transaction-header">
             <h4>Tanggal: {{ $date }}</h4>
         </div>
 
+
         @foreach ($transactions as $transaction)
+            {{-- <hr style="border: none; border-top: 1px solid #ccc; margin: 10px 0;"> --}}
             <div class="transaction-header2">
-                Transaksi: {{ $transaction->no_trans }} | Customer: {{ $transaction->nama_customer }}
+                Transaksi: {{ $transaction->no_trans }} | Customer: {{ $transaction->nama_customer }} |
+                Status: <span
+                    style="font-size:0.8rem;
+                    background-color:
+                        {{ $transaction->status === 'Pending'
+                            ? '#FFD966'
+                            : ($transaction->status === 'Batal'
+                                ? '#FF9999'
+                                : ($transaction->status === 'Selesai'
+                                    ? '#C3E6CB'
+                                    : 'transparent')) }};
+                    padding: 4px 8px;
+                    margin: 1px 0;
+                    border-radius: 10px;
+                    text-align: center;
+                ">{{ $transaction->status }}</span>
             </div>
 
             <table>
@@ -175,7 +193,9 @@
                         <th>Nama Barang</th>
                         <th>Unit</th>
                         <th>Harga</th>
-                        <th>Qty</th>
+                        <th>Permintaan</th>
+                        <th>Realisasi Jumlah</th>
+                        <th>Status</th>
                         <th>Sub Total</th>
                     </tr>
                 </thead>
@@ -186,7 +206,27 @@
                             <td>{{ $item->nama_barang }}</td>
                             <td>{{ $item->unit }}</td>
                             <td>{{ number_format($item->harga, 2) }}</td>
+                            <td>{{ $item->request_qty }}</td>
                             <td>{{ $item->qty }}</td>
+                            <td>
+                                <div
+                                    style="font-size:0.8rem;
+                            background-color:
+                                {{ $item->status === 'Penyesuaian'
+                                    ? '#FFD966'
+                                    : ($item->status === 'Stock Kosong'
+                                        ? '#FF9999'
+                                        : ($item->status === 'OK'
+                                            ? '#C3E6CB'
+                                            : 'transparent')) }};
+                            padding: 1px 4px;
+                            margin: 1px 0;
+                            border-radius: 10px;
+                            text-align: center;
+                        ">
+                                    {{ $item->status }}
+                                </div>
+                            </td>
                             <td>{{ number_format($item->sub_total, 2) }}</td>
                         </tr>
                     @endforeach

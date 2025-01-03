@@ -6,11 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan Detail Transaksi Kasir</title>
     <style>
+        @page {
+            margin: 0;
+            /* Hilangkan margin pada semua sisi */
+        }
+
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
             color: #333;
             line-height: 1.6;
+            margin: 16px;
+            padding: 16px;
         }
 
         .header {
@@ -111,26 +117,32 @@
 </head>
 
 <body>
-    <table width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-            <!-- Logo Kiri -->
-            <td width="20%" align="left">
-                <img src="assets/images/logo.png" alt="Logo" style="max-height: 80px;">
-            </td>
-            <!-- Info Toko Kanan -->
-            <td width="80%" align="right">
-                <div class="header-info">
-                    <h1 style="margin: 0; font-size: 24px;">LitaSurya</h1>
-                    <p style="margin: 0; font-size: 14px;">Jatisari, Jatisrono, Wonogiri Regency, Central Java 57691
-                    </p>
-                    <p style="margin: 0; font-size: 14px;">Periode: {{ $startDate }} - {{ $endDate }}</p>
-                </div>
-            </td>
-        </tr>
-    </table>
+    <div class="header">
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+                <!-- Logo Kiri -->
+                <td width="20%">
+                    <img src="assets/images/logo.png" alt="Logo" style="max-height: 80px;">
+                </td>
+                <!-- Info Toko Kanan -->
+                <td width="80%">
+                    <div class="header-info">
+                        <h1 style="margin: 0; font-size: 24px;">LitaSurya</h1>
+                        <p style="margin: 0; font-size: 14px;">Jatisari, Jatisrono, Wonogiri Regency, Central Java 57691
+                        </p>
+                        <p style="margin: 0; font-size: 14px;">0812-4193-9160
+                        </p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <p style="color: #555; margin: 0; font-weight: bold">LAPORAN SALES</p>
 
+    </div>
     @foreach ($transactions as $transaction)
-        <div class="transaction-header">
+        <div class="transaction-header" style="margin: 0; font-size: 14px; color: #777;">
             Transaksi: {{ $transaction->no_trans }} | Tanggal: {{ $transaction->tanggal }} | Customer:
             {{ $transaction->nama_customer }}
         </div>
@@ -167,7 +179,7 @@
 
     <div class="signature">
         <p>Dicetak oleh Admin</p>
-        <span>Tanda Tangan</span>
+        <span>Nama Admin</span>
     </div>
 </body>
 

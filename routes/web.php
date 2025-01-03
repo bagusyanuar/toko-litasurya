@@ -26,6 +26,11 @@ Route::group(['prefix' => 'item'], function () {
 
 
 // LAPORAN PDF
-Route::get('/laporan-kasir/global', [\App\Http\Controllers\LaporanController::class, 'cetakLaporanGlobal']);
-Route::get('/laporan-kasir/detail', [\App\Http\Controllers\LaporanController::class, 'cetakLaporanDetail']);
-Route::get('/laporan-kasir/detailglobal', [\App\Http\Controllers\LaporanController::class, 'cetakLaporanGlobalDetail']);
+Route::get('/laporan-kasir/global', [\App\Http\Controllers\LaporanController::class, 'cassierCetakLaporanGlobal']);
+Route::get('/laporan-kasir/detail', [\App\Http\Controllers\LaporanController::class, 'cassierCetakLaporanDetail']);
+Route::get('/laporan-kasir/detailglobal', [\App\Http\Controllers\LaporanController::class, 'cassierCetakLaporanGlobalDetail']);
+
+Route::get('/laporan-sales/global', [\App\Http\Controllers\LaporanController::class, 'salesCetakLaporanGlobal']);
+Route::get('/laporan-sales/detail', [\App\Http\Controllers\LaporanController::class, 'salesCetakLaporanDetail']);
+Route::get('/laporan-sales/detailglobal', [\App\Http\Controllers\LaporanController::class, 'salesCetakLaporanGlobalDetail']);
+Route::get('/laporan-sales/attendance', [\App\Http\Controllers\LaporanController::class, 'salesAttendace']);

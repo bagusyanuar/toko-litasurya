@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Global Transaksi Kasir</title>
+    <title>Laporan Global Transaksi Sales</title>
     <style>
         @page {
             margin: 0;
@@ -20,8 +20,6 @@
         }
 
         .header {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
             border-bottom: 2px solid #ddd;
@@ -110,6 +108,7 @@
 </head>
 
 <body>
+
     <div class="header">
         <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
@@ -133,31 +132,58 @@
     </div>
 
     <div>
-        <p style="color: #555; margin: 0; font-weight: bold">LAPORAN SALES</p>
+        <p style="color: #555; margin: 0; font-weight: bold">LAPORAN KUNJUNGAN TOKO</p>
         <p style="margin: 0; font-size: 14px; color: #777;">Periode: {{ $startDate }} - {{ $endDate }}</p>
     </div>
 
     <table>
         <thead>
             <tr>
-                <th>No Trans</th>
+                <th>No</th>
                 <th>Tanggal</th>
-                <th>Nama Customer</th>
-                <th>Points</th>
-                <th>Cara Pembayaran</th>
-                <th>Total</th>
+                <th>Nama Toko</th>
+                <th>Nama Sales</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($transactions as $transaction)
+            @foreach ($attendances as $attendance)
                 <tr>
-                    <td>{{ $transaction->no_trans }}</td>
-                    <td>{{ $transaction->tanggal }}</td>
-                    <td>{{ $transaction->nama_customer }}</td>
-                    <td>{{ $transaction->points }}</td>
-                    <td>{{ $transaction->cara_pembayaran }}</td>
-                    <td>{{ number_format($transaction->total, 2) }}</td>
+                    <td>{{ $attendance->no }}</td>
+                    <td>{{ $attendance->tanggal }}</td>
+                    <td>{{ $attendance->nama_customer }}</td>
+                    <td>
+                        <div
+                            style="
+                            font-size: 0.8rem;
+                            background-color:
+                                {{ $attendance->status === 'Pending'
+                                    ? '#FFD966'
+                                    : ($attendance->status === 'Dilewatkan'
+                                        ? '#FF9999'
+                                        : ($attendance->status === 'Dikunjungi'
+                                            ? '#C3E6CB'
+                                            : 'transparent')) }};
+                            padding: 4px 8px;
+                            margin: 2px 0;
+                            border-radius: 10px;
+                            text-align: center;
+                        ">
+                            {{ $attendance->status }}
+                        </div>
+                    </td>
+                    <td>{{ $attendance->nama_sales }}</td>
                 </tr>
+
+                <!-- Baris alasan hanya muncul jika alasan tidak kosong -->
+                @if (!empty($attendance->alasan))
+                    <tr>
+                        <td></td>
+                        <td colspan="5" style="font-size: 0.8rem; color: #666;">
+                            <strong>Alasan:</strong> {{ $attendance->alasan }}
+                        </td>
+                    </tr>
+                @endif
             @endforeach
         </tbody>
     </table>

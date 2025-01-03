@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Global Transaksi Kasir</title>
+    <title>Laporan Global Transaksi Sales</title>
     <style>
         @page {
             margin: 0;
@@ -20,8 +20,6 @@
         }
 
         .header {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
             border-bottom: 2px solid #ddd;
@@ -110,6 +108,7 @@
 </head>
 
 <body>
+
     <div class="header">
         <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
@@ -133,7 +132,7 @@
     </div>
 
     <div>
-        <p style="color: #555; margin: 0; font-weight: bold">LAPORAN SALES</p>
+        <p style="color: #555; margin: 0; font-weight: bold">LAPORAN KASIR</p>
         <p style="margin: 0; font-size: 14px; color: #777;">Periode: {{ $startDate }} - {{ $endDate }}</p>
     </div>
 
@@ -142,8 +141,10 @@
             <tr>
                 <th>No Trans</th>
                 <th>Tanggal</th>
-                <th>Nama Customer</th>
+                <th>Nama Toko</th>
                 <th>Points</th>
+                <th>Status</th>
+                <th>Nama Sales</th>
                 <th>Cara Pembayaran</th>
                 <th>Total</th>
             </tr>
@@ -155,8 +156,30 @@
                     <td>{{ $transaction->tanggal }}</td>
                     <td>{{ $transaction->nama_customer }}</td>
                     <td>{{ $transaction->points }}</td>
+                    <td>
+                        <div
+                            style="font-size:0.8rem;
+                    background-color:
+                        {{ $transaction->status === 'Pending'
+                            ? '#FFD966'
+                            : ($transaction->status === 'Batal'
+                                ? '#FF9999'
+                                : ($transaction->status === 'Selesai'
+                                    ? '#C3E6CB'
+                                    : 'transparent')) }};
+                    padding: 1px 4px;
+                    margin: 1px 0;
+                    border-radius: 10px;
+                    text-align: center;
+                ">
+                            {{ $transaction->status }}
+                        </div>
+                    </td>
+                    <td>{{ $transaction->nama_sales }}</td>
                     <td>{{ $transaction->cara_pembayaran }}</td>
-                    <td>{{ number_format($transaction->total, 2) }}</td>
+                    <td>
+                        <div style="font-weight: bold">{{ number_format($transaction->total, 2) }}</div>
+                    </td>
                 </tr>
             @endforeach
         </tbody>
