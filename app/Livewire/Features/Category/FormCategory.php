@@ -6,25 +6,21 @@ use App\Domain\Web\Category\CategoryRequest;
 use App\Helpers\Alpine\AlpineResponse;
 use App\Services\CategoryService;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\On;
 
-class Create extends Component
+class FormCategory extends Component
 {
     use WithFileUploads;
 
     /** @var $service CategoryService */
     private $service;
-
     /** @var $file UploadedFile | null */
     public $file;
-
     /** @var $categoryRequest  CategoryRequest */
     protected $categoryRequest;
-
     public $name;
 
     public function boot(CategoryService $categoryService)
@@ -34,9 +30,10 @@ class Create extends Component
     }
 
     #[On('category-create')]
-    public function createNewCategory()
+    public function create()
     {
-        $this->categoryRequest->setName($this->name)
+        $this->categoryRequest
+            ->setName($this->name)
             ->setFile($this->file);
         $serviceResponse = $this->service->createNewCategory($this->categoryRequest);
         if (!$serviceResponse->isSuccess()) {
@@ -58,8 +55,18 @@ class Create extends Component
                 $serviceResponse->getData()
             );
         }
-//        $this->dispatch('page-success', true, 'Berhasil menyimpan data kategori');
-//        $this->dispatch('fetch-categories');
+        $this->reset('name');
+        return AlpineResponse::toResponse(
+            true,
+            200,
+            'Berhasil menyimpan data kategori',
+            null);
+    }
+
+    public function getCategory($id)
+    {
+        $this->name = $id;
+        sleep(2);
         return AlpineResponse::toResponse(
             true,
             200,
@@ -69,6 +76,6 @@ class Create extends Component
 
     public function render()
     {
-        return view('livewire.features.category.create');
+        return view('livewire.features.category.form-category');
     }
 }

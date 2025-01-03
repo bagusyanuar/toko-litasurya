@@ -1,4 +1,5 @@
 import {paginate} from '../shared/pagination';
+import {Popover} from 'flowbite'
 
 document.addEventListener('alpine:init', () => {
     Alpine.store('categoryList', {
@@ -11,6 +12,9 @@ document.addEventListener('alpine:init', () => {
         shownPages: [],
         componentID: document.querySelector('[data-component-id="category-list"]')?.getAttribute('wire:id'),
         init: function () {
+            const $targetEl = document.getElementById('popoverContent');
+            const $triggerEl = document.getElementById('popoverButton');
+
             Livewire.hook('component.init', ({component, cleanup}) => {
                 if (component.id === this.componentID) {
                     component.$wire.call('getDataCategories', this.page, this.perPage).then((res) => {
