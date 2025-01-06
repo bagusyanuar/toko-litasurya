@@ -60,4 +60,4 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('logout', [AuthController::class, 'logout'])->middleware('auth.jwt');
     Route::get('me', [AuthController::class, 'me'])->middleware('auth.jwt');
     Route::post('refresh', [AuthController::class, 'refresh'])->middleware('auth.jwt');
-})->withoutMiddleware(JwtMiddleware::class);
+});
