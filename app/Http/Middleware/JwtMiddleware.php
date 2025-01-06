@@ -3,24 +3,26 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class JwtMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-    public function handle(Request $request, Closure $next): Response
+    public function handle($request, Closure $next)
     {
+
+        Log::info('masuk ke JWTMIDDLEWARE');
+
+        if (!$token = JWTAuth::setRequest($request)->getToken()) {
+            return response()->json(['message' => 'Token not provided'], 400);
+        }
+
         try {
-            $user = JWTAuth::parseToken()->authenticate();
+            $user = JWTAuth::authenticate($token);
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Token not valid'], 401);
+            return response()->json(['message' => 'Token invalid'], 401);
         }
 
         return $next($request);

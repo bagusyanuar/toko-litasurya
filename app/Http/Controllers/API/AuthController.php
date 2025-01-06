@@ -2,35 +2,48 @@
 
 namespace App\Http\Controllers\API;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Exception;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
     /**
      * Login dan generate token JWT.
      */
+
     public function login(Request $request)
     {
         // Ambil kredensial dari request
         $credentials = $request->only('username', 'password');
 
-        // Coba otentikasi dengan JWTAuth
-        if (!$token = JWTAuth::attempt($credentials)) {
-            // Jika gagal, kembalikan error 401 dengan pesan JSON yang lebih jelas
-            return response()->json([
-                'error' => 'Unauthorized',
-                'message' => 'Username atau password salah. Silakan coba lagi.',
-            ], 401);
-        }
+        try {
+            // Coba otentikasi dengan JWTAuth
+            if (!$token = JWTAuth::attempt($credentials)) {
+                Log::error('JWTAuth failed to generate token');
+                return response()->json([
+                    'error' => 'Unauthorized',
+                    'message' => 'Username atau password salah. Silakan coba lagi.',
+                ], 401);
+            }
 
-        // Jika berhasil, kembalikan token
-        return $this->respondWithToken($token);
+
+            // Kembalikan token jika berhasil
+            return response()->json(compact('token'));
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Something went wrong',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
+
     /**
      * Register user baru.
      */
@@ -62,7 +75,7 @@ class AuthController extends Controller
 
             // Mengembalikan data pengguna termasuk data sales
             return response()->json(['data' => $userWithSales]);
-        } catch (Exception $e) {
+        } catch (JWTException $e) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
     }
