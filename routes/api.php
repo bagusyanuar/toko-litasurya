@@ -13,9 +13,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/categories', [CategoryController::class, 'index'])->withoutMiddleware(JwtMiddleware::class);
 
 Route::middleware([JwtMiddleware::class])->group(function () {
+    Route::get('/categories', [CategoryController::class, 'index']);
+
     Route::get('/profile', [AuthController::class, 'getUserData']);
 
     Route::group(['prefix' => 'carts'], function () {
