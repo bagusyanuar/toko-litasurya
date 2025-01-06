@@ -8,11 +8,12 @@ use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\CustomerController;
 use App\Http\Controllers\Api\DailyTargetController;
 use App\Http\Controllers\API\TransactionController;
+use App\Http\Middleware\JwtMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-Route::group(['middleware' => 'jwt.auth'], function () {
+Route::middleware([JwtMiddleware::class])->group(function () {
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/profile', [AuthController::class, 'getUserData']);
 
