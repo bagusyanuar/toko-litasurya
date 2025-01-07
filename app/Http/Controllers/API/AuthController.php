@@ -77,16 +77,17 @@ class AuthController extends Controller
             if (!$user) {
                 return response()->json(['error' => 'User not found'], 401);
             }
-            // Mendapatkan token dari header dan memverifikasi pengguna
-            $user = JWTAuth::parseToken()->authenticate();
-            if (!$user) {
-                return response()->json(['error' => 'User not found'], 404);
-            }
-            // Memuat data `sales` terkait menggunakan eager loading
+
             $userWithSales = $user->load('sales');
 
             // Mengembalikan data pengguna termasuk data sales
             return response()->json(['data' => $userWithSales]);
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json(['error' => 'Token has expired'], 401);
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json(['error' => 'Token is invalid'], 401);
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return response()->json(['error' => 'Token not provided'], 401);
         } catch (JWTException $e) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
