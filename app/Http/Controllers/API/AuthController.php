@@ -71,7 +71,9 @@ class AuthController extends Controller
         try {
             // Mendapatkan token dari header dan memverifikasi pengguna
             $user = JWTAuth::parseToken()->authenticate();
-
+            if (!$user) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
             // Memuat data `sales` terkait menggunakan eager loading
             $userWithSales = $user->load('sales');
 
