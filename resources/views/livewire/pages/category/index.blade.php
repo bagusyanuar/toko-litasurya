@@ -1,9 +1,5 @@
 <div>
-    <x-alert.ui-alert
-        show="$store.categoryIndex.notification"
-        handleClose="$store.categoryIndex.setNotification(false)"
-        timeToClose="2000"
-    ></x-alert.ui-alert>
+    <x-alert.ui-alert timeToClose="2000"></x-alert.ui-alert>
     <x-typography.page-title
         title="Halaman Kategori"
         class="mb-3"
@@ -29,7 +25,7 @@
     <livewire:features.category.form-category/>
 </div>
 @push('scripts')
-    @vite(['resources/js/features/category/index.js', 'resources/js/features/category/store/form-category-store.js'])
+    @vite(['resources/js/features/category/store/category-page-store.js', 'resources/js/features/category/store/form-category-store.js', 'resources/js/features/shared/alert-store.js'])
 @endpush
 
 

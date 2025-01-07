@@ -10,6 +10,7 @@ use App\Domain\ServiceResponseWithMetaPagination;
 use App\Domain\Web\Category\CategoryFilter;
 use App\Domain\Web\Category\CategoryRequest;
 use App\Helpers\FileUpload\FileUpload;
+use App\Helpers\FileUpload\FileUploadControl;
 use App\Helpers\FileUpload\FileUploadRequest;
 use App\Helpers\Validator\ValidatorResponse;
 use App\Models\Category;
@@ -90,20 +91,12 @@ class CategoryService implements CategoryInterface
                     ->setMessage('bad request');
             }
             $file = $categoryRequest->getFile();
-            $imageName = null;
-            if ($file) {
-                $fileUploadService = new FileUpload();
-                $fileUploadRequest = new FileUploadRequest($this->targetPathImage, $file);
-                $fileUploadResponse = $fileUploadService->upload($fileUploadRequest);
-
-                if (!$fileUploadResponse->isSuccess()) {
-                    DB::rollBack();
-                    return $response->setSuccess(false)
+            $imageName = FileUploadControl::upload($this->targetPathImage, $file, function ($errorMessage) use ($response) {
+                DB::rollBack();
+                return $response->setSuccess(false)
                         ->setCode(500)
-                        ->setMessage($fileUploadResponse->getMessage());
-                }
-                $imageName = $fileUploadResponse->getFileName();
-            }
+                        ->setMessage($errorMessage);
+            });
             $data = [
                 'name' => $categoryRequest->getName(),
                 'image' => $imageName

@@ -11,7 +11,7 @@
                 placeholder="Nama Kategori"
                 wire:model="name"
                 parentClassName="mb-3"
-                x-bind:disabled="$store.formCategoryStore.loading"
+                x-bind:disabled="$store.formCategoryStore.loading || $store.formCategoryStore.loadingGetCategory"
                 validatorKey="$store.formCategoryStore.validator"
                 validatorField="name"
             ></x-input.text.ui-form-text>

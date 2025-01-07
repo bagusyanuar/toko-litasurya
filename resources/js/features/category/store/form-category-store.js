@@ -19,16 +19,11 @@ document.addEventListener('alpine:init', () => {
             this.isOpen = false;
         },
         async getCategory(id) {
+            this.setOpenModal('Form Edit Kategori');
             this.loadingGetCategory = true;
-            this.popOverClosable = false;
             const res = await window.Livewire.find(this.componentID).call('getCategory', id);
-            if (res['status'] === 200 ) {
-                this.isOpen = true;
-            }
+            Alpine.store('alertStore').failed('test');
             this.loadingGetCategory = false;
-            this.popOverClosable = true;
-            this.setOpenModal('Form Edit Kategori')
-
         },
         initFileUpload() {
             const elDrop = document.getElementById('dropCategory');
@@ -73,6 +68,9 @@ document.addEventListener('alpine:init', () => {
                 default:
                     break;
             }
+        },
+        async delete() {
+            Alpine.store('alertStore').success('test');
         }
     });
 });
