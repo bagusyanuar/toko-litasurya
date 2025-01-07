@@ -26,9 +26,7 @@ return [
     */
 
     'secret' => env('JWT_SECRET'),
-    'keys' => [
-        'base64' => true, // Set to true if JWT_SECRET is Base64-encoded
-    ],
+
     /*
     |--------------------------------------------------------------------------
     | JWT Authentication Keys
