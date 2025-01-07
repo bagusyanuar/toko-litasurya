@@ -35,7 +35,9 @@ class AuthController extends Controller
 
 
             // Kembalikan token jika berhasil
-            return response()->json(compact('token'));
+
+            return $this->respondWithToken($token);
+            // return response()->json(compact('token'));
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Something went wrong',
