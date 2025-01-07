@@ -69,6 +69,14 @@ class AuthController extends Controller
     public function getUserData()
     {
         try {
+            if (!JWTAuth::getToken()) {
+                return response()->json(['error' => 'Token not provided'], 401);
+            }
+
+            $user = JWTAuth::parseToken()->authenticate();
+            if (!$user) {
+                return response()->json(['error' => 'User not found'], 401);
+            }
             // Mendapatkan token dari header dan memverifikasi pengguna
             $user = JWTAuth::parseToken()->authenticate();
             if (!$user) {
