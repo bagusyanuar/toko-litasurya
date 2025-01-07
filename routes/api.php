@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware([JwtMiddleware::class])->group(function () {
     Route::get('/categories', [CategoryController::class, 'index']);
 
-    Route::middleware('auth:api')->get('/profile', [AuthController::class, 'getUserData'])->middleware('auth:api');
+    Route::get('/profile', [AuthController::class, 'getUserData']);
 
     Route::group(['prefix' => 'carts'], function () {
         Route::post('/', [CartController::class, 'store']);
