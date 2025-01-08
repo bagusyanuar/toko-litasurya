@@ -23,6 +23,7 @@ class AuthController extends Controller
         // Ambil kredensial dari request
         $credentials = $request->only('username', 'password');
 
+        $userId = User::where('username', $request->username)->first();
         try {
             // Coba otentikasi dengan JWTAuth
             if (!$token = JWTAuth::attempt($credentials)) {
@@ -36,7 +37,7 @@ class AuthController extends Controller
 
             // Kembalikan token jika berhasil
 
-            return $this->respondWithToken($token);
+            return $this->respondWithToken($token, $userId);
             // return response()->json(compact('token'));
         } catch (\Exception $e) {
             return response()->json([
@@ -121,13 +122,13 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        return $this->respondWithToken(JWTAuth::refresh());
+        return $this->respondWithToken(JWTAuth::refresh(), "");
     }
 
     /**
      * Format respons token.
      */
-    protected function respondWithToken($token)
+    protected function respondWithToken($token, $userId)
     {
         // $userId = JWTAuth::parseToken()->getPayload()->get('sub');
 
@@ -135,7 +136,7 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
-            // 'user_id' => $userId,
+            'user_id' => $userId,
         ]);
     }
 }
