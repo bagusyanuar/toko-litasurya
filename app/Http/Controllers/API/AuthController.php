@@ -129,13 +129,13 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
-        $userId = JWTAuth::parseToken()->getPayload()->get('sub');
+        // $userId = JWTAuth::parseToken()->getPayload()->get('sub');
 
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
-            'user_id' => $userId,
+            // 'user_id' => $userId,
         ]);
     }
 }
