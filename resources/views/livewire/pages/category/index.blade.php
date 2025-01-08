@@ -1,5 +1,6 @@
 <div>
     <x-alert.ui-alert timeToClose="2000"></x-alert.ui-alert>
+    <x-alert.ui-alert-confirm handleSubmit="$store.formCategoryStore.onDelete()"></x-alert.ui-alert-confirm>
     <x-typography.page-title
         title="Halaman Kategori"
         class="mb-3"
@@ -25,7 +26,12 @@
     <livewire:features.category.form-category/>
 </div>
 @push('scripts')
-    @vite(['resources/js/features/category/store/category-page-store.js', 'resources/js/features/category/store/form-category-store.js', 'resources/js/features/shared/alert-store.js'])
+    @vite([
+    'resources/js/features/category/store/category-page-store.js',
+    'resources/js/features/category/store/form-category-store.js',
+    'resources/js/features/shared/alert-store.js',
+    'resources/js/features/shared/alert-confirm-store.js',
+    ])
 @endpush
 
 

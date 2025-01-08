@@ -69,8 +69,11 @@ document.addEventListener('alpine:init', () => {
                     break;
             }
         },
-        async delete() {
-            Alpine.store('alertStore').success('test');
+        delete() {
+            Alpine.store('alertConfirmStore').showConfirm('Konfirmasi', 'Apakah anda yakin ingin menghapus data?');
+        },
+        async onDelete() {
+            Alpine.store('alertConfirmStore').close();
         }
     });
 });
