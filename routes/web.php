@@ -34,3 +34,14 @@ Route::get('/laporan-sales/global', [\App\Http\Controllers\LaporanController::cl
 Route::get('/laporan-sales/detail', [\App\Http\Controllers\LaporanController::class, 'salesCetakLaporanDetail']);
 Route::get('/laporan-sales/detailglobal', [\App\Http\Controllers\LaporanController::class, 'salesCetakLaporanGlobalDetail']);
 Route::get('/laporan-sales/attendance', [\App\Http\Controllers\LaporanController::class, 'salesAttendace']);
+
+
+Route::get('/storage/attendances/{filename}', function ($filename) {
+    $path = storage_path('app/public/attendances/' . $filename);
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    return response()->file($path);
+})->where('filename', '.*');
