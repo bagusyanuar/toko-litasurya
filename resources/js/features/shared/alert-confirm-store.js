@@ -1,8 +1,8 @@
 document.addEventListener('alpine:init', () => {
     Alpine.store('alertConfirmStore', {
         open: false,
-        title: 'Confirmation',
-        message: '',
+        title: 'Are you sure?',
+        message: 'Do you want leave this page?',
         buttonCancelText: 'Cancel',
         buttonSubmitText: 'Submit',
         submitProcess: false,
@@ -13,6 +13,9 @@ document.addEventListener('alpine:init', () => {
         },
         close() {
             this.open = false;
+        },
+        setProcess(value = false){
+            this.submitProcess = value;
         }
     })
 });

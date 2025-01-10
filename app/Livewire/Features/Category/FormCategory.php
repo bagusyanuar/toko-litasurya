@@ -63,6 +63,13 @@ class FormCategory extends Component
             null);
     }
 
+    #[On('category-delete')]
+    public function delete()
+    {
+        sleep(2);
+        return AlpineResponse::toResponse(false, 500, 'failed to delete category...');
+    }
+
     public function getCategory($id)
     {
         $this->name = $id;

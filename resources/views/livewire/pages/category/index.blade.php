@@ -31,6 +31,7 @@
     'resources/js/features/category/store/form-category-store.js',
     'resources/js/features/shared/alert-store.js',
     'resources/js/features/shared/alert-confirm-store.js',
+    'resources/js/features/shared/pop-over-bind.js',
     ])
 @endpush
 

@@ -3,7 +3,8 @@
 namespace App\Livewire\Features\Category;
 
 use App\Domain\Web\Category\CategoryRequest;
-use App\Services\CategoryService;
+use App\Helpers\Alpine\AlpineResponse;
+use App\Services\Web\CategoryService;
 use Illuminate\Http\UploadedFile;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -37,13 +38,15 @@ class TableAction extends Component
     public function onDeleteCategory()
     {
         $categoryID = $this->category->id;
-        $serviceResponse = $this->service->deleteCategory($categoryID);
-        if (!$serviceResponse->isSuccess()) {
-            $this->dispatch('page-error', true, $serviceResponse->getMessage());
-            return;
-        }
-        $this->dispatch('page-success', true, 'Berhasil menghapus data kategori.');
-        $this->dispatch('fetch-categories-no-reload');
+        sleep(2);
+        return AlpineResponse::toResponse(false, 500, 'failed to delete category...');
+//        $serviceResponse = $this->service->deleteCategory($categoryID);
+//        if (!$serviceResponse->isSuccess()) {
+//            $this->dispatch('page-error', true, $serviceResponse->getMessage());
+//            return;
+//        }
+//        $this->dispatch('page-success', true, 'Berhasil menghapus data kategori.');
+//        $this->dispatch('fetch-categories-no-reload');
     }
 
     public function onUpdateCategory()
