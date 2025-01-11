@@ -1,6 +1,5 @@
 document.addEventListener('alpine:init', () => {
-    // lucide.createIcons();
-    Alpine.store('alertStore', {
+    Alpine.store('uiNotificationStore', {
         open: false,
         type: 'success',
         message: '',

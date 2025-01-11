@@ -22,7 +22,7 @@ document.addEventListener('alpine:init', () => {
             this.setOpenModal('Form Edit Kategori');
             this.loadingGetCategory = true;
             const res = await window.Livewire.find(this.componentID).call('getCategory', id);
-            Alpine.store('alertStore').failed('test');
+            Alpine.store('uiNotificationStore').failed('test');
             this.loadingGetCategory = false;
         },
         initFileUpload() {
@@ -76,7 +76,7 @@ document.addEventListener('alpine:init', () => {
             Alpine.store('alertConfirmStore').setProcess(true);
             let response = await window.Livewire.find(this.componentID).call('delete');
             if (!response['success']) {
-                Alpine.store('alertStore').failed(response['message']);
+                Alpine.store('uiNotificationStore').failed(response['message']);
             }
             Alpine.store('alertConfirmStore').setProcess(false);
             Alpine.store('alertConfirmStore').close();

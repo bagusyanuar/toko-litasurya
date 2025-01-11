@@ -38,7 +38,43 @@
                         {{ $datum->name }}
                     </td>
                     <td class="py-3 px-3 text-center">
-                        <livewire:features.category.table-action :category="$datum" wire:key="{{ uniqid('table-action-') }}" />
+                        <div class="w-full justify-items-center">
+                            <x-pop-over.ui-pop-over>
+                                <div
+                                    x-bind="uiPopOverTrigger"
+                                    class="cursor-pointer w-fit"
+                                >
+                                    <i data-lucide="ellipsis-vertical"
+                                       class="text-neutral-500 group-focus-within:text-neutral-900 h-3 aspect-[1/1]"></i>
+                                </div>
+                                <div
+                                    x-bind="uiPopOverContent"
+                                    class="fixed z-50 text-sm w-[130px] text-gray-500 bg-white border border-gray-200 rounded-md shadow-sm dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"
+                                >
+                                    <div class="flex flex-col py-1 justify-start items-start">
+                                        <div
+                                            class="flex items-center justify-start gap-2 w-full text-sm px-2 py-1.5 cursor-pointer hover:bg-neutral-50"
+                                            x-on:click="open = false; $store.formCategoryStore.getCategory('my-id');"
+                                        >
+                                            <div wire:ignore>
+                                                <i data-lucide="pencil" class="text-neutral-500 h-4 aspect-[1/1]"></i>
+                                            </div>
+                                            <span>Edit</span>
+                                        </div>
+                                        <div
+                                            class="flex items-center justify-start gap-2 w-full text-sm px-2 py-1.5 cursor-pointer hover:bg-neutral-50"
+                                            x-on:click="open = false; $store.formCategoryStore.delete();"
+                                        >
+                                            <div wire:ignore>
+                                                <i data-lucide="trash" class="text-neutral-500 h-4 aspect-[1/1]"></i>
+                                            </div>
+                                            <span>Delete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </x-pop-over.ui-pop-over>
+                        </div>
+
                     </td>
                 </tr>
             @endforeach
@@ -58,5 +94,5 @@
     </x-table.ui-table>
 </section>
 @push('scripts')
-    @vite(['resources/js/features/category/list.js', 'resources/js/features/category/bind/table-action-bind.js'])
+    @vite(['resources/js/features/category/list.js'])
 @endpush

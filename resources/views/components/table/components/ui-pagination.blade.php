@@ -8,7 +8,6 @@
                     this.shownPages = value;
                 });
                 $watch('{{ $currentPage }}', value => {
-                    console.log(value);
                     this.currentPage = value;
                 });
             }

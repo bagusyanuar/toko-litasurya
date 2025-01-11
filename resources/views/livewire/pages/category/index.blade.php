@@ -1,5 +1,5 @@
 <div>
-    <x-alert.ui-alert timeToClose="2000"></x-alert.ui-alert>
+    <x-notification.ui-notification timeToClose="2000"></x-notification.ui-notification>
     <x-alert.ui-alert-confirm handleSubmit="$store.formCategoryStore.onDelete()"></x-alert.ui-alert-confirm>
     <x-typography.page-title
         title="Halaman Kategori"
@@ -29,9 +29,9 @@
     @vite([
     'resources/js/features/category/store/category-page-store.js',
     'resources/js/features/category/store/form-category-store.js',
-    'resources/js/features/shared/alert-store.js',
     'resources/js/features/shared/alert-confirm-store.js',
-    'resources/js/features/shared/pop-over-bind.js',
+    'resources/js/features/shared/components/pop-over.js',
+    'resources/js/features/shared/components/notification.js',
     ])
 @endpush
 
