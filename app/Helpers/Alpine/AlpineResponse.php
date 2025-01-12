@@ -102,13 +102,14 @@ class AlpineResponse
         return $this;
     }
 
-    public static function toResponse($success = true, $status = 200, $message = '', $data = null)
+    public static function toResponse($success = true, $status = 200, $message = '', $data = null, $meta = null)
     {
         return [
             'success' => $success,
             'status' => $status,
             'message' => $message,
-            'data' => $data
+            'data' => $data,
+            'meta' => $meta
         ];
     }
 }
