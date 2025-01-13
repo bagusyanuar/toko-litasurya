@@ -43,10 +43,18 @@
 {{--                    x-text="(({{ $currentPage }} - 1) * {{ $perPage }} + 1)"></span> sampai <span--}}
 {{--                    x-text="{{ $perPage }}"></span> dari <span x-text="{{ $totalRows }}"></span></span>--}}
 {{--        </div>--}}
-        <div class="flex gap-1 items-center">
+        <div class="flex gap-1 items-center text-sm text-neutral-500">
             <span>Rows Per Page</span>
+            <select
+                class="border border-neutral-500 w-fit appearance-none rounded-[4px] text-sm pl-1 !pr-[1.5rem] py-1 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500"
+                x-on:change="{{ $onPerPageChange }}"
+            >
+                <template x-for="value in {{ $pageLength }}">
+                    <option :value="value" x-text="value"></option>
+                </template>
+            </select>
         </div>
-        <div class="flex items-center gap-1 py-1.5 px-1.5">
+        <div class="flex items-center gap-1 py-1.5 px-1.5" wire:ignore>
             <a href="#" x-on:click.prevent=""
                class="text-brand-500 cursor-pointer h-6 w-6 rounded-[4px] flex items-center justify-center hover:text-white hover:bg-brand-500 transition-all duration-300 ease-in-out">
                 <i data-lucide="chevrons-left"
