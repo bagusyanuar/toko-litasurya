@@ -37,11 +37,14 @@
         </div>
     </div>
     <!-- table pagination -->
-    <div class="mt-3 flex items-center justify-between">
-        <div class="">
-            <span class="text-sm text-neutral-500">Menampilkan <span
-                    x-text="(({{ $currentPage }} - 1) * {{ $perPage }} + 1)"></span> sampai <span
-                    x-text="{{ $perPage }}"></span> dari <span x-text="{{ $totalRows }}"></span></span>
+    <div class="mt-3 flex items-center justify-end">
+{{--        <div class="">--}}
+{{--            <span class="text-sm text-neutral-500">Menampilkan <span--}}
+{{--                    x-text="(({{ $currentPage }} - 1) * {{ $perPage }} + 1)"></span> sampai <span--}}
+{{--                    x-text="{{ $perPage }}"></span> dari <span x-text="{{ $totalRows }}"></span></span>--}}
+{{--        </div>--}}
+        <div class="flex gap-1 items-center">
+            <span>Rows Per Page</span>
         </div>
         <div class="flex items-center gap-1 py-1.5 px-1.5">
             <a href="#" x-on:click.prevent=""
