@@ -6,6 +6,9 @@
         loading="$store.listStore.loading"
         pageLength="$store.listStore.pageLength"
         onPerPageChange="$store.listStore.onPerPageChange($event.target.value)"
+        currentPage="$store.listStore.page"
+        perPage="$store.listStore.perPage"
+        totalRows="$store.listStore.totalRows"
     >
         <x-slot name="header">
             <tr class="bg-brand-50">
@@ -28,14 +31,65 @@
             </tr>
         </x-slot>
         <x-slot name="rows">
-            <template x-for="data in $store.listStore.data">
+            <template x-for="(data, index) in $store.listStore.data" :key="index">
                 <tr class="border-b border-neutral-300">
-                    <td>
+                    <x-table.server.components.ui-td
+                        className="text-center"
+                    >
+                        <span x-text="(($store.listStore.page - 1) * $store.listStore.perPage + (index + 1))"></span>
+                    </x-table.server.components.ui-td>
+                    <x-table.server.components.ui-td
+                        className="justify-items-center"
+                    >
+                        <div
+                            class="w-12 aspect-[1/1] border border-neutral-300 rounded-sm p-1 flex items-center justify-center">
+                            <img
+                                alt=""
+                                class="w-full h-full object-cover object-center cursor-pointer"
+                                x-bind:src="data.image"
+                            >
+                        </div>
+                    </x-table.server.components.ui-td>
+                    <x-table.server.components.ui-td>
                         <span x-text="data.name"></span>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    </x-table.server.components.ui-td>
+                    <x-table.server.components.ui-td className="justify-items-center">
+                        <x-pop-over.ui-pop-over>
+                            <div
+                                x-bind="uiPopOverTrigger"
+                                class="cursor-pointer w-fit"
+                            >
+                                <i data-lucide="ellipsis-vertical"
+                                   class="text-neutral-500 group-focus-within:text-neutral-900 h-3 aspect-[1/1]">
+                                </i>
+                            </div>
+                            <div
+                                x-bind="uiPopOverContent"
+                                class="fixed z-50 text-sm w-[130px] text-gray-500 bg-white border border-gray-200 rounded-md shadow-sm dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"
+                            >
+                                <div class="flex flex-col py-1 justify-start items-start">
+                                    <div
+                                        class="flex items-center justify-start gap-2 w-full text-sm px-2 py-1.5 cursor-pointer hover:bg-neutral-50"
+                                        x-on:click="open = false; $store.formCategoryStore.getCategory('my-id');"
+                                    >
+                                        <div wire:ignore>
+                                            <i data-lucide="pencil" class="text-neutral-500 h-4 aspect-[1/1]"></i>
+                                        </div>
+                                        <span>Edit</span>
+                                    </div>
+                                    <div
+                                        class="flex items-center justify-start gap-2 w-full text-sm px-2 py-1.5 cursor-pointer hover:bg-neutral-50"
+                                        x-on:click="open = false; $store.formCategoryStore.delete();"
+                                    >
+                                        <div wire:ignore>
+                                            <i data-lucide="trash" class="text-neutral-500 h-4 aspect-[1/1]"></i>
+                                        </div>
+                                        <span>Delete</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </x-pop-over.ui-pop-over>
+                    </x-table.server.components.ui-td>
                 </tr>
             </template>
         </x-slot>

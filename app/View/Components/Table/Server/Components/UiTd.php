@@ -8,12 +8,15 @@ use Illuminate\View\Component;
 
 class UiTd extends Component
 {
+    public $className;
+
     /**
      * Create a new component instance.
+     * @param string $className
      */
-    public function __construct()
+    public function __construct($className = '')
     {
-        //
+        $this->className = $className;
     }
 
     /**
