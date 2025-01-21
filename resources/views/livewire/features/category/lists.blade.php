@@ -11,14 +11,14 @@
         totalRows="$store.listStore.totalRows"
     >
         <x-slot name="header">
-            <tr class="bg-brand-50">
+            <tr class="border-b border-neutral-300">
                 <x-table.server.components.ui-th
                     title="No."
-                    className="w-[80px]"
+                    className="w-[70px]"
                 ></x-table.server.components.ui-th>
                 <x-table.server.components.ui-th
                     title="Gambar"
-                    className="w-[150px]"
+                    className="w-[120px]"
                 ></x-table.server.components.ui-th>
                 <x-table.server.components.ui-th
                     title="Nama"
@@ -42,10 +42,10 @@
                         className="justify-items-center"
                     >
                         <div
-                            class="w-12 aspect-[1/1] border border-neutral-300 rounded-sm p-1 flex items-center justify-center">
+                            class="w-12 aspect-[1/1] border border-neutral-300 rounded-full p-1 flex items-center justify-center">
                             <img
                                 alt=""
-                                class="w-full h-full object-cover object-center cursor-pointer"
+                                class="w-full h-full object-cover object-center cursor-pointer border-0 rounded-full"
                                 x-bind:src="data.image"
                             >
                         </div>
@@ -58,6 +58,7 @@
                             <div
                                 x-bind="uiPopOverTrigger"
                                 class="cursor-pointer w-fit"
+                                wire:ignore
                             >
                                 <i data-lucide="ellipsis-vertical"
                                    class="text-neutral-500 group-focus-within:text-neutral-900 h-3 aspect-[1/1]">

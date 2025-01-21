@@ -21,8 +21,9 @@
 
 </head>
 <body class="bg-background">
-<x-navigation.navbar.wrapper></x-navigation.navbar.wrapper>
-<livewire:features.layout.sidebar />
+<x-navigation.sidebar.ui-sidebar></x-navigation.sidebar.ui-sidebar>
+{{--<x-navigation.navbar.wrapper></x-navigation.navbar.wrapper>--}}
+{{--<livewire:features.layout.sidebar />--}}
 <div class="ps-[theme(width.sidebar)] pt-14">
     <div class="px-5 py-3">
         {{ $slot }}
