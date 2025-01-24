@@ -1,9 +1,37 @@
-<div class="fixed w-sidebar h-screen flex flex-col border-r border-neutral-300">
-    <div class="h-20 w-full flex items-center justify-center gap-3">
+<div class="fixed bg-white w-sidebar h-screen flex flex-col border-r border-neutral-300 z-[151]">
+    <div class="h-[4.5rem] w-full flex items-center justify-center gap-3">
         <img
             src="{{ asset('/assets/images/logo_ls.png') }}"
             alt="img-logo"
             class="h-10">
-        <p class="text-brand-500 font-bold text-2xl">Lita Surya</p>
+        <p class="text-brand-500 font-semibold text-2xl">Lita Surya</p>
+    </div>
+    <div class="w-full flex-grow flex flex-col gap-1 px-4 py-5">
+        <x-navigation.sidebar.ui-sidebar-item
+            icon="house"
+            to="/dashboard"
+            title="Dashboard"
+            active="{{ \Illuminate\Support\Facades\Route::is('dashboard') }}"
+        ></x-navigation.sidebar.ui-sidebar-item>
+        <x-navigation.sidebar.ui-sidebar-item
+            icon="shopping-bag"
+            to="/cashier"
+            title="Cashier"
+        ></x-navigation.sidebar.ui-sidebar-item>
+        <x-navigation.sidebar.ui-sidebar-item-tree
+            icon="hard-drive"
+            title="Master Data"
+        >
+            <x-navigation.sidebar.ui-sidebar-item
+                icon="tags"
+                to="/category"
+                title="Category"
+            ></x-navigation.sidebar.ui-sidebar-item>
+            <x-navigation.sidebar.ui-sidebar-item
+                icon="box"
+                to="/item"
+                title="Item"
+            ></x-navigation.sidebar.ui-sidebar-item>
+        </x-navigation.sidebar.ui-sidebar-item-tree>
     </div>
 </div>
