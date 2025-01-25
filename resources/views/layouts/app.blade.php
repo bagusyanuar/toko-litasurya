@@ -24,8 +24,8 @@
 <x-navigation.sidebar.ui-sidebar></x-navigation.sidebar.ui-sidebar>
 <livewire:features.layout.ui-navbar />
 {{--<livewire:features.layout.sidebar />--}}
-<div class="ps-[theme(width.sidebar)] pt-14">
-    <div class="px-5 py-3">
+<div class="ps-[theme(width.sidebar)] pt-[theme(height.navbar)]">
+    <div class="px-5 py-5">
         {{ $slot }}
     </div>
 </div>

@@ -21,6 +21,9 @@ module.exports = {
             width: {
                 'sidebar': '270px',
             },
+            height: {
+                'navbar': '4.5rem',
+            },
             colors: {
                 'background': '#F7F7F7',
                 // 'brand': {

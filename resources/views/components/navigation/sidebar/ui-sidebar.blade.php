@@ -18,6 +18,11 @@
             to="/cashier"
             title="Cashier"
         ></x-navigation.sidebar.ui-sidebar-item>
+        <x-navigation.sidebar.ui-sidebar-item
+            icon="tags"
+            to="/master-data"
+            title="Master Data"
+        ></x-navigation.sidebar.ui-sidebar-item>
         <x-navigation.sidebar.ui-sidebar-item-tree
             icon="hard-drive"
             title="Master Data"
