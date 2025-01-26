@@ -19,7 +19,7 @@ class UiButton extends Component
     {
         $this->baseClass = 'flex gap-1 text-[0.675rem] px-[1.25rem] py-[0.65rem] rounded-[4px] cursor-pointer transition duration-300 ease-in-out disabled:cursor-default';
         if ($fill === 'outlined') {
-            $this->baseClass = implode(' ', [$this->baseClass, 'bg-whit border border-[#CBD5E1] text-brand-500 hover:bg-brand-50 disabled:bg-brand-50']);
+            $this->baseClass = implode(' ', [$this->baseClass, 'bg-white border border-[#CBD5E1] text-brand-500 hover:bg-brand-50 disabled:bg-brand-50']);
         } else {
             $this->baseClass = implode(' ', [$this->baseClass, 'bg-brand-500 border border-brand-500 text-white hover:bg-brand-700 hover:border-brand-700 disabled:bg-brand-700 disabled:border-brand-700']);
         }
