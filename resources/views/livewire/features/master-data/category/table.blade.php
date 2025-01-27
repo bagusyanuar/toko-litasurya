@@ -45,6 +45,13 @@
         <x-gxui.table.pagination
             shownPages="$store.categoryTableStore.shownPages"
             currentPage="$store.categoryTableStore.page"
+            perPageOptions="$store.categoryTableStore.perPageOptions"
+            handlePerPageChange="$store.categoryTableStore.perPageChange"
+            handlePageChange="$store.categoryTableStore.onPageChange"
+            handlePreviousPageChange="$store.categoryTableStore.onPreviousPage()"
+            handleNextPageChange="$store.categoryTableStore.onNextPage()"
+            totalPages="$store.categoryTableStore.totalPages"
+            totalRows="$store.categoryTableStore.totalRows"
         ></x-gxui.table.pagination>
     </div>
 </section>
@@ -55,8 +62,11 @@
             Alpine.store('categoryTableStore', {
                 loading: true,
                 page: 1,
-                perPage: 10,
+                perPage: 1,
                 shownPages: [],
+                perPageOptions: [1, 2, 3],
+                totalPages: 0,
+                totalRows: 0,
                 param: '',
                 data: [],
                 componentID: document.querySelector('[data-component-id="table-category"]')?.getAttribute('wire:id'),
@@ -68,8 +78,10 @@
                                     if (response['success']) {
                                         this.data = response['data'];
                                         const totalRecords = response['meta']['total_rows'];
+                                        this.totalRows = totalRecords;
                                         Alpine.store('gxuiPaginationStore').paginate(totalRecords, this.perPage, this.page, 5);
                                         this.shownPages = Alpine.store('gxuiPaginationStore').shownPages;
+                                        this.totalPages = Alpine.store('gxuiPaginationStore').totalPages;
                                     } else {
                                         console.error(response);
                                     }
@@ -79,6 +91,43 @@
                         }
                     })
                 },
+                perPageChange(value) {
+                    this.perPage = value;
+                    this.onFindAll();
+                    console.log(value)
+                },
+                onPageChange(value) {
+                    this.page = value;
+                    this.onFindAll();
+                    console.log(value);
+                },
+                onPreviousPage() {
+                    this.page = this.page - 1;
+                    this.onFindAll();
+                    console.log(this.page)
+                },
+                onNextPage() {
+                    this.page = this.page + 1;
+                    this.onFindAll();
+                },
+                onFindAll() {
+                    this.loading = true;
+                    window.Livewire.find(this.componentID).call('findAll', this.param, this.page, this.perPage)
+                        .then(response => {
+                            if (response['success']) {
+                                this.data = response['data'];
+                                const totalRecords = response['meta']['total_rows'];
+                                this.totalRows = totalRecords;
+                                Alpine.store('gxuiPaginationStore').paginate(totalRecords, this.perPage, this.page, 5);
+                                this.shownPages = Alpine.store('gxuiPaginationStore').shownPages;
+                                this.totalPages = Alpine.store('gxuiPaginationStore').totalPages;
+                            } else {
+                                console.error(response);
+                            }
+                        }).finally(() => {
+                        this.loading = false;
+                    });
+                }
             })
         })
     </script>

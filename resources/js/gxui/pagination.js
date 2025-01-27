@@ -3,7 +3,6 @@ document.addEventListener('alpine:init', () => {
         shownPages: [],
         totalPages: 0,
         paginate(totalRecords, perPage, currentPage, maxPageRange = 5) {
-
             let totalPages = Math.ceil(totalRecords / perPage);
             let halfRange = Math.floor(maxPageRange / 2);
             let startPage = Math.max(1, (currentPage - halfRange));

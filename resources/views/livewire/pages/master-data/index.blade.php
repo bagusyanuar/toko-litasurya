@@ -45,9 +45,6 @@
 </div>
 
 @push('scripts')
-    @vite([
-    'resources/js/gxui/pagination.js',
-    ])
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('masterDataStore', {
