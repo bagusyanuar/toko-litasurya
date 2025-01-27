@@ -9,11 +9,13 @@ use App\Domain\ServiceResponse;
 use App\Domain\ServiceResponseWithMetaPagination;
 use App\Domain\Web\Category\CategoryFilter;
 use App\Domain\Web\Category\CategoryRequest;
+use App\Domain\Web\Category\DTOCategoryFilter;
 use App\Helpers\FileUpload\FileUpload;
 use App\Helpers\FileUpload\FileUploadRequest;
 use App\Helpers\Validator\ValidatorResponse;
 use App\Models\Category;
 use App\UseCase\Web\CategoryInterface;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
@@ -21,36 +23,75 @@ use Illuminate\Support\MessageBag;
 class CategoryService implements CategoryInterface
 {
     private $targetPathImage = 'static/image/category';
+    /** @var ServiceResponseWithMetaPagination $paginationResponse */
+    private $paginationResponse;
+
+    public function __construct()
+    {
+        $this->paginationResponse = new ServiceResponseWithMetaPagination();
+    }
 
     /**
      * @inheritDoc
      */
-    public function getDataCategories(CategoryFilter $filter): ServiceResponseWithMetaPagination
+    public function findAll(DTOCategoryFilter $filter): ServiceResponseWithMetaPagination
     {
-        // TODO: Implement getDataCategories() method.
-        $response = new ServiceResponseWithMetaPagination();
+        // TODO: Implement findAll() method.
         try {
-            $query = Category::with([]);
-            if ($filter->getParam() !== '') {
-                $query->where('name', 'LIKE', '%' . $filter->getParam() . '%');
-            }
-            $offset = ($filter->getPage() - 1) * $filter->getPerPage();
+            $query = Category::with([])
+                ->when($filter->getParam(), function ($query) use ($filter) {
+                    /** @var Builder $query */
+                    return $query->where('name', 'LIKE', '%' . $filter->getParam() . '%');
+                });
             $totalRows = $query->count();
-            $data = $query->offset($offset)
+            $offset = ($filter->getPage() - 1) * $filter->getPerPage();
+            $categories = $query
+                ->offset($offset)
                 ->limit($filter->getPerPage())
                 ->get();
-
             $metaPagination = new MetaPagination($filter->getPage(), $filter->getPerPage(), $totalRows);
-            $response->setMessage('successfully load data category')
-                ->setData($data)
+            $this->paginationResponse->setMessage('successfully get data categories')
+                ->setData($categories)
                 ->setMeta($metaPagination);
         } catch (\Exception $e) {
-            $response->setSuccess(false)
+            $this->paginationResponse
+                ->setSuccess(false)
                 ->setCode(500)
-                ->setMessage($e->getMessage());
+                ->setMessage($e->getMessage())
+                ->setMeta(null);
         }
-        return $response;
+        return $this->paginationResponse;
     }
+
+//    /**
+//     * @inheritDoc
+//     */
+//    public function getDataCategories(CategoryFilter $filter): ServiceResponseWithMetaPagination
+//    {
+//        // TODO: Implement getDataCategories() method.
+//        $response = new ServiceResponseWithMetaPagination();
+//        try {
+//            $query = Category::with([]);
+//            if ($filter->getParam() !== '') {
+//                $query->where('name', 'LIKE', '%' . $filter->getParam() . '%');
+//            }
+//            $offset = ($filter->getPage() - 1) * $filter->getPerPage();
+//            $totalRows = $query->count();
+//            $data = $query->offset($offset)
+//                ->limit($filter->getPerPage())
+//                ->get();
+//
+//            $metaPagination = new MetaPagination($filter->getPage(), $filter->getPerPage(), $totalRows);
+//            $response->setMessage('successfully load data category')
+//                ->setData($data)
+//                ->setMeta($metaPagination);
+//        } catch (\Exception $e) {
+//            $response->setSuccess(false)
+//                ->setCode(500)
+//                ->setMessage($e->getMessage());
+//        }
+//        return $response;
+//    }
 
     /**
      * @inheritDoc
@@ -212,4 +253,6 @@ class CategoryService implements CategoryInterface
         }
         return $response;
     }
+
+
 }

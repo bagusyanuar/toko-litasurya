@@ -6,20 +6,17 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Table extends Component
+class Search extends Component
 {
-    public $isLoading;
-    public $storeData;
+    public $parentClassName;
 
     /**
      * Create a new component instance.
-     * @param $isLoading
-     * @param $storeData
+     * @param string $parentClassName
      */
-    public function __construct($isLoading, $storeData)
+    public function __construct($parentClassName = '')
     {
-        $this->isLoading = $isLoading;
-        $this->storeData = $storeData;
+        $this->parentClassName = $parentClassName;
     }
 
     /**
@@ -27,6 +24,6 @@ class Table extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.gxui.table.table');
+        return view('components.gxui.table.search');
     }
 }

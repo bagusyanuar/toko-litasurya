@@ -18,10 +18,10 @@
             handleChange="$store.masterDataStore.onChangeTab('box')"
         ></x-gxui.tab.tab-item>
         <x-gxui.tab.tab-item
-            active="$store.masterDataStore.selectedTab === 'gift'"
+            active="$store.masterDataStore.selectedTab === 'reward'"
             icon="gem"
             title="Reward"
-            handleChange="$store.masterDataStore.onChangeTab('gift')"
+            handleChange="$store.masterDataStore.onChangeTab('reward')"
         ></x-gxui.tab.tab-item>
         <x-gxui.tab.tab-item
             active="$store.masterDataStore.selectedTab === 'route'"
@@ -31,45 +31,7 @@
         ></x-gxui.tab.tab-item>
     </x-gxui.tab.tab-container>
     <div x-show="$store.masterDataStore.selectedTab === 'category'">
-        <div class="bg-white w-full px-6 py-5 rounded-lg shadow-md">
-            <div class="w-full flex items-center justify-between mb-3">
-                <p class="text-neutral-700 font-semibold">Category Data</p>
-                <x-gxui.button.button
-                    wire:ignore
-                >
-                    <div class="w-full flex justify-center items-center gap-1 text-sm">
-                        <i data-lucide="plus" class="h-3" style="width: fit-content;"></i>
-                        <span>Create New</span>
-                    </div>
-                </x-gxui.button.button>
-            </div>
-            <x-gxui.table.table
-                class="mb-1"
-                isLoading="true"
-            >
-                <x-slot name="header">
-                    <x-gxui.table.th
-                        title="Name"
-                        align="left"
-                    ></x-gxui.table.th>
-                    <x-gxui.table.th
-                        title="Action"
-                        className="w-[80px]"
-                    ></x-gxui.table.th>
-                </x-slot>
-                <x-slot name="rows">
-                    <tr>
-                        <td colspan="2">
-                            <x-gxui.table.empty-row></x-gxui.table.empty-row>
-                        </td>
-                    </tr>
-                </x-slot>
-            </x-gxui.table.table>
-            <x-gxui.table.pagination
-                shownPages="[1, 2, 3, 4, 5]"
-                currentPage="1"
-            ></x-gxui.table.pagination>
-        </div>
+        <livewire:features.master-data.category.table />
     </div>
     <div x-show="$store.masterDataStore.selectedTab === 'box'">
         <div>Box</div>
@@ -83,6 +45,9 @@
 </div>
 
 @push('scripts')
+    @vite([
+    'resources/js/gxui/pagination.js',
+    ])
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('masterDataStore', {

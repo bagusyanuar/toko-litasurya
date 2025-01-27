@@ -11,22 +11,30 @@ class Pagination extends Component
     public $perPageOptions;
     public $shownPages;
     public $currentPage;
+    public $totalRows;
+    public $totalPages;
 
     /**
      * Create a new component instance.
      * @param string $shownPages
      * @param string $perPageOptions
      * @param int $currentPage
+     * @param int $totalRows
+     * @param int $totalPages
      */
     public function __construct(
         $shownPages = '[]',
         $perPageOptions = '[10, 25, 50]',
-        $currentPage = 0
+        $currentPage = 0,
+        $totalRows = 0,
+        $totalPages = 0
     )
     {
         $this->shownPages = $shownPages;
         $this->perPageOptions = $perPageOptions;
         $this->currentPage = $currentPage;
+        $this->totalRows = $totalRows;
+        $this->totalPages = $totalPages;
     }
 
     /**

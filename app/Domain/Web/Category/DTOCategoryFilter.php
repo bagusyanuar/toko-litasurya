@@ -4,15 +4,14 @@
 namespace App\Domain\Web\Category;
 
 
-class CategoryFilter
+class DTOCategoryFilter
 {
-
     private $param = '';
     private $page = 1;
     private $perPage = 10;
 
     /**
-     * CategoryFilter constructor.
+     * DTOCategoryFilter constructor.
      * @param string $param
      * @param int $page
      * @param int $perPage
@@ -34,7 +33,7 @@ class CategoryFilter
 
     /**
      * @param string $param
-     * @return CategoryFilter
+     * @return DTOCategoryFilter
      */
     public function setParam($param)
     {
@@ -52,7 +51,7 @@ class CategoryFilter
 
     /**
      * @param int $page
-     * @return CategoryFilter
+     * @return DTOCategoryFilter
      */
     public function setPage($page)
     {
@@ -70,7 +69,7 @@ class CategoryFilter
 
     /**
      * @param int $perPage
-     * @return CategoryFilter
+     * @return DTOCategoryFilter
      */
     public function setPerPage($perPage)
     {

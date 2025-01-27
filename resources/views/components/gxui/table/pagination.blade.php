@@ -1,6 +1,6 @@
 <div class="flex items-center justify-between gap-3">
     <div class="text-sm text-neutral-500">Total Rows : <span
-            class="font-semibold text-neutral-700">100</span></div>
+            class="font-semibold text-neutral-700">{{ $totalRows }}</span></div>
     <div class="flex items-center">
         <div class="flex gap-2 items-center text-sm text-neutral-500">
             <span>Lines per page</span>
@@ -26,15 +26,10 @@
             <template x-for="value in {{ $shownPages }}">
                 <a href="#" x-on:click.prevent=""
                    class="text-xs cursor-pointer h-6 aspect-[1/1] rounded-full flex items-center justify-center"
-                   x-bind:class="value === {{ $currentPage }} ? 'bg-brand-500 text-white' : 'bg-transparent text-brand-500'"
+                   x-bind:class="value === {{ $currentPage }} ? 'bg-brand-500 text-white' : 'bg-transparent text-brand-500 hover:bg-brand-50 transition-all ease-in duration-200'"
                    x-text="value"
                 ></a>
             </template>
-
-{{--            <a href="#" x-on:click.prevent=""--}}
-{{--               class="text-brand-500 text-xs cursor-pointer h-6 aspect-[1/1] rounded-full flex items-center justify-center hover:bg-brand-50 transition-all ease-in duration-200">--}}
-{{--                2--}}
-{{--            </a>--}}
             <a href="#" x-on:click.prevent=""
                class="text-brand-500 cursor-pointer h-6 aspect-[1/1] rounded-full flex items-center justify-center hover:bg-brand-50 transition-all ease-in duration-200">
                 <i data-lucide="chevron-right"
