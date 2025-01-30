@@ -32,6 +32,7 @@
     </x-gxui.tab.tab-container>
     <div x-show="$store.masterDataStore.selectedTab === 'category'">
         <livewire:features.master-data.category.table />
+        <livewire:features.master-data.category.form />
     </div>
     <div x-show="$store.masterDataStore.selectedTab === 'box'">
         <div>Box</div>

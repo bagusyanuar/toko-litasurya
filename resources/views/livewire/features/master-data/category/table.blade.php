@@ -6,9 +6,15 @@
         <div class="w-full flex items-center justify-between mb-3">
             <p class="text-neutral-700 font-semibold">Category Data</p>
             <div class="flex items-center gap-3">
-                <x-gxui.table.search></x-gxui.table.search>
+                <x-gxui.table.search
+                    placeholder="Search..."
+                    x-bind:value="$store.categoryTableStore.param"
+                    x-on:input="$store.categoryTableStore.onSearch($event.target.value)"
+
+                ></x-gxui.table.search>
                 <x-gxui.button.button
                     wire:ignore
+                    x-on:click="$store.categoryFormStore.setOpenModalForm()"
                 >
                     <div class="w-full flex justify-center items-center gap-1 text-sm">
                         <i data-lucide="plus" class="h-3" style="width: fit-content;"></i>
@@ -54,6 +60,7 @@
             totalRows="$store.categoryTableStore.totalRows"
         ></x-gxui.table.pagination>
     </div>
+
 </section>
 
 @push('scripts')
@@ -69,6 +76,7 @@
                 totalRows: 0,
                 param: '',
                 data: [],
+                timeoutDebounce: null,
                 componentID: document.querySelector('[data-component-id="table-category"]')?.getAttribute('wire:id'),
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
@@ -86,7 +94,7 @@
                                         console.error(response);
                                     }
                                 }).finally(() => {
-                                this.loading = false;
+                                // this.loading = false;
                             })
                         }
                     })
@@ -127,7 +135,14 @@
                         }).finally(() => {
                         this.loading = false;
                     });
-                }
+                },
+                onSearch(value) {
+                    clearTimeout(this.timeoutDebounce);
+                    this.timeoutDebounce = setTimeout(() => {
+                        Alpine.store('categoryTableStore').param = value;
+                        Alpine.store('categoryTableStore').onFindAll();
+                    }, 500)
+                },
             })
         })
     </script>
