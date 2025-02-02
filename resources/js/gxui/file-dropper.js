@@ -1,5 +1,5 @@
 document.addEventListener('alpine:init', () => {
-    Alpine.store('fileDropperStore', {
+    Alpine.store('gxuiFileDropperStore', {
         initDropper(element) {
             return new Dropzone(element, {
                 url: '/url-dropper',

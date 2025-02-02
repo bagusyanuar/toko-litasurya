@@ -18,7 +18,7 @@
         </div>
         <div x-show="{{ $dropperLoading }}">
             <div
-                class="absolute inset-0 z-[20] bg-gray-900 bg-opacity-50 flex items-center justify-center text-white text-sm font-semibold"
+                class="absolute inset-0 z-[20] bg-neutral-200 bg-opacity-70 flex items-center justify-center text-brand-500 text-sm font-semibold"
                 x-cloak
             >
                 Uploading...

@@ -1,4 +1,5 @@
 <div>
+    <x-gxui.toast.toast></x-gxui.toast.toast>
     <div class="mb-5">
         <x-gxui.typography.page-title text="Master Data"></x-gxui.typography.page-title>
         <x-gxui.typography.page-sub-title

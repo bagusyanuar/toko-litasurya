@@ -76,17 +76,24 @@ class CategoryService implements CategoryInterface
     {
         // TODO: Implement create() method.
         try {
-            $file = $dto->getFile();
-            $fileUploadService = new FileUpload($file, $this->targetPathImage);
-            $fileUploadResponse = $fileUploadService->upload();
-            if (!$fileUploadResponse->isSuccess()) {
-                return $this->response
-                    ->setStatus(500)
-                    ->setSuccess(false)
-                    ->setMessage('internal server error (failed to upload)')
-                    ->setData(null)
-                    ->setMeta(null);
-            }
+//            $file = $dto->getFile();
+//            $fileUploadService = new FileUpload($file, $this->targetPathImage);
+//            $fileUploadResponse = $fileUploadService->upload();
+//            if (!$fileUploadResponse->isSuccess()) {
+//                return $this->response
+//                    ->setStatus(500)
+//                    ->setSuccess(false)
+//                    ->setMessage('internal server error (failed to upload)')
+//                    ->setData(null)
+//                    ->setMeta(null);
+//            }
+            sleep(2);
+            $this->response
+                ->setStatus(201)
+                ->setSuccess(true)
+                ->setMessage('successfully create new category')
+                ->setData(null)
+                ->setMeta(null);
         }catch (\Exception $e) {
             $this->response
                 ->setStatus(500)

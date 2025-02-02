@@ -48,11 +48,17 @@
             <x-gxui.button.button
                 wire:ignore
                 x-on:click="$store.categoryFormStore.mutate()"
+                x-bind:disabled="$store.categoryFormStore.loading"
                 class="!px-6"
             >
-                <div class="w-full flex justify-center items-center gap-1 text-sm">
-                    <span>Submit</span>
-                </div>
+                <template x-if="!$store.categoryFormStore.loading">
+                    <div class="w-full flex justify-center items-center gap-1 text-sm">
+                        <span>Submit</span>
+                    </div>
+                </template>
+                <template x-if="$store.categoryFormStore.loading">
+                    <x-gxui.loader.button-loader></x-gxui.loader.button-loader>
+                </template>
             </x-gxui.button.button>
         </div>
     </x-gxui.modal.form>
@@ -76,15 +82,25 @@
                     Livewire.hook('component.init', ({component}) => {
                         if (component.id === this.componentID) {
                             const dropperElement = document.getElementById('imageDropper');
-                            this.fileDropper = Alpine.store('fileDropperStore').initDropper(dropperElement);
+                            this.fileDropper = Alpine.store('gxuiFileDropperStore').initDropper(dropperElement);
                         }
                     });
                 },
                 async mutate () {
-                    this.loading = true;
-                    let response = await window.Livewire.find(this.componentID).call('create');
-                    console.log(response);
-                    this.loading = false;
+                    // this.fileDropper.disable();
+                    // this.loading = true;
+                    // const uploadPromises = this.fileDropper.files.map(file => {
+                    //     return new Promise((resolve, reject) => {
+                    //         window.Livewire.find(this.componentID).upload('file', file, resolve, reject)
+                    //     });
+                    // });
+                    // await Promise.all(uploadPromises);
+                    // let response = await window.Livewire.find(this.componentID).call('create');
+                    // this.fileDropper.enable();
+                    // this.fileDropper.removeAllFiles();
+                    // this.loading = false;
+
+                    Alpine.store('gxuiToastStore').failed('error nih');
                 }
             });
         });
