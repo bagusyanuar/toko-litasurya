@@ -34,11 +34,7 @@ class Table extends Component
             200,
             'success',
             $response->getData(),
-            [
-                'total_rows' => $response->getMeta()->getTotalRows(),
-                'page' => $response->getMeta()->getPage(),
-                'per_page' => $response->getMeta()->getPerPage(),
-            ]
+            $response->getMeta()
         );
     }
 

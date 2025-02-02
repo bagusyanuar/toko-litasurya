@@ -4,21 +4,26 @@
 namespace App\UseCase\Web;
 
 
-use App\Domain\ServiceResponse;
-use App\Domain\ServiceResponseWithMetaPagination;
-use App\Domain\Web\Category\CategoryFilter;
-use App\Domain\Web\Category\CategoryRequest;
+use App\Commons\Response\ServiceResponse;
 use App\Domain\Web\Category\DTOCategoryFilter;
+use App\Domain\Web\Category\DTOCategoryRequest;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Collection;
 
 interface CategoryInterface
 {
+
     /**
      * @param DTOCategoryFilter $filter
-     * @return ServiceResponseWithMetaPagination
+     * @return ServiceResponse
      */
-    public function findAll(DTOCategoryFilter $filter): ServiceResponseWithMetaPagination;
+    public function findAll(DTOCategoryFilter $filter): ServiceResponse;
+
+    /**
+     * @param DTOCategoryRequest $dto
+     * @return ServiceResponse
+     */
+    public function create(DTOCategoryRequest $dto): ServiceResponse;
 //    /**
 //     * @param CategoryFilter $filter
 //     * @return ServiceResponseWithMetaPagination

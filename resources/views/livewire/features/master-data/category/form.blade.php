@@ -82,6 +82,9 @@
                 },
                 async mutate () {
                     this.loading = true;
+                    let response = await window.Livewire.find(this.componentID).call('create');
+                    console.log(response);
+                    this.loading = false;
                 }
             });
         });
