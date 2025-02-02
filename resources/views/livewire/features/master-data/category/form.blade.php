@@ -1,17 +1,89 @@
-<x-gxui.modal.form></x-gxui.modal.form>
+<section
+    id="section-form-category"
+    data-component-id="form-category"
+>
+    <x-gxui.modal.form>
+        <div
+            class="modal-header flex items-center justify-between px-4 py-3 border-b border-neutral-300 rounded-t">
+            <span class="text-neutral-700 font-semibold">Form New Category</span>
+            <button
+                type="button"
+                x-on:click=""
+                class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-4 h-4 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            >
+                <svg class="w-2 h-2" aria-hidden="true"
+                     xmlns="http://www.w3.org/2000/svg"
+                     fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+        </div>
+        <div class="modal-body p-6">
+            <x-gxui.input.text.text
+                placeholder="Name"
+                label="Name"
+                parentClassName="mb-3"
+                x-bind:disabled="$store.categoryFormStore.loading"
+            ></x-gxui.input.text.text>
+            <x-gxui.input.file.file-dropper
+                placeholder="Name"
+                label="Image"
+                dropperID="imageDropper"
+                dropperLoading="$store.categoryFormStore.loading"
+            ></x-gxui.input.file.file-dropper>
+        </div>
+        <div class="modal-footer w-full flex items-center justify-end gap-2 px-4 py-3 border-t border-neutral-300">
+            <x-gxui.button.button
+                wire:ignore
+                x-on:click=""
+                class="!px-6 bg-white border !border-brand-500 !text-brand-500 hover:!text-white"
+            >
+                <div class="w-full flex justify-center items-center gap-1 text-sm">
+                    <span>Cancel</span>
+                </div>
+            </x-gxui.button.button>
+            <x-gxui.button.button
+                wire:ignore
+                x-on:click="$store.categoryFormStore.mutate()"
+                class="!px-6"
+            >
+                <div class="w-full flex justify-center items-center gap-1 text-sm">
+                    <span>Submit</span>
+                </div>
+            </x-gxui.button.button>
+        </div>
+    </x-gxui.modal.form>
+</section>
 
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('categoryFormStore', {
+                componentID: document.querySelector('[data-component-id="form-category"]')?.getAttribute('wire:id'),
                 modalFormShow: false,
+                fileDropper: null,
+                loading: false,
                 setOpenModalForm() {
                     this.modalFormShow = true;
                 },
                 setCloseModalForm() {
                     this.modalFormShow = false;
+                },
+                init: function () {
+                    Livewire.hook('component.init', ({component}) => {
+                        if (component.id === this.componentID) {
+                            const dropperElement = document.getElementById('imageDropper');
+                            this.fileDropper = Alpine.store('fileDropperStore').initDropper(dropperElement);
+                        }
+                    });
+                },
+                async mutate () {
+                    this.loading = true;
                 }
-            })
+            });
         });
     </script>
 @endpush
