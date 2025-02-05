@@ -19,6 +19,8 @@ class Form extends Component
     /** @var DTOCategoryRequest $dto */
     private $dto;
 
+    public $name;
+
     /** @var $file UploadedFile | null */
     public $file;
 
@@ -31,9 +33,15 @@ class Form extends Component
 
     public function create()
     {
-        sleep(2);
-        $this->dto->setFile($this->file);
+        $dtoForm = [
+            'name' => $this->name,
+            'file' => $this->file
+        ];
+        $this->dto->hydrateForm($dtoForm);
         $response = $this->service->create($this->dto);
+        if ($response->isSuccess()) {
+            $this->reset(['name', 'file']);
+        }
         return AlpineResponse::toResponse(
             $response->isSuccess(),
             $response->getStatus(),

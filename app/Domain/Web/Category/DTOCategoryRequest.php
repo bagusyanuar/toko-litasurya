@@ -6,6 +6,7 @@ namespace App\Domain\Web\Category;
 
 use App\Commons\Request\DTORequest;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Validation\Rules\Password;
 
 class DTOCategoryRequest extends DTORequest
 {
@@ -13,6 +14,28 @@ class DTOCategoryRequest extends DTORequest
     private $name;
     /** @var UploadedFile|null $file */
     private $file;
+
+    protected function rules()
+    {
+        return [
+            'name' => 'required',
+        ];
+    }
+
+    public function hydrate()
+    {
+        $name = $this->dtoForm['name'];
+        $file = $this->dtoForm['file'];
+        $this->setName($name)
+            ->setFile($file);
+    }
+
+    public function dehydrate()
+    {
+        return [
+            'name' => $this->getName(),
+        ];
+    }
 
     /**
      * @return string

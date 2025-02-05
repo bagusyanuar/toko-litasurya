@@ -2,13 +2,15 @@
     id="section-form-category"
     data-component-id="form-category"
 >
-    <x-gxui.modal.form>
+    <x-gxui.modal.form
+        show="$store.categoryFormStore.modalFormShow"
+    >
         <div
             class="modal-header flex items-center justify-between px-4 py-3 border-b border-neutral-300 rounded-t">
             <span class="text-neutral-700 font-semibold">Form New Category</span>
             <button
                 type="button"
-                x-on:click=""
+                x-on:click="$store.categoryFormStore.setCloseModalForm()"
                 class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-4 h-4 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
             >
                 <svg class="w-2 h-2" aria-hidden="true"
@@ -26,7 +28,10 @@
                 placeholder="Name"
                 label="Name"
                 parentClassName="mb-3"
+                wire:model="name"
                 x-bind:disabled="$store.categoryFormStore.loading"
+                validatorKey="$store.categoryFormStore.validator"
+                validatorField="name"
             ></x-gxui.input.text.text>
             <x-gxui.input.file.file-dropper
                 placeholder="Name"
@@ -38,8 +43,9 @@
         <div class="modal-footer w-full flex items-center justify-end gap-2 px-4 py-3 border-t border-neutral-300">
             <x-gxui.button.button
                 wire:ignore
-                x-on:click=""
-                class="!px-6 bg-white border !border-brand-500 !text-brand-500 hover:!text-white"
+                x-on:click="$store.categoryFormStore.setCloseModalForm()"
+                x-bind:disabled="$store.categoryFormStore.loading"
+                class="!px-6 bg-white !border-brand-500 !text-brand-500 hover:!text-white"
             >
                 <div class="w-full flex justify-center items-center gap-1 text-sm">
                     <span>Cancel</span>
@@ -72,6 +78,7 @@
                 modalFormShow: false,
                 fileDropper: null,
                 loading: false,
+                validator: {},
                 setOpenModalForm() {
                     this.modalFormShow = true;
                 },
@@ -87,20 +94,33 @@
                     });
                 },
                 async mutate () {
-                    // this.fileDropper.disable();
-                    // this.loading = true;
-                    // const uploadPromises = this.fileDropper.files.map(file => {
-                    //     return new Promise((resolve, reject) => {
-                    //         window.Livewire.find(this.componentID).upload('file', file, resolve, reject)
-                    //     });
-                    // });
-                    // await Promise.all(uploadPromises);
-                    // let response = await window.Livewire.find(this.componentID).call('create');
-                    // this.fileDropper.enable();
-                    // this.fileDropper.removeAllFiles();
-                    // this.loading = false;
-
-                    Alpine.store('gxuiToastStore').failed('error nih');
+                    this.fileDropper.disable();
+                    this.loading = true;
+                    const uploadPromises = this.fileDropper.files.map(file => {
+                        return new Promise((resolve, reject) => {
+                            window.Livewire.find(this.componentID).upload('file', file, resolve, reject)
+                        });
+                    });
+                    await Promise.all(uploadPromises);
+                    let response = await window.Livewire.find(this.componentID).call('create');
+                    console.log(response);
+                    switch (response['status']) {
+                        case 422:
+                            this.validator = response['data'];
+                            Alpine.store('gxuiToastStore').failed('please fill the correct form');
+                            break;
+                        case 201:
+                            this.fileDropper.removeAllFiles();
+                            Alpine.store('gxuiToastStore').success('successfully create new category');
+                            break;
+                        case 500:
+                            Alpine.store('gxuiToastStore').failed('internal server error');
+                            break;
+                        default:
+                            break;
+                    }
+                    this.fileDropper.enable();
+                    this.loading = false;
                 }
             });
         });

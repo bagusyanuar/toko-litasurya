@@ -76,25 +76,42 @@ class CategoryService implements CategoryInterface
     {
         // TODO: Implement create() method.
         try {
-//            $file = $dto->getFile();
-//            $fileUploadService = new FileUpload($file, $this->targetPathImage);
-//            $fileUploadResponse = $fileUploadService->upload();
-//            if (!$fileUploadResponse->isSuccess()) {
-//                return $this->response
-//                    ->setStatus(500)
-//                    ->setSuccess(false)
-//                    ->setMessage('internal server error (failed to upload)')
-//                    ->setData(null)
-//                    ->setMeta(null);
-//            }
-            sleep(2);
+            $validator = $dto->validate();
+            if ($validator->fails()) {
+                return $this->response
+                    ->setSuccess(false)
+                    ->setStatus(422)
+                    ->setMessage('Unprocessable Entity')
+                    ->setMeta(null)
+                    ->setData($validator->errors()->toArray());
+            }
+            $dto->hydrate();
+            $dataCategory = [
+                'name' => $dto->getName()
+            ];
+            if ($dto->getFile()) {
+                $file = $dto->getFile();
+                $fileUploadService = new FileUpload($file, $this->targetPathImage);
+                $fileUploadResponse = $fileUploadService->upload();
+                if (!$fileUploadResponse->isSuccess()) {
+                    return $this->response
+                        ->setStatus(500)
+                        ->setSuccess(false)
+                        ->setMessage('internal server error (failed to upload)')
+                        ->setData(null)
+                        ->setMeta(null);
+                }
+                $dataCategory['image'] = $fileUploadResponse->getFileName();
+            }
+
+            Category::create($dataCategory);
             $this->response
                 ->setStatus(201)
                 ->setSuccess(true)
                 ->setMessage('successfully create new category')
                 ->setData(null)
                 ->setMeta(null);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->response
                 ->setStatus(500)
                 ->setSuccess(false)
@@ -265,7 +282,6 @@ class CategoryService implements CategoryInterface
 //        }
 //        return $response;
 //    }
-
 
 
 }

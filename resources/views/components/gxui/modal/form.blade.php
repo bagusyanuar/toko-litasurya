@@ -2,12 +2,12 @@
     <div
         class="fixed inset-0 bg-gray-500 bg-opacity-50 z-[250]"
         x-cloak
-        x-show="true"
+        x-show="{{ $show }}"
         x-on:click=""
     ></div>
     <div
         x-cloak
-        x-show="true"
+        x-show="{{ $show }}"
         x-transition:enter="transition ease-out duration-300 transform"
         x-transition:enter-start="translate-y-[-100%] opacity-0"
         x-transition:enter-end="translate-y-0 opacity-100"
