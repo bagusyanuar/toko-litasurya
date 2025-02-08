@@ -10,9 +10,14 @@ module.exports = {
                 spinner: {
                     '100%': {transform: 'rotate(360deg)'},
                 },
+                shimmer: {
+                    "0%": { transform: "translateX(-100%)" },
+                    "100%": { transform: "translateX(100%)" },
+                },
             },
             animation: {
                 spinner: 'spinner 1.5s linear infinite',
+                shimmer: "shimmer 1.5s infinite linear",
             },
             boxShadow: {
                 'sidebar': '3px 0 3px -2px rgba(0, 0, 0, 0.2)',

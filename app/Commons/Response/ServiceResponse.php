@@ -133,4 +133,39 @@ class ServiceResponse
         $this->meta = $meta;
         return $this;
     }
+
+    public static function success($message, $data = null, $meta = null, $status = 200): self
+    {
+        return new self(true, $status, $message, $data, $meta);
+    }
+
+    public static function failed($message, $data = null, $meta = null, $status = 500): self
+    {
+        return new self(false, $status, $message, $data, $meta);
+    }
+
+    public static function statusOK($message = 'success', $data = null, $meta = null): self
+    {
+        return new self(true, 200, $message, $data, $meta);
+    }
+
+    public static function created($message = '', $data = null): self
+    {
+        $msg = $message ? $message : 'successfully created';
+        return new self(true, 201, $msg, $data, null);
+    }
+
+    public static function internalServerError($message = ''): self
+    {
+        $msg = $message ? 'internal server error (' . $message . ')' : 'internal server error';
+        return new self(false, 500, $msg, null, null);
+    }
+
+    public static function unprocessableEntity($data = null, $message = ''): self
+    {
+        $msg = $message ? 'Unprocessable Entity (' . $message . ')' : 'Unprocessable Entity';
+        return new self(false, 422, $msg, $data, null);
+    }
+
+
 }

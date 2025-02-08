@@ -50,23 +50,17 @@ class CategoryService implements CategoryInterface
                 ->limit($filter->getPerPage())
                 ->get();
             $metaPagination = new MetaPagination($filter->getPage(), $filter->getPerPage(), $totalRows);
-            $this->response
-                ->setSuccess(true)
-                ->setStatus(200)
-                ->setMessage('successfully get data categories')
-                ->setData($categories)
-                ->setMeta([
-                    'pagination' => $metaPagination->dehydrate()
-                ]);
+            $meta = [
+                'pagination' => $metaPagination->dehydrate()
+            ];
+            return ServiceResponse::statusOK(
+                'successfully get data categories',
+                $categories,
+                $meta
+            );
         } catch (\Exception $e) {
-            $this->response
-                ->setSuccess(false)
-                ->setStatus(500)
-                ->setData(null)
-                ->setMessage($e->getMessage())
-                ->setMeta(null);
+            return ServiceResponse::internalServerError($e->getMessage());
         }
-        return $this->response;
     }
 
     /**
@@ -78,12 +72,7 @@ class CategoryService implements CategoryInterface
         try {
             $validator = $dto->validate();
             if ($validator->fails()) {
-                return $this->response
-                    ->setSuccess(false)
-                    ->setStatus(422)
-                    ->setMessage('Unprocessable Entity')
-                    ->setMeta(null)
-                    ->setData($validator->errors()->toArray());
+                return ServiceResponse::unprocessableEntity($validator->errors()->toArray());
             }
             $dto->hydrate();
             $dataCategory = [
@@ -94,32 +83,16 @@ class CategoryService implements CategoryInterface
                 $fileUploadService = new FileUpload($file, $this->targetPathImage);
                 $fileUploadResponse = $fileUploadService->upload();
                 if (!$fileUploadResponse->isSuccess()) {
-                    return $this->response
-                        ->setStatus(500)
-                        ->setSuccess(false)
-                        ->setMessage('internal server error (failed to upload)')
-                        ->setData(null)
-                        ->setMeta(null);
+                    return ServiceResponse::internalServerError('failed to upload');
                 }
                 $dataCategory['image'] = $fileUploadResponse->getFileName();
             }
 
             Category::create($dataCategory);
-            $this->response
-                ->setStatus(201)
-                ->setSuccess(true)
-                ->setMessage('successfully create new category')
-                ->setData(null)
-                ->setMeta(null);
+            return ServiceResponse::created('successfully create new category');
         } catch (\Exception $e) {
-            $this->response
-                ->setStatus(500)
-                ->setSuccess(false)
-                ->setMessage('internal server error ' . $e->getMessage())
-                ->setData(null)
-                ->setMeta(null);
+            return ServiceResponse::internalServerError($e->getMessage());
         }
-        return $this->response;
     }
 
     /**

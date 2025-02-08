@@ -42,13 +42,22 @@
                 <template x-for="(data, index) in $store.categoryTableStore.data" :key="index">
                     <tr class="border-b border-neutral-300">
                         <x-gxui.table.td>
-                            <span x-text="data.name"></span>
+                            <div class="flex items-center gap-3">
+                                <img
+                                    alt="category-image"
+                                    class="w-10 h-10 rounded-full"
+                                    x-bind:src="data.image"
+                                >
+                                <span x-text="data.name"></span>
+                            </div>
+
                         </x-gxui.table.td>
                     </tr>
                 </template>
             </x-slot>
         </x-gxui.table.table>
         <x-gxui.table.pagination
+            isLoading="$store.categoryTableStore.loading"
             shownPages="$store.categoryTableStore.shownPages"
             currentPage="$store.categoryTableStore.page"
             perPageOptions="$store.categoryTableStore.perPageOptions"
@@ -73,7 +82,7 @@
                 shownPages: [],
                 perPageOptions: [1, 2, 3],
                 totalPages: 0,
-                totalRows: 0,
+                totalRows: 10,
                 param: '',
                 data: [],
                 timeoutDebounce: null,
@@ -85,7 +94,7 @@
                                 .then(response => {
                                     if (response['success']) {
                                         this.data = response['data'];
-                                        const totalRecords = response['meta']['total_rows'];
+                                        const totalRecords = response['meta']['pagination']['total_rows'];
                                         this.totalRows = totalRecords;
                                         Alpine.store('gxuiPaginationStore').paginate(totalRecords, this.perPage, this.page, 5);
                                         this.shownPages = Alpine.store('gxuiPaginationStore').shownPages;
@@ -94,7 +103,7 @@
                                         console.error(response);
                                     }
                                 }).finally(() => {
-                                // this.loading = false;
+                                this.loading = false;
                             })
                         }
                     })
@@ -124,7 +133,7 @@
                         .then(response => {
                             if (response['success']) {
                                 this.data = response['data'];
-                                const totalRecords = response['meta']['total_rows'];
+                                const totalRecords = response['meta']['pagination']['total_rows'];
                                 this.totalRows = totalRecords;
                                 Alpine.store('gxuiPaginationStore').paginate(totalRecords, this.perPage, this.page, 5);
                                 this.shownPages = Alpine.store('gxuiPaginationStore').shownPages;
