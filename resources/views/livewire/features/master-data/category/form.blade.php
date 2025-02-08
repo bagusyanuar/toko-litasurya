@@ -103,7 +103,6 @@
                     });
                     await Promise.all(uploadPromises);
                     let response = await window.Livewire.find(this.componentID).call('create');
-                    console.log(response);
                     switch (response['status']) {
                         case 422:
                             this.validator = response['data'];
@@ -112,6 +111,7 @@
                         case 201:
                             this.fileDropper.removeAllFiles();
                             Alpine.store('gxuiToastStore').success('successfully create new category');
+                            Alpine.store('categoryTableStore').onFindAll();
                             break;
                         case 500:
                             Alpine.store('gxuiToastStore').failed('internal server error');

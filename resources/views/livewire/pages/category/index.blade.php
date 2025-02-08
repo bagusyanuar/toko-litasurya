@@ -31,7 +31,7 @@
     'resources/js/features/category/store/form-category-store.js',
     'resources/js/features/category/store/list-store.js',
     'resources/js/features/shared/alert-confirm-store.js',
-    'resources/js/features/shared/components/pop-over.js',
+    'resources/js/features/shared/components/popper.js',
     'resources/js/features/shared/components/notification.js',
     ])
 @endpush

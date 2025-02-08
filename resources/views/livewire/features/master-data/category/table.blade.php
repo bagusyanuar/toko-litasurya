@@ -44,13 +44,51 @@
                         <x-gxui.table.td>
                             <div class="flex items-center gap-3">
                                 <img
+                                    x-data
                                     alt="category-image"
-                                    class="w-10 h-10 rounded-full"
+                                    class="w-10 h-10 rounded-full border border-neutral-200"
                                     x-bind:src="data.image"
                                 >
                                 <span x-text="data.name"></span>
                             </div>
-
+                        </x-gxui.table.td>
+                        <x-gxui.table.td className="flex justify-center">
+                            <x-gxui.popper.popper>
+                                <div
+                                    x-bind="gxuiPopperTrigger"
+                                    class="cursor-pointer w-fit"
+                                    wire:ignore
+                                >
+                                    <i data-lucide="ellipsis-vertical"
+                                       class="text-neutral-500 group-focus-within:text-neutral-900 h-3 aspect-[1/1]">
+                                    </i>
+                                </div>
+                                <div
+                                    x-bind="gxuiPopperContent"
+                                    class="fixed z-50 text-sm w-[130px] text-gray-500 bg-white border border-gray-200 rounded-md shadow-sm dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"
+                                >
+                                    <div class="flex flex-col py-1 justify-start items-start">
+                                        <div
+                                            class="flex items-center justify-start gap-2 w-full text-sm px-2 py-1.5 cursor-pointer hover:bg-neutral-50"
+                                            x-on:click="open = false;"
+                                        >
+                                            <div wire:ignore>
+                                                <i data-lucide="pencil" class="text-neutral-500 h-4 aspect-[1/1]"></i>
+                                            </div>
+                                            <span>Edit</span>
+                                        </div>
+                                        <div
+                                            class="flex items-center justify-start gap-2 w-full text-sm px-2 py-1.5 cursor-pointer hover:bg-neutral-50"
+                                            x-on:click="open = false;"
+                                        >
+                                            <div wire:ignore>
+                                                <i data-lucide="trash" class="text-neutral-500 h-4 aspect-[1/1]"></i>
+                                            </div>
+                                            <span>Delete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </x-gxui.popper.popper>
                         </x-gxui.table.td>
                     </tr>
                 </template>
@@ -78,11 +116,11 @@
             Alpine.store('categoryTableStore', {
                 loading: true,
                 page: 1,
-                perPage: 1,
+                perPage: 10,
                 shownPages: [],
-                perPageOptions: [1, 2, 3],
+                perPageOptions: [10, 25, 50],
                 totalPages: 0,
-                totalRows: 10,
+                totalRows: 0,
                 param: '',
                 data: [],
                 timeoutDebounce: null,
@@ -100,28 +138,28 @@
                                         this.shownPages = Alpine.store('gxuiPaginationStore').shownPages;
                                         this.totalPages = Alpine.store('gxuiPaginationStore').totalPages;
                                     } else {
-                                        console.error(response);
+                                        Alpine.store('gxuiToastStore').failed('failed to load data');
                                     }
-                                }).finally(() => {
-                                this.loading = false;
+                                }).catch(error => {
+                                Alpine.store('gxuiToastStore').failed('failed to load data');
                             })
+                                .finally(() => {
+                                    this.loading = false;
+                                })
                         }
                     })
                 },
                 perPageChange(value) {
                     this.perPage = value;
                     this.onFindAll();
-                    console.log(value)
                 },
                 onPageChange(value) {
                     this.page = value;
                     this.onFindAll();
-                    console.log(value);
                 },
                 onPreviousPage() {
                     this.page = this.page - 1;
                     this.onFindAll();
-                    console.log(this.page)
                 },
                 onNextPage() {
                     this.page = this.page + 1;
@@ -129,7 +167,8 @@
                 },
                 onFindAll() {
                     this.loading = true;
-                    window.Livewire.find(this.componentID).call('findAll', this.param, this.page, this.perPage)
+                    window.Livewire
+                        .find(this.componentID).call('findAll', this.param, this.page, this.perPage)
                         .then(response => {
                             if (response['success']) {
                                 this.data = response['data'];
@@ -139,15 +178,18 @@
                                 this.shownPages = Alpine.store('gxuiPaginationStore').shownPages;
                                 this.totalPages = Alpine.store('gxuiPaginationStore').totalPages;
                             } else {
-                                console.error(response);
+                                Alpine.store('gxuiToastStore').failed('failed to load data');
                             }
-                        }).finally(() => {
+                        }).catch(error => {
+                        Alpine.store('gxuiToastStore').failed('failed to load data');
+                    }).finally(() => {
                         this.loading = false;
-                    });
+                    })
                 },
                 onSearch(value) {
                     clearTimeout(this.timeoutDebounce);
                     this.timeoutDebounce = setTimeout(() => {
+                        Alpine.store('categoryTableStore').page = 1;
                         Alpine.store('categoryTableStore').param = value;
                         Alpine.store('categoryTableStore').onFindAll();
                     }, 500)
