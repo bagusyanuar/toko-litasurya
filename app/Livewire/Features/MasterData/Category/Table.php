@@ -38,6 +38,25 @@ class Table extends Component
         );
     }
 
+    public function delete($id)
+    {
+        $response = $this->service->delete($id);
+        if (!$response->isSuccess()) {
+            return AlpineResponse::toResponse(
+                false,
+                500,
+                $response->getMessage()
+            );
+        }
+        return AlpineResponse::toResponse(
+            true,
+            200,
+            'success',
+            $response->getData(),
+            $response->getMeta()
+        );
+    }
+
     public function render()
     {
         return view('livewire.features.master-data.category.table');

@@ -17,7 +17,7 @@ document.addEventListener('alpine:init', () => {
 
     Alpine.bind('gxuiPopperTrigger', () => ({
         'x-data': () => ({}),
-        '@click': `togglePopOver(); triggerRect = $el.getBoundingClientRect();`,
+        '@click': `togglePopOver(); triggerRect = $el.getBoundingClientRect(); console.log($el.getBoundingClientRect())`,
     }));
 
     Alpine.bind('gxuiPopperContent', () => ({
@@ -27,8 +27,8 @@ document.addEventListener('alpine:init', () => {
         'x-cloak': true,
         ':style': `
             {
-                top: triggerRect.bottom + 10 + window.scrollY + 'px',
-                right: window.innerWidth - triggerRect.right + 'px'
+                top: triggerRect.bottom + 10 +'px',
+                right: window.innerWidth - triggerRect.right - triggerRect.width + 'px'
             }
         `,
     }));

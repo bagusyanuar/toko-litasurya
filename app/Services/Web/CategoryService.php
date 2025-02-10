@@ -44,12 +44,22 @@ class CategoryService implements CategoryInterface
                     return $query->where('name', 'LIKE', '%' . $filter->getParam() . '%');
                 });
             $totalRows = $query->count();
-            $offset = ($filter->getPage() - 1) * $filter->getPerPage();
+            $page = $filter->getPage();
+            $offset = ($page - 1) * $filter->getPerPage();
             $categories = $query
                 ->offset($offset)
                 ->limit($filter->getPerPage())
                 ->get();
-            $metaPagination = new MetaPagination($filter->getPage(), $filter->getPerPage(), $totalRows);
+            //force to fetch previous page
+            if ($page > 1 && count($categories) <= 0) {
+                $page = $page - 1;
+                $offset = ($page - 1) * $filter->getPerPage();
+                $categories = $query
+                    ->offset($offset)
+                    ->limit($filter->getPerPage())
+                    ->get();
+            }
+            $metaPagination = new MetaPagination($page, $filter->getPerPage(), $totalRows);
             $meta = [
                 'pagination' => $metaPagination->dehydrate()
             ];
@@ -90,6 +100,16 @@ class CategoryService implements CategoryInterface
 
             Category::create($dataCategory);
             return ServiceResponse::created('successfully create new category');
+        } catch (\Exception $e) {
+            return ServiceResponse::internalServerError($e->getMessage());
+        }
+    }
+
+    public function delete($id): ServiceResponse
+    {
+        try {
+            Category::destroy($id);
+            return ServiceResponse::statusOK('successfully delete category');
         } catch (\Exception $e) {
             return ServiceResponse::internalServerError($e->getMessage());
         }
@@ -255,6 +275,7 @@ class CategoryService implements CategoryInterface
 //        }
 //        return $response;
 //    }
+
 
 
 }

@@ -52,7 +52,7 @@
                                 <span x-text="data.name"></span>
                             </div>
                         </x-gxui.table.td>
-                        <x-gxui.table.td className="flex justify-center">
+                        <x-gxui.table.td className="flex justify-center relative">
                             <x-gxui.popper.popper>
                                 <div
                                     x-bind="gxuiPopperTrigger"
@@ -79,7 +79,7 @@
                                         </div>
                                         <div
                                             class="flex items-center justify-start gap-2 w-full text-sm px-2 py-1.5 cursor-pointer hover:bg-neutral-50"
-                                            x-on:click="open = false;"
+                                            x-on:click="open = false; $store.categoryTableStore.onDelete(data.id)"
                                         >
                                             <div wire:ignore>
                                                 <i data-lucide="trash" class="text-neutral-500 h-4 aspect-[1/1]"></i>
@@ -194,6 +194,24 @@
                         Alpine.store('categoryTableStore').onFindAll();
                     }, 500)
                 },
+                onDelete(id) {
+                    Alpine.store('masterDataStore').processText = 'Deleting Process...';
+                    Alpine.store('masterDataStore').processLoading = true;
+                    window.Livewire
+                        .find(this.componentID).call('delete', id)
+                        .then(response => {
+                            Alpine.store('masterDataStore').processLoading = false;
+                            if (response['success']) {
+                                Alpine.store('gxuiToastStore').success('success delete category');
+                                this.onFindAll();
+                            } else {
+                                Alpine.store('gxuiToastStore').failed('failed to load data');
+                            }
+                        }).catch(error => {
+                        Alpine.store('masterDataStore').processLoading = false;
+                        Alpine.store('gxuiToastStore').failed('failed to load data');
+                    })
+                }
             })
         })
     </script>

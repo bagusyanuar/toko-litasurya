@@ -24,39 +24,6 @@ interface CategoryInterface
      * @return ServiceResponse
      */
     public function create(DTOCategoryRequest $dto): ServiceResponse;
-//    /**
-//     * @param CategoryFilter $filter
-//     * @return ServiceResponseWithMetaPagination
-//     */
-//    public function getDataCategories(CategoryFilter $filter): ServiceResponseWithMetaPagination;
-//
-//    /**
-//     * @param CategoryRequest $categoryRequest
-//     * @return ServiceResponse
-//     */
-//    public function createNewCategory(CategoryRequest $categoryRequest): ServiceResponse;
-//
-//    /**
-//     * @param string $id
-//     * @return ServiceResponse
-//     */
-//    public function deleteCategory($id): ServiceResponse;
-//
-//    /**
-//     * @param $id
-//     * @return ServiceResponse
-//     */
-//    public function getCategoryByID($id): ServiceResponse;
-//
-//    /**
-//     * @param Category $category
-//     * @param CategoryRequest $categoryRequest
-//     * @return ServiceResponse
-//     */
-//    public function updateCategory(Category $category, CategoryRequest $categoryRequest): ServiceResponse;
-//
-//    /**
-//     * @return ServiceResponse
-//     */
-//    public function getDataCategoriesNoPagination(): ServiceResponse;
+
+    public function delete($id): ServiceResponse;
 }
