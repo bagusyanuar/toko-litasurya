@@ -38,6 +38,18 @@ class Table extends Component
         );
     }
 
+    public function findByID($id)
+    {
+        $response = $this->service->findByID($id);
+        return AlpineResponse::toResponse(
+            true,
+            $response->getStatus(),
+            $response->getMessage(),
+            $response->getData(),
+            $response->getMeta()
+        );
+    }
+
     public function delete($id)
     {
         $response = $this->service->delete($id);

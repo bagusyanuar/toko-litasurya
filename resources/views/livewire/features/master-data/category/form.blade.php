@@ -45,7 +45,7 @@
                 wire:ignore
                 x-on:click="$store.categoryFormStore.setCloseModalForm()"
                 x-bind:disabled="$store.categoryFormStore.loading"
-                class="!px-6 bg-white !border-brand-500 !text-brand-500 hover:!text-white"
+                class="!px-6 bg-white !border-brand-500 !text-brand-500 hover:!text-white disabled:!bg-white"
             >
                 <div class="w-full flex justify-center items-center gap-1 text-sm">
                     <span>Cancel</span>
@@ -78,9 +78,11 @@
                 modalFormShow: false,
                 fileDropper: null,
                 loading: false,
+                type: 'create',
                 validator: {},
-                setOpenModalForm() {
+                setOpenModalForm(type = 'create') {
                     this.modalFormShow = true;
+                    this.type = type;
                 },
                 setCloseModalForm() {
                     this.modalFormShow = false;
@@ -93,7 +95,7 @@
                         }
                     });
                 },
-                async mutate () {
+                async mutate() {
                     this.fileDropper.disable();
                     this.loading = true;
                     const uploadPromises = this.fileDropper.files.map(file => {
@@ -102,7 +104,7 @@
                         });
                     });
                     await Promise.all(uploadPromises);
-                    let response = await window.Livewire.find(this.componentID).call('create');
+                    let response = await window.Livewire.find(this.componentID).call(this.type);
                     switch (response['status']) {
                         case 422:
                             this.validator = response['data'];
@@ -121,6 +123,9 @@
                     }
                     this.fileDropper.enable();
                     this.loading = false;
+                },
+                hydrateForm(id) {
+
                 }
             });
         });

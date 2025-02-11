@@ -76,6 +76,25 @@ class CategoryService implements CategoryInterface
     /**
      * @inheritDoc
      */
+    public function findByID($id): ServiceResponse
+    {
+        // TODO: Implement findByID() method.
+        try {
+            $category = Category::with([])
+                ->where('id', '=', $id)
+                ->first();
+            if (!$category) {
+                return ServiceResponse::notFound('category not found');
+            }
+            return ServiceResponse::statusOK('successfully get category', $category);
+        } catch (\Exception $e) {
+            return ServiceResponse::internalServerError($e->getMessage());
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function create(DTOCategoryRequest $dto): ServiceResponse
     {
         // TODO: Implement create() method.
@@ -110,6 +129,46 @@ class CategoryService implements CategoryInterface
         try {
             Category::destroy($id);
             return ServiceResponse::statusOK('successfully delete category');
+        } catch (\Exception $e) {
+            return ServiceResponse::internalServerError($e->getMessage());
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function update($id, DTOCategoryRequest $dto): ServiceResponse
+    {
+        // TODO: Implement update() method.
+        try {
+            $validator = $dto->validate();
+            if ($validator->fails()) {
+                return ServiceResponse::unprocessableEntity($validator->errors()->toArray());
+            }
+            $dto->hydrate();
+            $dataCategory = [
+                'name' => $dto->getName()
+            ];
+
+            $category = Category::with([])
+                ->where('id', '=', $id)
+                ->first();
+            if (!$category) {
+                return ServiceResponse::notFound('category not found');
+            }
+
+            if ($dto->getFile()) {
+                $file = $dto->getFile();
+                $fileUploadService = new FileUpload($file, $this->targetPathImage);
+                $fileUploadResponse = $fileUploadService->upload();
+                if (!$fileUploadResponse->isSuccess()) {
+                    return ServiceResponse::internalServerError('failed to upload');
+                }
+                $dataCategory['image'] = $fileUploadResponse->getFileName();
+            }
+
+            $category->update($dataCategory);
+            return ServiceResponse::created('successfully update new category');
         } catch (\Exception $e) {
             return ServiceResponse::internalServerError($e->getMessage());
         }

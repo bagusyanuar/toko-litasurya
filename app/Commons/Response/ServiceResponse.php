@@ -155,6 +155,12 @@ class ServiceResponse
         return new self(true, 201, $msg, $data, null);
     }
 
+    public static function notFound($message = ''): self
+    {
+        $msg = $message ? $message : 'item not found';
+        return new self(false, 404, $msg, null, null);
+    }
+
     public static function internalServerError($message = ''): self
     {
         $msg = $message ? 'internal server error (' . $message . ')' : 'internal server error';

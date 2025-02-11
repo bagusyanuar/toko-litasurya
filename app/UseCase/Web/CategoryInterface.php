@@ -20,10 +20,27 @@ interface CategoryInterface
     public function findAll(DTOCategoryFilter $filter): ServiceResponse;
 
     /**
+     * @param $id
+     * @return ServiceResponse
+     */
+    public function findByID($id): ServiceResponse;
+
+    /**
      * @param DTOCategoryRequest $dto
      * @return ServiceResponse
      */
     public function create(DTOCategoryRequest $dto): ServiceResponse;
 
+    /**
+     * @param $id
+     * @return ServiceResponse
+     */
     public function delete($id): ServiceResponse;
+
+    /**
+     * @param $id
+     * @param DTOCategoryRequest $dto
+     * @return ServiceResponse
+     */
+    public function update($id, DTOCategoryRequest $dto): ServiceResponse;
 }

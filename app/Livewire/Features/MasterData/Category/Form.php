@@ -51,6 +51,31 @@ class Form extends Component
         );
     }
 
+    public function update($id)
+    {
+        $dtoForm = [
+            'name' => $this->name,
+            'file' => $this->file
+        ];
+        $this->dto->hydrateForm($dtoForm);
+        $response = $this->service->update($id, $this->dto);
+        if ($response->isSuccess()) {
+            $this->reset(['name', 'file']);
+        }
+        return AlpineResponse::toResponse(
+            $response->isSuccess(),
+            $response->getStatus(),
+            $response->getMessage(),
+            $response->getData(),
+            $response->getMeta()
+        );
+    }
+
+    public function hydrate($name)
+    {
+        $this->name = $name;
+    }
+
     public function render()
     {
         return view('livewire.features.master-data.category.form');

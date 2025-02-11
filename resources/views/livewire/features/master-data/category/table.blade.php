@@ -70,7 +70,7 @@
                                     <div class="flex flex-col py-1 justify-start items-start">
                                         <div
                                             class="flex items-center justify-start gap-2 w-full text-sm px-2 py-1.5 cursor-pointer hover:bg-neutral-50"
-                                            x-on:click="open = false;"
+                                            x-on:click="open = false; $store.categoryTableStore.onEdit(data.id)"
                                         >
                                             <div wire:ignore>
                                                 <i data-lucide="pencil" class="text-neutral-500 h-4 aspect-[1/1]"></i>
@@ -199,6 +199,24 @@
                     Alpine.store('masterDataStore').processLoading = true;
                     window.Livewire
                         .find(this.componentID).call('delete', id)
+                        .then(response => {
+                            Alpine.store('masterDataStore').processLoading = false;
+                            if (response['success']) {
+                                Alpine.store('gxuiToastStore').success('success delete category');
+                                this.onFindAll();
+                            } else {
+                                Alpine.store('gxuiToastStore').failed('failed to load data');
+                            }
+                        }).catch(error => {
+                        Alpine.store('masterDataStore').processLoading = false;
+                        Alpine.store('gxuiToastStore').failed('failed to load data');
+                    })
+                },
+                onEdit(id) {
+                    Alpine.store('masterDataStore').processText = 'Finding Item Process...';
+                    Alpine.store('masterDataStore').processLoading = true;
+                    window.Livewire
+                        .find(this.componentID).call('findByID', id)
                         .then(response => {
                             Alpine.store('masterDataStore').processLoading = false;
                             if (response['success']) {
