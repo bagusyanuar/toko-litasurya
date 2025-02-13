@@ -219,12 +219,8 @@
                         .find(this.componentID).call('findByID', id)
                         .then(response => {
                             Alpine.store('masterDataStore').processLoading = false;
-                            if (response['success']) {
-                                Alpine.store('gxuiToastStore').success('success delete category');
-                                this.onFindAll();
-                            } else {
-                                Alpine.store('gxuiToastStore').failed('failed to load data');
-                            }
+                            Alpine.store('categoryFormStore').modalFormShow = true;
+                            console.log(response);
                         }).catch(error => {
                         Alpine.store('masterDataStore').processLoading = false;
                         Alpine.store('gxuiToastStore').failed('failed to load data');

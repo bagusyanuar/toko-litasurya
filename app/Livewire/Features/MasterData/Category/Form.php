@@ -5,9 +5,11 @@ namespace App\Livewire\Features\MasterData\Category;
 use App\Domain\Web\Category\DTOCategoryRequest;
 use App\Helpers\Alpine\AlpineResponse;
 use App\Services\Web\CategoryService;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\Attributes\On;
 
 class Form extends Component
 {
@@ -71,9 +73,10 @@ class Form extends Component
         );
     }
 
-    public function hydrate($name)
+    #[On('hydrate-category')]
+    public function hydrateAttribute($category)
     {
-        $this->name = $name;
+        $this->name = $category['name'];
     }
 
     public function render()

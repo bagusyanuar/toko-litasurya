@@ -28,7 +28,7 @@
                 placeholder="Name"
                 label="Name"
                 parentClassName="mb-3"
-                wire:model="name"
+                x-model="$store.categoryFormStore.form.name"
                 x-bind:disabled="$store.categoryFormStore.loading"
                 validatorKey="$store.categoryFormStore.validator"
                 validatorField="name"
@@ -75,6 +75,10 @@
         document.addEventListener('alpine:init', () => {
             Alpine.store('categoryFormStore', {
                 componentID: document.querySelector('[data-component-id="form-category"]')?.getAttribute('wire:id'),
+                form: {
+                    name: '',
+                    file: null,
+                },
                 modalFormShow: false,
                 fileDropper: null,
                 loading: false,
@@ -96,33 +100,35 @@
                     });
                 },
                 async mutate() {
-                    this.fileDropper.disable();
-                    this.loading = true;
-                    const uploadPromises = this.fileDropper.files.map(file => {
-                        return new Promise((resolve, reject) => {
-                            window.Livewire.find(this.componentID).upload('file', file, resolve, reject)
-                        });
-                    });
-                    await Promise.all(uploadPromises);
-                    let response = await window.Livewire.find(this.componentID).call(this.type);
-                    switch (response['status']) {
-                        case 422:
-                            this.validator = response['data'];
-                            Alpine.store('gxuiToastStore').failed('please fill the correct form');
-                            break;
-                        case 201:
-                            this.fileDropper.removeAllFiles();
-                            Alpine.store('gxuiToastStore').success('successfully create new category');
-                            Alpine.store('categoryTableStore').onFindAll();
-                            break;
-                        case 500:
-                            Alpine.store('gxuiToastStore').failed('internal server error');
-                            break;
-                        default:
-                            break;
-                    }
-                    this.fileDropper.enable();
-                    this.loading = false;
+                    console.log(this.form.name);
+                    console.log(this.fileDropper.files[0])
+                    // this.fileDropper.disable();
+                    // this.loading = true;
+                    // const uploadPromises = this.fileDropper.files.map(file => {
+                    //     return new Promise((resolve, reject) => {
+                    //         window.Livewire.find(this.componentID).upload('file', file, resolve, reject)
+                    //     });
+                    // });
+                    // await Promise.all(uploadPromises);
+                    // let response = await window.Livewire.find(this.componentID).call(this.type);
+                    // switch (response['status']) {
+                    //     case 422:
+                    //         this.validator = response['data'];
+                    //         Alpine.store('gxuiToastStore').failed('please fill the correct form');
+                    //         break;
+                    //     case 201:
+                    //         this.fileDropper.removeAllFiles();
+                    //         Alpine.store('gxuiToastStore').success('successfully create new category');
+                    //         Alpine.store('categoryTableStore').onFindAll();
+                    //         break;
+                    //     case 500:
+                    //         Alpine.store('gxuiToastStore').failed('internal server error');
+                    //         break;
+                    //     default:
+                    //         break;
+                    // }
+                    // this.fileDropper.enable();
+                    // this.loading = false;
                 },
                 hydrateForm(id) {
 

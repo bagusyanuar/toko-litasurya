@@ -5,6 +5,7 @@ namespace App\Livewire\Features\MasterData\Category;
 use App\Domain\Web\Category\DTOCategoryFilter;
 use App\Helpers\Alpine\AlpineResponse;
 use App\Services\Web\CategoryService;
+use Illuminate\Database\Eloquent\Model;
 use Livewire\Component;
 
 class Table extends Component
@@ -27,7 +28,7 @@ class Table extends Component
                 false,
                 500,
                 $response->getMessage()
-                );
+            );
         }
         return AlpineResponse::toResponse(
             true,
@@ -41,6 +42,9 @@ class Table extends Component
     public function findByID($id)
     {
         $response = $this->service->findByID($id);
+
+        $category = $response->getData();
+        $this->dispatch('hydrate-category', $category);
         return AlpineResponse::toResponse(
             true,
             $response->getStatus(),
