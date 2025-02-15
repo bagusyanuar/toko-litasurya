@@ -42,16 +42,7 @@ class Table extends Component
     public function findByID($id)
     {
         $response = $this->service->findByID($id);
-
-        $category = $response->getData();
-        $this->dispatch('hydrate-category', $category);
-        return AlpineResponse::toResponse(
-            true,
-            $response->getStatus(),
-            $response->getMessage(),
-            $response->getData(),
-            $response->getMeta()
-        );
+        return AlpineResponse::toJSON($response);
     }
 
     public function delete($id)

@@ -21,8 +21,6 @@ class Form extends Component
     /** @var DTOCategoryRequest $dto */
     private $dto;
 
-    public $name;
-
     /** @var $file UploadedFile | null */
     public $file;
 
@@ -33,24 +31,18 @@ class Form extends Component
         $this->dto = new DTOCategoryRequest();
     }
 
-    public function create()
+    public function create($formData)
     {
         $dtoForm = [
-            'name' => $this->name,
+            'name' => $formData['name'],
             'file' => $this->file
         ];
         $this->dto->hydrateForm($dtoForm);
         $response = $this->service->create($this->dto);
         if ($response->isSuccess()) {
-            $this->reset(['name', 'file']);
+            $this->reset(['file']);
         }
-        return AlpineResponse::toResponse(
-            $response->isSuccess(),
-            $response->getStatus(),
-            $response->getMessage(),
-            $response->getData(),
-            $response->getMeta()
-        );
+        return AlpineResponse::toJSON($response);
     }
 
     public function update($id)
@@ -71,12 +63,6 @@ class Form extends Component
             $response->getData(),
             $response->getMeta()
         );
-    }
-
-    #[On('hydrate-category')]
-    public function hydrateAttribute($category)
-    {
-        $this->name = $category['name'];
     }
 
     public function render()

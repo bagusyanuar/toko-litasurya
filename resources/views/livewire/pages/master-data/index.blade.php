@@ -32,8 +32,8 @@
         ></x-gxui.tab.tab-item>
     </x-gxui.tab.tab-container>
     <div x-show="$store.masterDataStore.selectedTab === 'category'">
-        <livewire:features.master-data.category.table />
-        <livewire:features.master-data.category.form />
+        <livewire:features.master-data.category.table/>
+        <livewire:features.master-data.category.form/>
     </div>
     <div x-show="$store.masterDataStore.selectedTab === 'box'">
         <div>Box</div>
@@ -73,7 +73,11 @@
                 processText: 'Loading...',
                 onChangeTab(selectedTab) {
                     this.selectedTab = selectedTab;
-                }
+                },
+                showLoading(text = 'Loading process...') {
+                    this.processText = text;
+                    this.processLoading = true;
+                },
             })
         })
     </script>

@@ -116,7 +116,6 @@ class CategoryService implements CategoryInterface
                 }
                 $dataCategory['image'] = $fileUploadResponse->getFileName();
             }
-
             Category::create($dataCategory);
             return ServiceResponse::created('successfully create new category');
         } catch (\Exception $e) {

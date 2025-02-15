@@ -77,58 +77,66 @@
                 componentID: document.querySelector('[data-component-id="form-category"]')?.getAttribute('wire:id'),
                 form: {
                     name: '',
-                    file: null,
                 },
                 modalFormShow: false,
                 fileDropper: null,
                 loading: false,
                 type: 'create',
                 validator: {},
+                toastStore: null,
                 setOpenModalForm(type = 'create') {
                     this.modalFormShow = true;
                     this.type = type;
                 },
                 setCloseModalForm() {
+                    this.resetForm();
                     this.modalFormShow = false;
+                },
+                resetForm() {
+                    this.validator = {};
+                    this.form.name = '';
+                    this.fileDropper.removeAllFiles();
+                    this.type = 'create';
                 },
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
                         if (component.id === this.componentID) {
+                            this.toastStore = Alpine.store('gxuiToastStore');
                             const dropperElement = document.getElementById('imageDropper');
                             this.fileDropper = Alpine.store('gxuiFileDropperStore').initDropper(dropperElement);
                         }
                     });
                 },
                 async mutate() {
-                    console.log(this.form.name);
-                    console.log(this.fileDropper.files[0])
-                    // this.fileDropper.disable();
-                    // this.loading = true;
-                    // const uploadPromises = this.fileDropper.files.map(file => {
-                    //     return new Promise((resolve, reject) => {
-                    //         window.Livewire.find(this.componentID).upload('file', file, resolve, reject)
-                    //     });
-                    // });
-                    // await Promise.all(uploadPromises);
-                    // let response = await window.Livewire.find(this.componentID).call(this.type);
-                    // switch (response['status']) {
-                    //     case 422:
-                    //         this.validator = response['data'];
-                    //         Alpine.store('gxuiToastStore').failed('please fill the correct form');
-                    //         break;
-                    //     case 201:
-                    //         this.fileDropper.removeAllFiles();
-                    //         Alpine.store('gxuiToastStore').success('successfully create new category');
-                    //         Alpine.store('categoryTableStore').onFindAll();
-                    //         break;
-                    //     case 500:
-                    //         Alpine.store('gxuiToastStore').failed('internal server error');
-                    //         break;
-                    //     default:
-                    //         break;
-                    // }
-                    // this.fileDropper.enable();
-                    // this.loading = false;
+                    this.fileDropper.disable();
+                    this.loading = true;
+                    const uploadPromises = this.fileDropper.files.map(file => {
+                        return new Promise((resolve, reject) => {
+                            window.Livewire.find(this.componentID).upload('file', file, resolve, reject)
+                        });
+                    });
+                    await Promise.all(uploadPromises);
+                    const formData = {name: this.form.name};
+                    let response = await window.Livewire.find(this.componentID).call(this.type, formData);
+                    switch (response['status']) {
+                        case 422:
+                            this.validator = response['data'];
+                            this.toastStore.failed('please fill the correct form');
+                            break;
+                        case 201:
+                            this.fileDropper.removeAllFiles();
+                            Alpine.store('gxuiToastStore').success('successfully create new category');
+                            Alpine.store('categoryTableStore').onFindAll();
+                            break;
+                        case 500:
+                            Alpine.store('gxuiToastStore').failed('internal server error');
+                            break;
+                        default:
+                            Alpine.store('gxuiToastStore').failed('unknown error');
+                            break;
+                    }
+                    this.fileDropper.enable();
+                    this.loading = false;
                 },
                 hydrateForm(id) {
 

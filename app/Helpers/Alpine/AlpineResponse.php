@@ -4,6 +4,8 @@
 namespace App\Helpers\Alpine;
 
 
+use App\Commons\Response\ServiceResponse;
+
 class AlpineResponse
 {
     /** @var bool $success */
@@ -14,6 +16,8 @@ class AlpineResponse
     private $message;
     /** @var mixed|null $data */
     private $data;
+    /** @var mixed|null $meta */
+    private $meta;
 
     /**
      * AlpineResponse constructor.
@@ -21,13 +25,15 @@ class AlpineResponse
      * @param int $status
      * @param string $message
      * @param mixed|null $data
+     * @param mixed|null $meta
      */
-    public function __construct($success = true, $status = 200, $message = '', $data = null)
+    public function __construct($success = true, $status = 200, $message = '', $data = null, $meta = null)
     {
         $this->success = $success;
         $this->status = $status;
         $this->message = $message;
         $this->data = $data;
+        $this->meta = $meta;
     }
 
     /**
@@ -102,6 +108,24 @@ class AlpineResponse
         return $this;
     }
 
+    /**
+     * @return mixed|null
+     */
+    public function getMeta()
+    {
+        return $this->meta;
+    }
+
+    /**
+     * @param mixed|null $meta
+     * @return AlpineResponse
+     */
+    public function setMeta($meta)
+    {
+        $this->meta = $meta;
+        return $this;
+    }
+
     public static function toResponse($success = true, $status = 200, $message = '', $data = null, $meta = null)
     {
         return [
@@ -112,4 +136,17 @@ class AlpineResponse
             'meta' => $meta
         ];
     }
+
+    public static function toJSON(ServiceResponse $serviceResponse): array
+    {
+        return [
+            'success' => $serviceResponse->isSuccess(),
+            'status' => $serviceResponse->getStatus(),
+            'message' => $serviceResponse->getMessage(),
+            'data' => $serviceResponse->getData(),
+            'meta' => $serviceResponse->getMeta()
+        ];
+    }
+
+
 }

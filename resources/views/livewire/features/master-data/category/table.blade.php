@@ -124,10 +124,16 @@
                 param: '',
                 data: [],
                 timeoutDebounce: null,
+                formStore: null,
+                toastStore: null,
+                masterDataStore: null,
                 componentID: document.querySelector('[data-component-id="table-category"]')?.getAttribute('wire:id'),
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
                         if (component.id === this.componentID) {
+                            this.formStore = Alpine.store('categoryFormStore');
+                            this.toastStore = Alpine.store('gxuiToastStore');
+                            this.masterDataStore = Alpine.store('masterDataStore');
                             component.$wire.call('findAll', this.param, this.page, this.perPage)
                                 .then(response => {
                                     if (response['success']) {
@@ -138,10 +144,10 @@
                                         this.shownPages = Alpine.store('gxuiPaginationStore').shownPages;
                                         this.totalPages = Alpine.store('gxuiPaginationStore').totalPages;
                                     } else {
-                                        Alpine.store('gxuiToastStore').failed('failed to load data');
+                                        this.toastStore.failed('failed to load data');
                                     }
                                 }).catch(error => {
-                                Alpine.store('gxuiToastStore').failed('failed to load data');
+                                this.toastStore.failed('failed to load data');
                             })
                                 .finally(() => {
                                     this.loading = false;
@@ -178,10 +184,10 @@
                                 this.shownPages = Alpine.store('gxuiPaginationStore').shownPages;
                                 this.totalPages = Alpine.store('gxuiPaginationStore').totalPages;
                             } else {
-                                Alpine.store('gxuiToastStore').failed('failed to load data');
+                                this.toastStore.failed('failed to load data');
                             }
                         }).catch(error => {
-                        Alpine.store('gxuiToastStore').failed('failed to load data');
+                        this.toastStore.failed('failed to load data');
                     }).finally(() => {
                         this.loading = false;
                     })
@@ -219,11 +225,14 @@
                         .find(this.componentID).call('findByID', id)
                         .then(response => {
                             Alpine.store('masterDataStore').processLoading = false;
-                            Alpine.store('categoryFormStore').modalFormShow = true;
+                            const {data} = response;
+                            this.formStore.form.name = data['name'];
+                            this.formStore.type = 'update';
+                            this.formStore.modalFormShow = true;
                             console.log(response);
                         }).catch(error => {
                         Alpine.store('masterDataStore').processLoading = false;
-                        Alpine.store('gxuiToastStore').failed('failed to load data');
+                        this.toastStore.failed('failed to load data');
                     })
                 }
             })
