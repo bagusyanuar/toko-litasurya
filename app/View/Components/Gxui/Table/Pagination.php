@@ -8,53 +8,18 @@ use Illuminate\View\Component;
 
 class Pagination extends Component
 {
-    public $perPageOptions;
-    public $shownPages;
-    public $currentPage;
-    public $totalRows;
-    public $totalPages;
-    public $handlePerPageChange;
-    public $handlePageChange;
-    public $handlePreviousPageChange;
-    public $handleNextPageChange;
-    public $isLoading;
+    public $store;
+    public $dispatcher;
 
     /**
-     * Create a new component instance.
-     * @param string $shownPages
-     * @param string $perPageOptions
-     * @param int $currentPage
-     * @param string $totalRows
-     * @param string $totalPages
-     * @param string $handlePerPageChange
-     * @param string $handlePageChange
-     * @param string $handlePreviousPageChange
-     * @param string $handleNextPageChange
-     * @param $isLoading
+     * Pagination constructor.
+     * @param string $store
+     * @param string $dispatcher
      */
-    public function __construct(
-        $shownPages = '[]',
-        $perPageOptions = '[10, 25, 50]',
-        $currentPage = 0,
-        $totalRows = '0',
-        $totalPages = '0',
-        $handlePerPageChange = '',
-        $handlePageChange = '',
-        $handlePreviousPageChange = '',
-        $handleNextPageChange = '',
-        $isLoading = 'false'
-    )
+    public function __construct($store = '', $dispatcher = '')
     {
-        $this->shownPages = $shownPages;
-        $this->perPageOptions = $perPageOptions;
-        $this->currentPage = $currentPage;
-        $this->totalRows = $totalRows;
-        $this->totalPages = $totalPages;
-        $this->handlePerPageChange = $handlePerPageChange;
-        $this->handlePageChange = $handlePageChange;
-        $this->handlePreviousPageChange = $handlePreviousPageChange;
-        $this->handleNextPageChange = $handleNextPageChange;
-        $this->isLoading = $isLoading;
+        $this->store = $store;
+        $this->dispatcher = $dispatcher;
     }
 
     /**

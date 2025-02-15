@@ -10,7 +10,6 @@
                     placeholder="Search..."
                     x-bind:value="$store.categoryTableStore.param"
                     x-on:input="$store.categoryTableStore.onSearch($event.target.value)"
-
                 ></x-gxui.table.search>
                 <x-gxui.button.button
                     wire:ignore
@@ -25,8 +24,7 @@
         </div>
         <x-gxui.table.table
             class="mb-1"
-            isLoading="$store.categoryTableStore.loading"
-            storeData="$store.categoryTableStore.data"
+            store="categoryTableStore"
         >
             <x-slot name="header">
                 <x-gxui.table.th
@@ -95,16 +93,8 @@
             </x-slot>
         </x-gxui.table.table>
         <x-gxui.table.pagination
-            isLoading="$store.categoryTableStore.loading"
-            shownPages="$store.categoryTableStore.shownPages"
-            currentPage="$store.categoryTableStore.page"
-            perPageOptions="$store.categoryTableStore.perPageOptions"
-            handlePerPageChange="$store.categoryTableStore.perPageChange"
-            handlePageChange="$store.categoryTableStore.onPageChange"
-            handlePreviousPageChange="$store.categoryTableStore.onPreviousPage()"
-            handleNextPageChange="$store.categoryTableStore.onNextPage()"
-            totalPages="$store.categoryTableStore.totalPages"
-            totalRows="$store.categoryTableStore.totalRows"
+            store="categoryTableStore"
+            dispatcher="onFindAll"
         ></x-gxui.table.pagination>
     </div>
 
@@ -116,9 +106,9 @@
             Alpine.store('categoryTableStore', {
                 loading: true,
                 page: 1,
-                perPage: 10,
+                perPage: 1,
                 shownPages: [],
-                perPageOptions: [10, 25, 50],
+                perPageOptions: [1, 2, 3],
                 totalPages: 0,
                 totalRows: 0,
                 param: '',
@@ -128,40 +118,18 @@
                 toastStore: null,
                 masterDataStore: null,
                 componentID: document.querySelector('[data-component-id="table-category"]')?.getAttribute('wire:id'),
+                component: null,
                 init: function () {
+                    const componentID = document.querySelector('[data-component-id="table-category"]')?.getAttribute('wire:id');
                     Livewire.hook('component.init', ({component}) => {
-                        if (component.id === this.componentID) {
+                        if (component.id === componentID) {
                             this.formStore = Alpine.store('categoryFormStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.masterDataStore = Alpine.store('masterDataStore');
-                            component.$wire.call('findAll', this.param, this.page, this.perPage)
-                                .then(response => {
-                                    if (response['success']) {
-                                        this.data = response['data'];
-                                        const totalRecords = response['meta']['pagination']['total_rows'];
-                                        this.totalRows = totalRecords;
-                                        Alpine.store('gxuiPaginationStore').paginate(totalRecords, this.perPage, this.page, 5);
-                                        this.shownPages = Alpine.store('gxuiPaginationStore').shownPages;
-                                        this.totalPages = Alpine.store('gxuiPaginationStore').totalPages;
-                                    } else {
-                                        this.toastStore.failed('failed to load data');
-                                    }
-                                }).catch(error => {
-                                this.toastStore.failed('failed to load data');
-                            })
-                                .finally(() => {
-                                    this.loading = false;
-                                })
+                            this.component = component;
+                            this.onFindAll();
                         }
                     })
-                },
-                perPageChange(value) {
-                    this.perPage = value;
-                    this.onFindAll();
-                },
-                onPageChange(value) {
-                    this.page = value;
-                    this.onFindAll();
                 },
                 onPreviousPage() {
                     this.page = this.page - 1;
@@ -173,8 +141,7 @@
                 },
                 onFindAll() {
                     this.loading = true;
-                    window.Livewire
-                        .find(this.componentID).call('findAll', this.param, this.page, this.perPage)
+                    this.component.$wire.call('findAll', this.param, this.page, this.perPage)
                         .then(response => {
                             if (response['success']) {
                                 this.data = response['data'];
@@ -195,10 +162,10 @@
                 onSearch(value) {
                     clearTimeout(this.timeoutDebounce);
                     this.timeoutDebounce = setTimeout(() => {
-                        Alpine.store('categoryTableStore').page = 1;
-                        Alpine.store('categoryTableStore').param = value;
-                        Alpine.store('categoryTableStore').onFindAll();
-                    }, 500)
+                        this.page = 1;
+                        this.param = value;
+                        this.onFindAll();
+                    }, 500);
                 },
                 onDelete(id) {
                     Alpine.store('masterDataStore').processText = 'Deleting Process...';
@@ -219,23 +186,41 @@
                     })
                 },
                 onEdit(id) {
-                    Alpine.store('masterDataStore').processText = 'Finding Item Process...';
-                    Alpine.store('masterDataStore').processLoading = true;
+                    this.masterDataStore.showLoading('Finding Item Process...');
                     window.Livewire
                         .find(this.componentID).call('findByID', id)
                         .then(response => {
                             Alpine.store('masterDataStore').processLoading = false;
-                            const {data} = response;
-                            this.formStore.form.name = data['name'];
-                            this.formStore.type = 'update';
-                            this.formStore.modalFormShow = true;
+                            const {success, data} = response;
+                            if (success) {
+                                this.formStore.hydrateForm(data);
+                            } else {
+                                this.toastStore.failed('failed to hydrate form');
+                            }
                             console.log(response);
                         }).catch(error => {
-                        Alpine.store('masterDataStore').processLoading = false;
+                        this.masterDataStore.closeLoading();
                         this.toastStore.failed('failed to load data');
                     })
                 }
             })
         })
+
+        // window.Livewire
+        //     .find(this.componentID).call('delete', id)
+        //     .then(response => {
+        //         Alpine.store('masterDataStore').processLoading = false;
+        //         if (response['success']) {
+        //             Alpine.store('gxuiToastStore').success('success delete category');
+        //             this.onFindAll();
+        //         } else {
+        //             Alpine.store('gxuiToastStore').failed('failed to load data');
+        //         }
+        //     }).catch(error => {
+        //     Alpine.store('masterDataStore').processLoading = false;
+        //     Alpine.store('gxuiToastStore').failed('failed to load data');
+        // })
     </script>
 @endpush
+
+

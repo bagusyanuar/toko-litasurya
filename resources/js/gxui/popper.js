@@ -17,7 +17,7 @@ document.addEventListener('alpine:init', () => {
 
     Alpine.bind('gxuiPopperTrigger', () => ({
         'x-data': () => ({}),
-        '@click': `togglePopOver(); triggerRect = $el.getBoundingClientRect(); console.log($el.getBoundingClientRect())`,
+        '@click': `togglePopOver(); triggerRect = $el.getBoundingClientRect();`,
     }));
 
     Alpine.bind('gxuiPopperContent', () => ({

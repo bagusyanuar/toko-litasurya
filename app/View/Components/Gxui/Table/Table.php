@@ -8,18 +8,15 @@ use Illuminate\View\Component;
 
 class Table extends Component
 {
-    public $isLoading;
-    public $storeData;
+    public $store;
 
     /**
-     * Create a new component instance.
-     * @param $isLoading
-     * @param $storeData
+     * Table constructor.
+     * @param string $store
      */
-    public function __construct($isLoading, $storeData)
+    public function __construct($store = '')
     {
-        $this->isLoading = $isLoading;
-        $this->storeData = $storeData;
+        $this->store = $store;
     }
 
     /**

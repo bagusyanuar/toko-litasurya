@@ -138,8 +138,10 @@
                     this.fileDropper.enable();
                     this.loading = false;
                 },
-                hydrateForm(id) {
-
+                hydrateForm(data) {
+                    this.form.name = data['name'];
+                    this.type = 'update';
+                    this.modalFormShow = true;
                 }
             });
         });

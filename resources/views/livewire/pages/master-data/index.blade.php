@@ -78,6 +78,10 @@
                     this.processText = text;
                     this.processLoading = true;
                 },
+                closeLoading() {
+                    this.processLoading = false;
+                    this.processText = 'Loading...';
+                }
             })
         })
     </script>
