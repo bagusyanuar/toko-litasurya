@@ -10,15 +10,17 @@
             </thead>
         @endif
         @if(isset($rows))
-            <tbody x-show="!$store.{{ $store }}.loading && $store.{{ $store }}.data.length > 0">
-            {{ $rows }}
+            <tbody x-cloak x-show="!$store.{{ $store }}.loading && $store.{{ $store }}.data.length > 0">
+                <template x-for="(data, index) in $store.{{ $store }}.data" :key="index">
+                    {{ $rows }}
+                </template>
             </tbody>
         @endif
     </table>
     <div x-show="$store.{{ $store }}.loading">
         <x-gxui.table.loader></x-gxui.table.loader>
     </div>
-    <div x-show="!$store.{{ $store }}.loading && $store.{{ $store }}.data.length <= 0">
+    <div x-cloak x-show="!$store.{{ $store }}.loading && $store.{{ $store }}.data.length <= 0">
         <x-gxui.table.empty-row></x-gxui.table.empty-row>
     </div>
 </div>

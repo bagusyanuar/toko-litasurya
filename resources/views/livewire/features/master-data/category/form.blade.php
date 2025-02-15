@@ -73,7 +73,14 @@
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
+            const props = {
+                component: null,
+                form: {
+                    name: '',
+                },
+            };
             Alpine.store('categoryFormStore', {
+                component: null,
                 componentID: document.querySelector('[data-component-id="form-category"]')?.getAttribute('wire:id'),
                 form: {
                     name: '',
@@ -101,6 +108,7 @@
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
                         if (component.id === this.componentID) {
+                            this.component = component;
                             this.toastStore = Alpine.store('gxuiToastStore');
                             const dropperElement = document.getElementById('imageDropper');
                             this.fileDropper = Alpine.store('gxuiFileDropperStore').initDropper(dropperElement);
@@ -112,7 +120,8 @@
                     this.loading = true;
                     const uploadPromises = this.fileDropper.files.map(file => {
                         return new Promise((resolve, reject) => {
-                            window.Livewire.find(this.componentID).upload('file', file, resolve, reject)
+                            // window.Livewire.find(this.componentID).upload('file', file, resolve, reject)
+                            this.component.$wire.upload('file', file, resolve, reject);
                         });
                     });
                     await Promise.all(uploadPromises);

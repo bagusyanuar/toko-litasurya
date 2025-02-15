@@ -22,7 +22,7 @@
             active="$store.masterDataStore.selectedTab === 'reward'"
             icon="gem"
             title="Reward"
-            handleChange="$store.masterDataStore.onChangeTab('reward')"
+            handleChange="$store.masterDataStore.onChangeTab('gift')"
         ></x-gxui.tab.tab-item>
         <x-gxui.tab.tab-item
             active="$store.masterDataStore.selectedTab === 'route'"
@@ -35,16 +35,28 @@
         <livewire:features.master-data.category.table/>
         <livewire:features.master-data.category.form/>
     </div>
-    <div x-show="$store.masterDataStore.selectedTab === 'box'">
+    <div
+        x-show="$store.masterDataStore.selectedTab === 'box'"
+        x-cloak
+    >
         <div>Box</div>
     </div>
-    <div x-show="$store.masterDataStore.selectedTab === 'gift'">
+    <div
+        x-show="$store.masterDataStore.selectedTab === 'gift'"
+        x-cloak
+    >
         <div>Gift</div>
     </div>
-    <div x-show="$store.masterDataStore.selectedTab === 'route'">
+    <div
+        x-show="$store.masterDataStore.selectedTab === 'route'"
+        x-cloak
+    >
         <div>Route</div>
     </div>
-    <x-gxui.loader.action-loader show="$store.masterDataStore.processLoading">
+    <x-gxui.loader.action-loader
+        show="$store.masterDataStore.processLoading"
+        x-cloak
+    >
         <div class="h-24 w-full flex flex-col gap-1 items-center justify-center">
             <svg class="w-6 h-6 animate-spinner me-1 text-brand-500" xmlns="http://www.w3.org/2000/svg"
                  viewBox="0 0 24 24">

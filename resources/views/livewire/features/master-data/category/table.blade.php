@@ -8,8 +8,8 @@
             <div class="flex items-center gap-3">
                 <x-gxui.table.search
                     placeholder="Search..."
-                    x-bind:value="$store.categoryTableStore.param"
-                    x-on:input="$store.categoryTableStore.onSearch($event.target.value)"
+                    store="categoryTableStore"
+                    dispatcher="onFindAll"
                 ></x-gxui.table.search>
                 <x-gxui.button.button
                     wire:ignore
@@ -37,59 +37,22 @@
                 ></x-gxui.table.th>
             </x-slot>
             <x-slot name="rows">
-                <template x-for="(data, index) in $store.categoryTableStore.data" :key="index">
-                    <tr class="border-b border-neutral-300">
-                        <x-gxui.table.td>
-                            <div class="flex items-center gap-3">
-                                <img
-                                    x-data
-                                    alt="category-image"
-                                    class="w-10 h-10 rounded-full border border-neutral-200"
-                                    x-bind:src="data.image"
-                                >
-                                <span x-text="data.name"></span>
-                            </div>
-                        </x-gxui.table.td>
-                        <x-gxui.table.td className="flex justify-center relative">
-                            <x-gxui.popper.popper>
-                                <div
-                                    x-bind="gxuiPopperTrigger"
-                                    class="cursor-pointer w-fit"
-                                    wire:ignore
-                                >
-                                    <i data-lucide="ellipsis-vertical"
-                                       class="text-neutral-500 group-focus-within:text-neutral-900 h-3 aspect-[1/1]">
-                                    </i>
-                                </div>
-                                <div
-                                    x-bind="gxuiPopperContent"
-                                    class="fixed z-50 text-sm w-[130px] text-gray-500 bg-white border border-gray-200 rounded-md shadow-sm dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"
-                                >
-                                    <div class="flex flex-col py-1 justify-start items-start">
-                                        <div
-                                            class="flex items-center justify-start gap-2 w-full text-sm px-2 py-1.5 cursor-pointer hover:bg-neutral-50"
-                                            x-on:click="open = false; $store.categoryTableStore.onEdit(data.id)"
-                                        >
-                                            <div wire:ignore>
-                                                <i data-lucide="pencil" class="text-neutral-500 h-4 aspect-[1/1]"></i>
-                                            </div>
-                                            <span>Edit</span>
-                                        </div>
-                                        <div
-                                            class="flex items-center justify-start gap-2 w-full text-sm px-2 py-1.5 cursor-pointer hover:bg-neutral-50"
-                                            x-on:click="open = false; $store.categoryTableStore.onDelete(data.id)"
-                                        >
-                                            <div wire:ignore>
-                                                <i data-lucide="trash" class="text-neutral-500 h-4 aspect-[1/1]"></i>
-                                            </div>
-                                            <span>Delete</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </x-gxui.popper.popper>
-                        </x-gxui.table.td>
-                    </tr>
-                </template>
+                <tr class="border-b border-neutral-300">
+                    <x-gxui.table.td>
+                        <div class="flex items-center gap-3">
+                            <img
+                                x-data
+                                alt="category-image"
+                                class="w-10 h-10 rounded-full border border-neutral-200"
+                                x-bind:src="data.image"
+                            >
+                            <span x-text="data.name"></span>
+                        </div>
+                    </x-gxui.table.td>
+                    <x-gxui.table.td className="flex justify-center relative">
+                        <x-gxui.table.action store="categoryTableStore"></x-gxui.table.action>
+                    </x-gxui.table.td>
+                </tr>
             </x-slot>
         </x-gxui.table.table>
         <x-gxui.table.pagination
@@ -103,22 +66,28 @@
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.store('categoryTableStore', {
-                loading: true,
-                page: 1,
-                perPage: 1,
-                shownPages: [],
-                perPageOptions: [1, 2, 3],
-                totalPages: 0,
-                totalRows: 0,
-                param: '',
-                data: [],
-                timeoutDebounce: null,
+            const componentProps = {
+                component: null,
                 formStore: null,
                 toastStore: null,
                 masterDataStore: null,
-                componentID: document.querySelector('[data-component-id="table-category"]')?.getAttribute('wire:id'),
-                component: null,
+                paginationStore: null,
+                actions: [
+                    {
+                        label: 'Edit',
+                        icon: 'pencil',
+                        dispatch: function (id) {
+                            this.onEdit(id)
+                        }
+                    },
+                    {
+                        label: 'Delete',
+                        icon: 'trash',
+                        dispatch: function (id) {
+                            this.onDelete(id)
+                        }
+                    },
+                ],
                 init: function () {
                     const componentID = document.querySelector('[data-component-id="table-category"]')?.getAttribute('wire:id');
                     Livewire.hook('component.init', ({component}) => {
@@ -126,69 +95,55 @@
                             this.formStore = Alpine.store('categoryFormStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.masterDataStore = Alpine.store('masterDataStore');
+                            this.paginationStore = Alpine.store('gxuiPaginationStore');
+                            this.actions.forEach((action, key) => {
+                                action.dispatch = action.dispatch.bind(this);
+                            });
                             this.component = component;
                             this.onFindAll();
                         }
+
                     })
-                },
-                onPreviousPage() {
-                    this.page = this.page - 1;
-                    this.onFindAll();
-                },
-                onNextPage() {
-                    this.page = this.page + 1;
-                    this.onFindAll();
                 },
                 onFindAll() {
                     this.loading = true;
                     this.component.$wire.call('findAll', this.param, this.page, this.perPage)
                         .then(response => {
-                            if (response['success']) {
-                                this.data = response['data'];
-                                const totalRecords = response['meta']['pagination']['total_rows'];
-                                this.totalRows = totalRecords;
-                                Alpine.store('gxuiPaginationStore').paginate(totalRecords, this.perPage, this.page, 5);
-                                this.shownPages = Alpine.store('gxuiPaginationStore').shownPages;
-                                this.totalPages = Alpine.store('gxuiPaginationStore').totalPages;
+                            const {success, data, meta} = response;
+                            if (success) {
+                                this.data = data;
+                                const totalRows = meta['pagination'] ? meta['pagination']['total_rows'] : 0;
+                                const page = meta['pagination'] ? meta['pagination']['page'] : 1;
+                                this.totalRows = totalRows;
+                                this.page = page;
+                                this.paginationStore.paginate(totalRows, this.perPage, this.page);
+                                this.totalPages = this.paginationStore.totalPages;
+                                this.shownPages = this.paginationStore.shownPages;
                             } else {
                                 this.toastStore.failed('failed to load data');
                             }
-                        }).catch(error => {
-                        this.toastStore.failed('failed to load data');
-                    }).finally(() => {
+                        }).finally(() => {
                         this.loading = false;
                     })
                 },
-                onSearch(value) {
-                    clearTimeout(this.timeoutDebounce);
-                    this.timeoutDebounce = setTimeout(() => {
-                        this.page = 1;
-                        this.param = value;
-                        this.onFindAll();
-                    }, 500);
-                },
                 onDelete(id) {
-                    Alpine.store('masterDataStore').processText = 'Deleting Process...';
-                    Alpine.store('masterDataStore').processLoading = true;
-                    window.Livewire
-                        .find(this.componentID).call('delete', id)
+                    this.masterDataStore.showLoading('Deleting Process...');
+                    this.component.$wire.call('delete', id)
                         .then(response => {
-                            Alpine.store('masterDataStore').processLoading = false;
-                            if (response['success']) {
-                                Alpine.store('gxuiToastStore').success('success delete category');
+                            const {success} = response;
+                            if (success) {
+                                this.toastStore.success('success delete category');
                                 this.onFindAll();
                             } else {
-                                Alpine.store('gxuiToastStore').failed('failed to load data');
+                                this.toastStore.failed('failed to load data');
                             }
-                        }).catch(error => {
-                        Alpine.store('masterDataStore').processLoading = false;
-                        Alpine.store('gxuiToastStore').failed('failed to load data');
+                        }).finally(() => {
+                        this.masterDataStore.closeLoading();
                     })
                 },
                 onEdit(id) {
                     this.masterDataStore.showLoading('Finding Item Process...');
-                    window.Livewire
-                        .find(this.componentID).call('findByID', id)
+                    this.component.$wire.call('findByID', id)
                         .then(response => {
                             Alpine.store('masterDataStore').processLoading = false;
                             const {success, data} = response;
@@ -198,28 +153,14 @@
                                 this.toastStore.failed('failed to hydrate form');
                             }
                             console.log(response);
-                        }).catch(error => {
+                        }).finally(() => {
                         this.masterDataStore.closeLoading();
-                        this.toastStore.failed('failed to load data');
                     })
                 }
-            })
+            };
+            const props = Object.assign({}, window.TableStore, componentProps);
+            Alpine.store('categoryTableStore', props);
         })
-
-        // window.Livewire
-        //     .find(this.componentID).call('delete', id)
-        //     .then(response => {
-        //         Alpine.store('masterDataStore').processLoading = false;
-        //         if (response['success']) {
-        //             Alpine.store('gxuiToastStore').success('success delete category');
-        //             this.onFindAll();
-        //         } else {
-        //             Alpine.store('gxuiToastStore').failed('failed to load data');
-        //         }
-        //     }).catch(error => {
-        //     Alpine.store('masterDataStore').processLoading = false;
-        //     Alpine.store('gxuiToastStore').failed('failed to load data');
-        // })
     </script>
 @endpush
 

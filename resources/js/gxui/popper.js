@@ -28,7 +28,8 @@ document.addEventListener('alpine:init', () => {
         ':style': `
             {
                 top: triggerRect.bottom + 10 +'px',
-                right: window.innerWidth - triggerRect.right - triggerRect.width + 'px'
+                // right: window.innerWidth - triggerRect.right - triggerRect.width + 'px'
+                right: window.innerWidth - triggerRect.right + 'px'
             }
         `,
     }));
