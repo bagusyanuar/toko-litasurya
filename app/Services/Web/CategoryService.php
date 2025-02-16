@@ -14,13 +14,14 @@ use App\Domain\Web\Category\DTOCategoryFilter;
 use App\Domain\Web\Category\DTOCategoryRequest;
 use App\Helpers\Validator\ValidatorResponse;
 use App\Models\Category;
+use App\Services\CustomService;
 use App\UseCase\Web\CategoryInterface;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 
-class CategoryService implements CategoryInterface
+class CategoryService extends CustomService implements CategoryInterface
 {
     /**
      * @inheritDoc
@@ -29,6 +30,20 @@ class CategoryService implements CategoryInterface
     {
         // TODO: Implement findAll() method.
         try {
+            $filters = [
+                [
+                    'key' => $filter->getParam(),
+                    'dispatcher' => function ($query) use ($filter) {
+                        /** @var Builder $query */
+                        return $query->where('name', 'LIKE', '%' . $filter->getParam() . '%');
+                    }
+                ],
+            ];
+            $categories = $this->queryFrom(Category::class)
+                ->filters($filters)
+                ->paginate($filter->getPage(), $filter->getPerPage());
+            $totalRows = $this->queryRows;
+            dd($categories, $totalRows);
             $query = Category::with([])
                 ->when($filter->getParam(), function ($query) use ($filter) {
                     /** @var Builder $query */
