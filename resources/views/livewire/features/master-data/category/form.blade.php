@@ -3,14 +3,14 @@
     data-component-id="form-category"
 >
     <x-gxui.modal.form
-        show="$store.categoryFormStore.modalFormShow"
+        show="$store.categoryFormStore.showModalForm"
     >
         <div
             class="modal-header flex items-center justify-between px-4 py-3 border-b border-neutral-300 rounded-t">
             <span class="text-neutral-700 font-semibold">Form New Category</span>
             <button
                 type="button"
-                x-on:click="$store.categoryFormStore.setCloseModalForm()"
+                x-on:click="$store.categoryFormStore.closeModal()"
                 class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-4 h-4 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
             >
                 <svg class="w-2 h-2" aria-hidden="true"
@@ -30,7 +30,7 @@
                 parentClassName="mb-3"
                 x-model="$store.categoryFormStore.form.name"
                 x-bind:disabled="$store.categoryFormStore.loading"
-                validatorKey="$store.categoryFormStore.validator"
+                validatorKey="$store.categoryFormStore.formValidator"
                 validatorField="name"
             ></x-gxui.input.text.text>
             <x-gxui.input.file.file-dropper
@@ -73,7 +73,7 @@
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
-            const INITIAL_FORM = {name: ''};
+            const INITIAL_FORM = { id: '', name: '' };
             const STORE_PROPS = {
                 component: null,
                 toastStore: null,
@@ -83,10 +83,11 @@
                 loading: false,
                 formType: 'create',
                 formValidator: {},
-                form: INITIAL_FORM,
+                form: { ...INITIAL_FORM },
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
-                        if (component.id === this.componentID) {
+                        const componentID = document.querySelector('[data-component-id="form-category"]')?.getAttribute('wire:id');
+                        if (component.id === componentID) {
                             this.component = component;
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.tableStore = Alpine.store('categoryTableStore');
@@ -96,7 +97,7 @@
                     });
                 },
                 formReset() {
-                    this.form = INITIAL_FORM;
+                    this.form = { ...INITIAL_FORM };
                     this.formType = 'create';
                     this.formValidator = {};
                     this.fileDropper.removeAllFiles();
@@ -118,12 +119,16 @@
                         });
                     });
                     await Promise.all(uploadPromises);
-                    const formData = {name: this.form.name};
-                    const response = await window.Livewire.find(this.componentID).call(this.type, formData);
-                    const { success, data, status } = response;
+                    const response = await this.component.$wire.call(this.formType, this.form);
+                    const {success, data, status, message} = response;
                     if (success) {
                         this.fileDropper.removeAllFiles();
-                        this.toastStore.success('successfully create new category');
+                        if (this.formType === 'update') {
+                            this.closeModal();
+                        } else {
+                            this.formReset();
+                        }
+                        this.toastStore.success(message);
                         this.tableStore.onFindAll();
                     } else {
                         switch (status) {
@@ -141,83 +146,15 @@
                     }
                     this.fileDropper.enable();
                     this.loading = false;
-                }
-            };
-
-            Alpine.store('categoryFormStore', {
-                component: null,
-                componentID: document.querySelector('[data-component-id="form-category"]')?.getAttribute('wire:id'),
-                form: {
-                    name: '',
-                },
-                modalFormShow: false,
-                fileDropper: null,
-                loading: false,
-                type: 'create',
-                validator: {},
-                toastStore: null,
-                setOpenModalForm(type = 'create') {
-                    this.modalFormShow = true;
-                    this.type = type;
-                },
-                setCloseModalForm() {
-                    this.resetForm();
-                    this.modalFormShow = false;
-                },
-                resetForm() {
-                    this.validator = {};
-                    this.form.name = '';
-                    this.fileDropper.removeAllFiles();
-                    this.type = 'create';
-                },
-                init: function () {
-                    Livewire.hook('component.init', ({component}) => {
-                        if (component.id === this.componentID) {
-                            this.component = component;
-                            this.toastStore = Alpine.store('gxuiToastStore');
-                            const dropperElement = document.getElementById('imageDropper');
-                            this.fileDropper = Alpine.store('gxuiFileDropperStore').initDropper(dropperElement);
-                        }
-                    });
-                },
-                async mutate() {
-                    this.fileDropper.disable();
-                    this.loading = true;
-                    const uploadPromises = this.fileDropper.files.map(file => {
-                        return new Promise((resolve, reject) => {
-                            // window.Livewire.find(this.componentID).upload('file', file, resolve, reject)
-                            this.component.$wire.upload('file', file, resolve, reject);
-                        });
-                    });
-                    await Promise.all(uploadPromises);
-                    const formData = {name: this.form.name};
-                    let response = await window.Livewire.find(this.componentID).call(this.type, formData);
-                    switch (response['status']) {
-                        case 422:
-                            this.validator = response['data'];
-                            this.toastStore.failed('please fill the correct form');
-                            break;
-                        case 201:
-                            this.fileDropper.removeAllFiles();
-                            Alpine.store('gxuiToastStore').success('successfully create new category');
-                            Alpine.store('categoryTableStore').onFindAll();
-                            break;
-                        case 500:
-                            Alpine.store('gxuiToastStore').failed('internal server error');
-                            break;
-                        default:
-                            Alpine.store('gxuiToastStore').failed('unknown error');
-                            break;
-                    }
-                    this.fileDropper.enable();
-                    this.loading = false;
                 },
                 hydrateForm(data) {
+                    this.formType = 'update';
+                    this.form.id = data['id'];
                     this.form.name = data['name'];
-                    this.type = 'update';
-                    this.modalFormShow = true;
+                    this.showModalForm = true;
                 }
-            });
+            };
+            Alpine.store('categoryFormStore', STORE_PROPS);
         });
     </script>
 @endpush

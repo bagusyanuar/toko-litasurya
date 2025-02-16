@@ -39,7 +39,7 @@
         x-show="$store.masterDataStore.selectedTab === 'box'"
         x-cloak
     >
-        <div>Box</div>
+        <livewire:features.master-data.item.table/>
     </div>
     <div
         x-show="$store.masterDataStore.selectedTab === 'gift'"

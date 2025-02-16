@@ -9,10 +9,16 @@ use Illuminate\Support\Facades\Validator;
 class DTORequest
 {
     protected $dtoForm;
+    protected $query;
 
     public function hydrateForm($formData)
     {
         $this->dtoForm = $formData;
+    }
+
+    public function hydrateQueryForm($query)
+    {
+        $this->query = $query;
     }
 
     protected function rules()

@@ -4,6 +4,7 @@ namespace App\Livewire\Features\MasterData\Category;
 
 use App\Domain\Web\Category\DTOCategoryRequest;
 use App\Helpers\Alpine\AlpineResponse;
+use App\Models\Category;
 use App\Services\Web\CategoryService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
@@ -23,6 +24,9 @@ class Form extends Component
 
     /** @var $file UploadedFile | null */
     public $file;
+
+    /** @var Category $category */
+    public $category;
 
 
     public function boot(CategoryService $categoryService)
@@ -45,24 +49,19 @@ class Form extends Component
         return AlpineResponse::toJSON($response);
     }
 
-    public function update($id)
+    public function update($formData)
     {
+        $id = $formData['id'];
         $dtoForm = [
-            'name' => $this->name,
+            'name' => $formData['name'],
             'file' => $this->file
         ];
         $this->dto->hydrateForm($dtoForm);
         $response = $this->service->update($id, $this->dto);
         if ($response->isSuccess()) {
-            $this->reset(['name', 'file']);
+            $this->reset(['file']);
         }
-        return AlpineResponse::toResponse(
-            $response->isSuccess(),
-            $response->getStatus(),
-            $response->getMessage(),
-            $response->getData(),
-            $response->getMeta()
-        );
+        return AlpineResponse::toJSON($response);
     }
 
     public function render()

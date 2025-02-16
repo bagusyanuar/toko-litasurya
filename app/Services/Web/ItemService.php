@@ -4,182 +4,57 @@
 namespace App\Services\Web;
 
 
-use App\Domain\MetaPagination;
-use App\Domain\ServiceResponse;
-use App\Domain\ServiceResponseWithMetaPagination;
-use App\Domain\Web\Item\ItemFilter;
-use App\Domain\Web\Item\ItemPriceRequest;
-use App\Domain\Web\Item\ItemRequest;
-use App\Helpers\FileUpload\FileUpload;
-use App\Helpers\FileUpload\FileUploadRequest;
+use App\Commons\Response\MetaPagination;
+use App\Commons\Response\ServiceResponse;
+use App\Domain\Web\Item\DTOFilterItem;
+use App\Models\Category;
 use App\Models\Item;
-use App\Models\ItemPrice;
 use App\Usecase\Web\ItemInterface;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Query\Builder;
 
 class ItemService implements ItemInterface
 {
-    private $targetPathImage = 'static/image/item';
+
     /**
      * @inheritDoc
      */
-    public function getDataItems(ItemFilter $filter): ServiceResponseWithMetaPagination
+    public function findAll(DTOFilterItem $filter): ServiceResponse
     {
-        // TODO: Implement getDataItems() method.
-        $response = new ServiceResponseWithMetaPagination();
         try {
-            $query = Item::with(['category']);
-            if ($filter->getParam() !== '') {
-                $query->where('name', 'LIKE', "%{$filter->getParam()}%");
-            }
-            $offset = ($filter->getPage() - 1) * $filter->getPerPage();
+            $query = Item::with([])
+                ->when($filter->getParam(), function ($query) use ($filter) {
+                    /** @var Builder $query */
+                    return $query->where('name', 'LIKE', '%' . $filter->getParam() . '%');
+                });
             $totalRows = $query->count();
-            $data = $query->offset($offset)
+            $page = $filter->getPage();
+            $offset = ($page - 1) * $filter->getPerPage();
+            $items = $query
+                ->offset($offset)
                 ->limit($filter->getPerPage())
+                ->orderBy('created_at', 'DESC')
                 ->get();
-            $metaPagination = new MetaPagination($filter->getPage(), $filter->getPerPage(), $totalRows);
-            $response->setMessage('successfully retrieve data items')
-                ->setData($data)
-                ->setMeta($metaPagination);
-        }catch (\Exception $e) {
-            $response->setSuccess(false)
-                ->setCode(500)
-                ->setMessage($e->getMessage());
-        }
-        return $response;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function createNewItem(ItemRequest $itemRequest): ServiceResponse
-    {
-        // TODO: Implement createNewItem() method.
-        $response = new ServiceResponse();
-        DB::beginTransaction();
-        try {
-            $file = $itemRequest->getFile();
-            $imageName = null;
-            if ($file) {
-                $fileUploadService = new FileUpload();
-                $fileUploadRequest = new FileUploadRequest($this->targetPathImage, $file);
-                $fileUploadResponse = $fileUploadService->upload($fileUploadRequest);
-                if (!$fileUploadResponse->isSuccess()) {
-                    DB::rollBack();
-                    return $response->setSuccess(false)
-                        ->setCode(500)
-                        ->setMessage($fileUploadResponse->getMessage());
-                }
-                $imageName = $fileUploadResponse->getFileName();
+            //force to fetch previous page
+            if ($page > 1 && count($items) <= 0) {
+                $page = $page - 1;
+                $offset = ($page - 1) * $filter->getPerPage();
+                $categories = $query
+                    ->offset($offset)
+                    ->limit($filter->getPerPage())
+                    ->orderBy('created_at', 'DESC')
+                    ->get();
             }
-            $data = [
-                'category_id' => $itemRequest->getCategoryID(),
-                'name' => $itemRequest->getName(),
-                'image' => $imageName,
-                'description' => $itemRequest->getDescription(),
+            $metaPagination = new MetaPagination($page, $filter->getPerPage(), $totalRows);
+            $meta = [
+                'pagination' => $metaPagination->dehydrate()
             ];
-            $item = Item::create($data);
-            $prices = $itemRequest->getPrices();
-            foreach ($prices as $price) {
-                $dataPrice = [
-                    'item_id' => $item->id,
-                    'price_list_unit' => $price->getPriceListUnit(),
-                    'price' => $price->getPrice(),
-                    'unit' => $price->getUnit(),
-                    'description' => $price->getDescription()
-                ];
-                ItemPrice::create($dataPrice);
-            }
-            $response->setMessage('successfully create new item')->setCode(201);
-            DB::commit();
+            return ServiceResponse::statusOK(
+                'successfully get data items',
+                $categories,
+                $meta
+            );
         }catch (\Exception $e) {
-            DB::rollBack();
-            $response->setSuccess(false)
-                ->setCode(500)
-                ->setMessage($e->getMessage());
+            return ServiceResponse::internalServerError($e->getMessage());
         }
-        return $response;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getItemByID($id): ServiceResponse
-    {
-        // TODO: Implement getItemByID() method.
-        $response = new ServiceResponse();
-        try {
-            $data = Item::with(['category'])
-                ->where('id', '=', $id)
-                ->first();
-            if (!$data) {
-                return $response->setSuccess(false)
-                    ->setCode(404)
-                    ->setMessage('item not found');
-            }
-            $response->setMessage('successfully get data item')
-                ->setData($data);
-        } catch (\Exception $e) {
-            $response->setSuccess(false)
-                ->setCode(500)
-                ->setMessage($e->getMessage());
-        }
-        return $response;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function updateItem(Item $item, ItemRequest $itemRequest): ServiceResponse
-    {
-        // TODO: Implement updateItem() method.
-        $response = new ServiceResponse();
-        try {
-            $file = $itemRequest->getFile();
-            $imageName = null;
-            $data = [
-                'category_id' => $itemRequest->getCategoryID(),
-                'name' => $itemRequest->getName(),
-                'description' => $itemRequest->getDescription(),
-            ];
-            if ($file) {
-                $fileUploadService = new FileUpload();
-                $fileUploadRequest = new FileUploadRequest($this->targetPathImage, $file);
-                $fileUploadResponse = $fileUploadService->upload($fileUploadRequest);
-
-                if (!$fileUploadResponse->isSuccess()) {
-                    return $response->setSuccess(false)
-                        ->setCode(500)
-                        ->setMessage($fileUploadResponse->getMessage());
-                }
-                $imageName = $fileUploadResponse->getFileName();
-                $data['image'] = $imageName;
-            }
-            $item->update($data);
-            $response->setMessage('successfully update data item');
-        }catch (\Exception $e) {
-            $response->setSuccess(false)
-                ->setCode(500)
-                ->setMessage($e->getMessage());
-        }
-        return $response;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function deleteItem(Item $item): ServiceResponse
-    {
-        // TODO: Implement deleteItem() method.
-        $response = new ServiceResponse();
-        try {
-            $item->delete();
-            $response->setMessage('successfully delete item');
-        } catch (\Exception $e) {
-            $response->setSuccess(false)
-                ->setCode(500)
-                ->setMessage($e->getMessage());
-        }
-        return $response;
     }
 }

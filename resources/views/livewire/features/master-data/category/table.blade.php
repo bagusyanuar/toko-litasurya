@@ -13,7 +13,7 @@
                 ></x-gxui.table.search>
                 <x-gxui.button.button
                     wire:ignore
-                    x-on:click="$store.categoryFormStore.setOpenModalForm()"
+                    x-on:click="$store.categoryFormStore.showModal()"
                 >
                     <div class="w-full flex justify-center items-center gap-1 text-sm">
                         <i data-lucide="plus" class="h-3" style="width: fit-content;"></i>
@@ -145,14 +145,12 @@
                     this.masterDataStore.showLoading('Finding Item Process...');
                     this.component.$wire.call('findByID', id)
                         .then(response => {
-                            Alpine.store('masterDataStore').processLoading = false;
                             const {success, data} = response;
                             if (success) {
                                 this.formStore.hydrateForm(data);
                             } else {
                                 this.toastStore.failed('failed to hydrate form');
                             }
-                            console.log(response);
                         }).finally(() => {
                         this.masterDataStore.closeLoading();
                     })

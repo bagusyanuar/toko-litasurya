@@ -23,20 +23,7 @@ class Table extends Component
     {
         $filter = new DTOCategoryFilter($param, $page, $perPage);
         $response = $this->service->findAll($filter);
-        if (!$response->isSuccess()) {
-            return AlpineResponse::toResponse(
-                false,
-                500,
-                $response->getMessage()
-            );
-        }
-        return AlpineResponse::toResponse(
-            true,
-            200,
-            'success',
-            $response->getData(),
-            $response->getMeta()
-        );
+        return AlpineResponse::toJSON($response);
     }
 
     public function findByID($id)
@@ -48,20 +35,7 @@ class Table extends Component
     public function delete($id)
     {
         $response = $this->service->delete($id);
-        if (!$response->isSuccess()) {
-            return AlpineResponse::toResponse(
-                false,
-                500,
-                $response->getMessage()
-            );
-        }
-        return AlpineResponse::toResponse(
-            true,
-            200,
-            'success',
-            $response->getData(),
-            $response->getMeta()
-        );
+        return AlpineResponse::toJSON($response);
     }
 
     public function render()
