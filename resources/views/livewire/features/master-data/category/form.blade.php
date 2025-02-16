@@ -73,12 +73,77 @@
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
-            const props = {
+            const INITIAL_FORM = {name: ''};
+            const STORE_PROPS = {
                 component: null,
-                form: {
-                    name: '',
+                toastStore: null,
+                tableStore: null,
+                showModalForm: false,
+                fileDropper: null,
+                loading: false,
+                formType: 'create',
+                formValidator: {},
+                form: INITIAL_FORM,
+                init: function () {
+                    Livewire.hook('component.init', ({component}) => {
+                        if (component.id === this.componentID) {
+                            this.component = component;
+                            this.toastStore = Alpine.store('gxuiToastStore');
+                            this.tableStore = Alpine.store('categoryTableStore');
+                            const dropperElement = document.getElementById('imageDropper');
+                            this.fileDropper = Alpine.store('gxuiFileDropperStore').initDropper(dropperElement);
+                        }
+                    });
                 },
+                formReset() {
+                    this.form = INITIAL_FORM;
+                    this.formType = 'create';
+                    this.formValidator = {};
+                    this.fileDropper.removeAllFiles();
+                },
+                showModal(formType = 'create') {
+                    this.showModalForm = true;
+                    this.type = formType;
+                },
+                closeModal() {
+                    this.formReset();
+                    this.showModalForm = false;
+                },
+                async mutate() {
+                    this.fileDropper.disable();
+                    this.loading = true;
+                    const uploadPromises = this.fileDropper.files.map(file => {
+                        return new Promise((resolve, reject) => {
+                            this.component.$wire.upload('file', file, resolve, reject);
+                        });
+                    });
+                    await Promise.all(uploadPromises);
+                    const formData = {name: this.form.name};
+                    const response = await window.Livewire.find(this.componentID).call(this.type, formData);
+                    const { success, data, status } = response;
+                    if (success) {
+                        this.fileDropper.removeAllFiles();
+                        this.toastStore.success('successfully create new category');
+                        this.tableStore.onFindAll();
+                    } else {
+                        switch (status) {
+                            case 422:
+                                this.formValidator = data;
+                                this.toastStore.failed('please fill the correct form');
+                                break;
+                            case 500:
+                                this.toastStore.failed('internal server error');
+                                break;
+                            default:
+                                this.toastStore.failed('unknown error');
+                                break;
+                        }
+                    }
+                    this.fileDropper.enable();
+                    this.loading = false;
+                }
             };
+
             Alpine.store('categoryFormStore', {
                 component: null,
                 componentID: document.querySelector('[data-component-id="form-category"]')?.getAttribute('wire:id'),
