@@ -145,11 +145,11 @@
                     this.masterDataStore.showLoading('Finding Item Process...');
                     this.component.$wire.call('findByID', id)
                         .then(response => {
-                            const {success, data} = response;
+                            const {success, data, message} = response;
                             if (success) {
                                 this.formStore.hydrateForm(data);
                             } else {
-                                this.toastStore.failed('failed to hydrate form');
+                                this.toastStore.failed(message);
                             }
                         }).finally(() => {
                         this.masterDataStore.closeLoading();

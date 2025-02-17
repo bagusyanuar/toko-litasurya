@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Commons\Response\MetaPagination;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -16,8 +17,8 @@ class CustomService
     /** @var Builder $builder */
     protected $builder;
 
-    /** @var int $queryRows */
-    protected $queryRows = 0;
+    /** @var MetaPagination $pagination */
+    protected $pagination;
 
     /**
      * @return Model
@@ -66,7 +67,7 @@ class CustomService
      */
     public function paginate($page, $perPage, $forceBack = true)
     {
-        $this->queryRows = $this->builder->count();
+        $totalRows = $this->builder->count();
         $offset = ($page - 1) * $perPage;
         $data = $this->builder
             ->offset($offset)
@@ -80,6 +81,7 @@ class CustomService
                 ->limit($perPage)
                 ->get();
         }
+        $this->pagination = new MetaPagination($page, $perPage, $totalRows);
         return $data;
     }
 

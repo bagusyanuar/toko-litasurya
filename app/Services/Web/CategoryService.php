@@ -28,7 +28,6 @@ class CategoryService extends CustomService implements CategoryInterface
      */
     public function findAll(DTOCategoryFilter $filter): ServiceResponse
     {
-        // TODO: Implement findAll() method.
         try {
             $filters = [
                 [
@@ -39,38 +38,11 @@ class CategoryService extends CustomService implements CategoryInterface
                     }
                 ],
             ];
-            $categories = $this->queryFrom(Category::class)
+            $categories = $this
+                ->queryFrom(Category::class)
                 ->filters($filters)
                 ->paginate($filter->getPage(), $filter->getPerPage());
-            $totalRows = $this->queryRows;
-            dd($categories, $totalRows);
-            $query = Category::with([])
-                ->when($filter->getParam(), function ($query) use ($filter) {
-                    /** @var Builder $query */
-                    return $query->where('name', 'LIKE', '%' . $filter->getParam() . '%');
-                });
-            $totalRows = $query->count();
-            $page = $filter->getPage();
-            $offset = ($page - 1) * $filter->getPerPage();
-            $categories = $query
-                ->offset($offset)
-                ->limit($filter->getPerPage())
-                ->orderBy('created_at', 'DESC')
-                ->get();
-            //force to fetch previous page
-            if ($page > 1 && count($categories) <= 0) {
-                $page = $page - 1;
-                $offset = ($page - 1) * $filter->getPerPage();
-                $categories = $query
-                    ->offset($offset)
-                    ->limit($filter->getPerPage())
-                    ->orderBy('created_at', 'DESC')
-                    ->get();
-            }
-            $metaPagination = new MetaPagination($page, $filter->getPerPage(), $totalRows);
-            $meta = [
-                'pagination' => $metaPagination->dehydrate()
-            ];
+            $meta = ['pagination' => $this->pagination->dehydrate()];
             return ServiceResponse::statusOK(
                 'successfully get data categories',
                 $categories,
@@ -86,14 +58,8 @@ class CategoryService extends CustomService implements CategoryInterface
      */
     public function findByID($id): ServiceResponse
     {
-        // TODO: Implement findByID() method.
         try {
-            $category = Category::with([])
-                ->where('id', '=', $id)
-                ->first();
-            if (!$category) {
-                return ServiceResponse::notFound('category not found');
-            }
+            $category = Category::findByID('asdqwe');
             return ServiceResponse::statusOK('successfully get category', $category);
         } catch (\Exception $e) {
             return ServiceResponse::internalServerError($e->getMessage());
