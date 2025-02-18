@@ -4,6 +4,7 @@
 namespace App\Commons\Traits\Eloquent;
 
 
+use App\Commons\Request\DTORequest;
 use App\Commons\Response\MetaPagination;
 use App\Commons\Response\ServiceResponse;
 use Illuminate\Database\Eloquent\Builder;
@@ -35,39 +36,51 @@ trait Finder
         return $self;
     }
 
-    public static function makeDataResponse($class, $config = []): ServiceResponse
+    public static function findFrom($class, $config = []): ServiceResponse
     {
-
-        $relations = [];
-        $self = new self();
-        /** @var Model $model */
-        $model = app($class);
-        $builder = $model::with($relations);
-        $meta = null;
-        $templateMessage = $self->getTemplateMessage($config);
-        $self->createFilter($config, function ($key, $dispatcher) use ($builder) {
-            $builder->when($key, $dispatcher);
-        });
-        $self->createPagination($config, $builder, function ($pagination) use (&$meta) {
-            $meta['pagination'] = $pagination;
-        });
-        $data = $builder->get();
-        return ServiceResponse::statusOK(
-            "successfully get {$templateMessage}",
-            $data,
-            $meta
-        );
+        try {
+            $relations = [];
+            $self = new self();
+            /** @var Model $model */
+            $model = app($class);
+            $builder = $model::with($relations);
+            $meta = null;
+            $templateMessage = $self->getTemplateMessage($config);
+            $self->createFilter($config, function ($key, $dispatcher) use ($builder) {
+                $builder->when($key, $dispatcher);
+            });
+            $self->createPagination($config, $builder, function ($pagination) use (&$meta) {
+                $meta['pagination'] = $pagination;
+            });
+            $data = $builder->get();
+            return ServiceResponse::statusOK(
+                "successfully get {$templateMessage}",
+                $data,
+                $meta
+            );
+        } catch (\Exception $e) {
+            return ServiceResponse::internalServerError($e->getMessage());
+        }
     }
 
-    public static function makeOneResponse($class, $id, $config = []): ServiceResponse
+    public static function findOneFrom($class, $id, $config = []): ServiceResponse
     {
-        $self = new self();
-        /** @var Model $model */
-        $model = app($class);
-        $data = $model::find($id);
-        $templateMessage = $self->getTemplateMessage($config);
-        return ServiceResponse::statusOK("successfully get {$templateMessage}", $data);
+        try {
+            $self = new self();
+            /** @var Model $model */
+            $model = app($class);
+            $data = $model::find($id);
+            $templateMessage = $self->getTemplateMessage($config);
+            if (!$data) {
+                return ServiceResponse::notFound("{$templateMessage} not found");
+            }
+            return ServiceResponse::statusOK("successfully get {$templateMessage}", $data);
+        } catch (\Exception $e) {
+            return ServiceResponse::internalServerError($e->getMessage());
+        }
     }
+
+
 
     public static function queryLike($column, $value)
     {

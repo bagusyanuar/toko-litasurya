@@ -36,4 +36,14 @@ class DTORequest
     {
         return Validator::make($this->dtoForm, $this->rules(), $this->messages());
     }
+
+    public function hydrate()
+    {
+
+    }
+
+    public function dehydrate()
+    {
+        return [];
+    }
 }

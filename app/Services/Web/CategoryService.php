@@ -10,9 +10,11 @@ use App\Commons\Response\MetaPagination;
 
 use App\Commons\Response\ServiceResponse;
 use App\Commons\Traits\Eloquent\Finder;
+use App\Commons\Traits\Eloquent\Mutator;
 use App\Domain\Web\Category\CategoryRequest;
 use App\Domain\Web\Category\DTOCategoryFilter;
 use App\Domain\Web\Category\DTOCategoryRequest;
+use App\Domain\Web\Category\DTOMutateCategory;
 use App\Helpers\Validator\ValidatorResponse;
 use App\Models\Category;
 use App\Services\CustomService;
@@ -24,25 +26,21 @@ use Illuminate\Support\MessageBag;
 
 class CategoryService extends CustomService implements CategoryInterface
 {
-    use Finder;
+    use Finder, Mutator;
 
     /**
      * @inheritDoc
      */
     public function findAll(DTOCategoryFilter $filter): ServiceResponse
     {
-        try {
-            $filters = [
-                self::filterQueryLikeBy($filter->getParam(), 'name', "%{$filter->getParam()}%")
-            ];
-            $config = self::useBasicConfig('category', $filter->getPage(), $filter->getPerPage(), $filters);
-            return self::makeDataResponse(
-                Category::class,
-                $config
-            );
-        } catch (\Exception $e) {
-            return ServiceResponse::internalServerError($e->getMessage());
-        }
+        $filters = [
+            self::filterQueryLikeBy($filter->getParam(), 'name', "%{$filter->getParam()}%")
+        ];
+        $config = self::useBasicConfig('category', $filter->getPage(), $filter->getPerPage(), $filters);
+        return self::findFrom(
+            Category::class,
+            $config
+        );
     }
 
     /**
@@ -50,42 +48,23 @@ class CategoryService extends CustomService implements CategoryInterface
      */
     public function findByID($id): ServiceResponse
     {
-        try {
-            return self::makeOneResponse(Category::class, $id, ['template_message' => 'category']);
-        } catch (\Exception $e) {
-            return ServiceResponse::internalServerError($e->getMessage());
-        }
+        return self::findOneFrom(Category::class, $id, ['template_message' => 'category']);
     }
 
     /**
      * @inheritDoc
      */
-    public function create(DTOCategoryRequest $dto): ServiceResponse
+    public function create(DTOMutateCategory $dto): ServiceResponse
     {
-        // TODO: Implement create() method.
-        try {
-            $validator = $dto->validate();
-            if ($validator->fails()) {
-                return ServiceResponse::unprocessableEntity($validator->errors()->toArray());
-            }
-            $dto->hydrate();
-            $dataCategory = [
-                'name' => $dto->getName()
-            ];
-            if ($dto->getFile()) {
-                $file = $dto->getFile();
-                $fileUploadService = new FileUpload($file, Path::CATEGORY_ASSET);
-                $fileUploadResponse = $fileUploadService->upload();
-                if (!$fileUploadResponse->isSuccess()) {
-                    return ServiceResponse::internalServerError('failed to upload');
-                }
-                $dataCategory['image'] = $fileUploadResponse->getFileName();
-            }
-            Category::create($dataCategory);
-            return ServiceResponse::created('successfully create new category');
-        } catch (\Exception $e) {
-            return ServiceResponse::internalServerError($e->getMessage());
-        }
+        $config = [
+            'type' => 'create',
+            'upload' => [
+                'key' => 'getFile',
+                'column' => 'image',
+                'path' => Path::CATEGORY_ASSET
+            ]
+        ];
+        return self::mutateTo(Category::class, $dto, $config);
     }
 
     public function delete($id): ServiceResponse

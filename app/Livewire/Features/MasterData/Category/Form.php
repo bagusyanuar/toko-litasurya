@@ -3,6 +3,7 @@
 namespace App\Livewire\Features\MasterData\Category;
 
 use App\Domain\Web\Category\DTOCategoryRequest;
+use App\Domain\Web\Category\DTOMutateCategory;
 use App\Helpers\Alpine\AlpineResponse;
 use App\Models\Category;
 use App\Services\Web\CategoryService;
@@ -19,7 +20,7 @@ class Form extends Component
     /** @var CategoryService $service */
     protected $service;
 
-    /** @var DTOCategoryRequest $dto */
+    /** @var DTOMutateCategory $dto */
     private $dto;
 
     /** @var $file UploadedFile | null */
@@ -32,7 +33,7 @@ class Form extends Component
     public function boot(CategoryService $categoryService)
     {
         $this->service = $categoryService;
-        $this->dto = new DTOCategoryRequest();
+        $this->dto = new DTOMutateCategory();
     }
 
     public function create($formData)
