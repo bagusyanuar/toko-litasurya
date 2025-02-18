@@ -19,6 +19,7 @@ class DTORequest
     public function hydrateQueryForm($query)
     {
         $this->query = $query;
+        return $this;
     }
 
     protected function rules()

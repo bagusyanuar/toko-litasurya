@@ -59,7 +59,10 @@ class CategoryService extends CustomService implements CategoryInterface
     public function findByID($id): ServiceResponse
     {
         try {
-            $category = Category::findByID('asdqwe');
+            $category = Category::find($id);
+            if (!$category) {
+                return ServiceResponse::notFound('category not found');
+            }
             return ServiceResponse::statusOK('successfully get category', $category);
         } catch (\Exception $e) {
             return ServiceResponse::internalServerError($e->getMessage());
@@ -122,14 +125,10 @@ class CategoryService extends CustomService implements CategoryInterface
             $dataCategory = [
                 'name' => $dto->getName()
             ];
-
-            $category = Category::with([])
-                ->where('id', '=', $id)
-                ->first();
+            $category = Category::find($id);
             if (!$category) {
                 return ServiceResponse::notFound('category not found');
             }
-
             if ($dto->getFile()) {
                 $file = $dto->getFile();
                 $fileUploadService = new FileUpload($file, Path::CATEGORY_ASSET);

@@ -10,17 +10,25 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 trait Finder
 {
+
     /**
+     * @param $class
      * @param $id
-     * @param string $message
-     * @return Model|ServiceResponse
+     * @param string $templateMessage
+     * @return ServiceResponse
      */
-    public static function findByID($id, $message = 'Data not found!')
+    public static function getOneByID($class, $id, $templateMessage = 'item')
     {
         try {
-            return self::findOrFail($id);
-        }catch (ModelNotFoundException $e) {
-            return ServiceResponse::notFound($message);
+            /** @var Model $model */
+            $model = app($class);
+            $data = $model::find($id);
+            if (!$data) {
+                return ServiceResponse::notFound("{$templateMessage} not found");
+            }
+            return ServiceResponse::statusOK("successfully get {$templateMessage}", $data);
+        } catch (\Exception $e) {
+            return ServiceResponse::notFound($e->getMessage());
         }
     }
 }

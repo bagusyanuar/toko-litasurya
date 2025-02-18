@@ -65,7 +65,7 @@ class CustomService
      * @param bool $forceBack
      * @return Collection
      */
-    public function paginate($page, $perPage, $forceBack = true)
+    public function paginate($page, $perPage)
     {
         $totalRows = $this->builder->count();
         $offset = ($page - 1) * $perPage;
@@ -73,7 +73,7 @@ class CustomService
             ->offset($offset)
             ->limit($perPage)
             ->get();
-        if ($forceBack && $page > 1 && count($data) <= 0) {
+        if ($page > 1 && count($data) <= 0) {
             $page = $page - 1;
             $offset = ($page - 1) * $perPage;
             $data = $this->builder
