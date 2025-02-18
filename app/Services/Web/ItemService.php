@@ -35,11 +35,8 @@ class ItemService extends CustomService implements ItemInterface
                     }
                 ],
             ];
-            $items = $this
-                ->queryFrom(Item::class)
-                ->filters($filters)
-                ->paginate($filter->getPage(), $filter->getPerPage());
-            $meta = ['pagination' => $this->pagination->dehydrate()];
+            $items = [];
+            $meta = null;
             return ServiceResponse::statusOK(
                 'successfully get data items',
                 $items,

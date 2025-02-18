@@ -25,31 +25,20 @@ use Illuminate\Support\MessageBag;
 class CategoryService extends CustomService implements CategoryInterface
 {
     use Finder;
+
     /**
      * @inheritDoc
      */
     public function findAll(DTOCategoryFilter $filter): ServiceResponse
     {
-        self::make(Category::class)->paginate(1, 10);
         try {
             $filters = [
-                [
-                    'key' => $filter->getParam(),
-                    'dispatcher' => function ($query) use ($filter) {
-                        /** @var Builder $query */
-                        return $query->where('name', 'LIKE', '%' . $filter->getParam() . '%');
-                    }
-                ],
+                self::filterQueryLikeBy($filter->getParam(), 'name', "%{$filter->getParam()}%")
             ];
-            $categories = $this
-                ->queryFrom(Category::class)
-                ->filters($filters)
-                ->paginate($filter->getPage(), $filter->getPerPage());
-            $meta = ['pagination' => $this->pagination->dehydrate()];
-            return ServiceResponse::statusOK(
-                'successfully get data categories',
-                $categories,
-                $meta
+            $config = self::useBasicConfig('category', $filter->getPage(), $filter->getPerPage(), $filters);
+            return self::makeDataResponse(
+                Category::class,
+                $config
             );
         } catch (\Exception $e) {
             return ServiceResponse::internalServerError($e->getMessage());
@@ -62,11 +51,7 @@ class CategoryService extends CustomService implements CategoryInterface
     public function findByID($id): ServiceResponse
     {
         try {
-            $category = Category::find($id);
-            if (!$category) {
-                return ServiceResponse::notFound('category not found');
-            }
-            return ServiceResponse::statusOK('successfully get category', $category);
+            return self::makeOneResponse(Category::class, $id, ['template_message' => 'category']);
         } catch (\Exception $e) {
             return ServiceResponse::internalServerError($e->getMessage());
         }

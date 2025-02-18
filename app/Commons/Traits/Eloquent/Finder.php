@@ -35,6 +35,121 @@ trait Finder
         return $self;
     }
 
+    public static function makeDataResponse($class, $config = []): ServiceResponse
+    {
+
+        $relations = [];
+        $self = new self();
+        /** @var Model $model */
+        $model = app($class);
+        $builder = $model::with($relations);
+        $meta = null;
+        $templateMessage = $self->getTemplateMessage($config);
+        $self->createFilter($config, function ($key, $dispatcher) use ($builder) {
+            $builder->when($key, $dispatcher);
+        });
+        $self->createPagination($config, $builder, function ($pagination) use (&$meta) {
+            $meta['pagination'] = $pagination;
+        });
+        $data = $builder->get();
+        return ServiceResponse::statusOK(
+            "successfully get {$templateMessage}",
+            $data,
+            $meta
+        );
+    }
+
+    public static function makeOneResponse($class, $id, $config = []): ServiceResponse
+    {
+        $self = new self();
+        /** @var Model $model */
+        $model = app($class);
+        $data = $model::find($id);
+        $templateMessage = $self->getTemplateMessage($config);
+        return ServiceResponse::statusOK("successfully get {$templateMessage}", $data);
+    }
+
+    public static function queryLike($column, $value)
+    {
+        return function ($query) use ($column, $value) {
+            /** @var Builder $query */
+            return $query->where($column, 'LIKE', $value);
+        };
+    }
+
+    public static function filterQueryLikeBy($key, $column, $value)
+    {
+        return [
+            'key' => $key,
+            'dispatcher' => self::queryLike($column, $value)
+        ];
+    }
+
+    public static function useBasicConfig($templateMessage = 'items', $page = 1, $perPage = 10, $filters = [])
+    {
+        return [
+            'template_message' => $templateMessage,
+            'pagination' => ['page' => $page, 'per_page' => $perPage],
+            'filter' => $filters
+        ];
+    }
+
+    private function getTemplateMessage($config)
+    {
+        if (array_key_exists('template_message', $config)) {
+            return $config['template_message'];
+        }
+        return "items";
+    }
+
+    private function createFilter($config, callable $callback)
+    {
+        if (array_key_exists('filter', $config)) {
+            $filters = $config['filter'];
+            if (is_array($filters)) {
+                foreach ($filters as $filter) {
+                    $key = $filter['key'];
+                    $dispatcher = $filter['dispatcher'];
+                    $callback($key, $dispatcher);
+                }
+            }
+        }
+    }
+
+    private function createPagination($config, Builder $builder, callable $callback)
+    {
+        if (array_key_exists('pagination', $config)) {
+            $pagination = $config['pagination'];
+            $page = 1;
+            $perPage = 10;
+
+            if (array_key_exists('page', $pagination)) {
+                $page = $pagination['page'];
+            }
+
+            if (array_key_exists('per_page', $pagination)) {
+                $perPage = $pagination['per_page'];
+            }
+
+            $totalRows = $builder->count();
+            $offset = ($page - 1) * $perPage;
+            $builder
+                ->offset($offset)
+                ->limit($perPage);
+
+            if ($page > 1 && count($builder->get()) <= 0) {
+                $page = $page - 1;
+                $offset = ($page - 1) * $perPage;
+                $builder
+                    ->offset($offset)
+                    ->limit($perPage);
+            }
+
+            $metaPagination = new MetaPagination($page, $perPage, $totalRows);
+            $callback($metaPagination->dehydrate());
+        }
+    }
+
     public function paginate($page, $perPage)
     {
         $totalRows = $this->finderBuilder->count();
