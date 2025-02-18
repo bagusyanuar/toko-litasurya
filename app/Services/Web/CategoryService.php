@@ -9,6 +9,7 @@ use App\Commons\FileUpload\FileUpload;
 use App\Commons\Response\MetaPagination;
 
 use App\Commons\Response\ServiceResponse;
+use App\Commons\Traits\Eloquent\Finder;
 use App\Domain\Web\Category\CategoryRequest;
 use App\Domain\Web\Category\DTOCategoryFilter;
 use App\Domain\Web\Category\DTOCategoryRequest;
@@ -23,11 +24,13 @@ use Illuminate\Support\MessageBag;
 
 class CategoryService extends CustomService implements CategoryInterface
 {
+    use Finder;
     /**
      * @inheritDoc
      */
     public function findAll(DTOCategoryFilter $filter): ServiceResponse
     {
+        self::make(Category::class)->paginate(1, 10);
         try {
             $filters = [
                 [
