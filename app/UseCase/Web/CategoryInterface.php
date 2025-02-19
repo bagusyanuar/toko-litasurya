@@ -6,10 +6,7 @@ namespace App\UseCase\Web;
 
 use App\Commons\Response\ServiceResponse;
 use App\Domain\Web\Category\DTOCategoryFilter;
-use App\Domain\Web\Category\DTOCategoryRequest;
 use App\Domain\Web\Category\DTOMutateCategory;
-use App\Models\Category;
-use Illuminate\Database\Eloquent\Collection;
 
 interface CategoryInterface
 {
@@ -40,8 +37,8 @@ interface CategoryInterface
 
     /**
      * @param $id
-     * @param DTOCategoryRequest $dto
+     * @param DTOMutateCategory $dto
      * @return ServiceResponse
      */
-    public function update($id, DTOCategoryRequest $dto): ServiceResponse;
+    public function update($id, DTOMutateCategory $dto): ServiceResponse;
 }

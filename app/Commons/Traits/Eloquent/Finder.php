@@ -40,6 +40,9 @@ trait Finder
     {
         try {
             $relations = [];
+            if (array_key_exists('relations', $config)) {
+                $relations = $config['relations'];
+            }
             $self = new self();
             /** @var Model $model */
             $model = app($class);
@@ -81,7 +84,6 @@ trait Finder
     }
 
 
-
     public static function queryLike($column, $value)
     {
         return function ($query) use ($column, $value) {
@@ -98,12 +100,13 @@ trait Finder
         ];
     }
 
-    public static function useBasicConfig($templateMessage = 'items', $page = 1, $perPage = 10, $filters = [])
+    public static function useBasicConfig($templateMessage = 'items', $relations = [], $page = 1, $perPage = 10, $filters = [])
     {
         return [
             'template_message' => $templateMessage,
             'pagination' => ['page' => $page, 'per_page' => $perPage],
-            'filter' => $filters
+            'filter' => $filters,
+            'relations' => $relations
         ];
     }
 

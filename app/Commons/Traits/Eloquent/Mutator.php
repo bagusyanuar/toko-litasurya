@@ -38,8 +38,33 @@ trait Mutator
                     return $uploadResult;
                 }
             }
-            $model::create($data);
-            return ServiceResponse::created("successfully create");
+            $templateMessage = $self->getTemplateMutatorMessage($config);
+            if ($type === 'update') {
+                $id = $config['key'];
+                $entity = $model::find($id);
+                if (!$entity) {
+                    return ServiceResponse::notFound("{$templateMessage} not found");
+                }
+                $entity->update($data);
+            } else {
+                $model::create($data);
+            }
+            return ServiceResponse::created("successfully update {$templateMessage}");
+        } catch (\Exception $e) {
+            return ServiceResponse::internalServerError($e->getMessage());
+        }
+    }
+
+    public static function removeFrom($class, $config = []): ServiceResponse
+    {
+        try {
+            $id = $config['key'];
+            $self = new self();
+            $templateMessage = $self->getTemplateMutatorMessage($config);
+            /** @var Model $model */
+            $model = app($class);
+            $model::destroy($id);
+            return ServiceResponse::statusOK("successfully delete {$templateMessage}");
         } catch (\Exception $e) {
             return ServiceResponse::internalServerError($e->getMessage());
         }
@@ -77,5 +102,13 @@ trait Mutator
             }
         }
         return null;
+    }
+
+    private function getTemplateMutatorMessage($config)
+    {
+        if (array_key_exists('template_message', $config)) {
+            return $config['template_message'];
+        }
+        return "";
     }
 }

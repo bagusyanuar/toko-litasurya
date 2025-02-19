@@ -67,6 +67,16 @@ class DTOMutateItem extends DTORequest
             ->setPricing($arrPricing);
     }
 
+    public function dehydrate()
+    {
+        return [
+            'name' => $this->getName(),
+            'category_id' => $this->getCategoryID(),
+            'description' => $this->getDescription(),
+            'file' => $this->getFile()
+        ];
+    }
+
     /**
      * @return string
      */

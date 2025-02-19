@@ -102,6 +102,7 @@
                     this.component.$wire.call('findAll', this.param, this.page, this.perPage)
                         .then(response => {
                             const {success, data, meta} = response;
+                            console.log(response);
                             if (success) {
                                 this.data = data;
                                 const totalRows = meta['pagination'] ? meta['pagination']['total_rows'] : 0;
