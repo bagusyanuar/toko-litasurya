@@ -8,12 +8,12 @@
             <div class="flex items-center gap-3">
                 <x-gxui.table.search
                     placeholder="Search..."
-                    store="categoryTableStore"
+                    store="itemTableStore"
                     dispatcher="onFindAll"
                 ></x-gxui.table.search>
                 <x-gxui.button.button
                     wire:ignore
-                    x-on:click=""
+                    x-on:click="$store.itemFormStore.showModal()"
                 >
                     <div class="w-full flex justify-center items-center gap-1 text-sm">
                         <i data-lucide="plus" class="h-3" style="width: fit-content;"></i>
@@ -42,9 +42,9 @@
             </x-slot>
             <x-slot name="rows">
                 <tr class="border-b border-neutral-300">
-                    <x-gxui.table.td>
-                        <div class="flex items-center gap-3">
-                            <span x-text="data.name"></span>
+                    <x-gxui.table.td className="flex justify-center">
+                        <div class="flex items-center">
+                            <span x-text="data.category.name"></span>
                         </div>
                     </x-gxui.table.td>
                     <x-gxui.table.td>
@@ -85,7 +85,7 @@
                     const componentID = document.querySelector('[data-component-id="table-item"]')?.getAttribute('wire:id');
                     Livewire.hook('component.init', ({component}) => {
                         if (component.id === componentID) {
-                            // this.formStore = Alpine.store('categoryFormStore');
+                            this.formStore = Alpine.store('itemFormStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.masterDataStore = Alpine.store('masterDataStore');
                             this.paginationStore = Alpine.store('gxuiPaginationStore');
@@ -118,6 +118,35 @@
                         }).finally(() => {
                         this.loading = false;
                     })
+                },
+                onDelete(id) {
+                    // this.masterDataStore.showLoading('Deleting Process...');
+                    // this.component.$wire.call('delete', id)
+                    //     .then(response => {
+                    //         const {success} = response;
+                    //         if (success) {
+                    //             this.toastStore.success('success delete category');
+                    //             this.onFindAll();
+                    //         } else {
+                    //             this.toastStore.failed('failed to load data');
+                    //         }
+                    //     }).finally(() => {
+                    //     this.masterDataStore.closeLoading();
+                    // })
+                },
+                onEdit(id) {
+                    // this.masterDataStore.showLoading('Finding Item Process...');
+                    // this.component.$wire.call('findByID', id)
+                    //     .then(response => {
+                    //         const {success, data, message} = response;
+                    //         if (success) {
+                    //             this.formStore.hydrateForm(data);
+                    //         } else {
+                    //             this.toastStore.failed(message);
+                    //         }
+                    //     }).finally(() => {
+                    //     this.masterDataStore.closeLoading();
+                    // })
                 }
             };
             const PROPS = Object.assign({}, window.TableStore, COMPONENT_PROPS);
