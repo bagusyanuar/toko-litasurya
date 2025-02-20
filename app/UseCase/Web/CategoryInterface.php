@@ -12,6 +12,11 @@ interface CategoryInterface
 {
 
     /**
+     * @return ServiceResponse
+     */
+    public function all(): ServiceResponse;
+
+    /**
      * @param DTOCategoryFilter $filter
      * @return ServiceResponse
      */

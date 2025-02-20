@@ -31,6 +31,14 @@ class CategoryService implements CategoryInterface
     /**
      * @inheritDoc
      */
+    public function all(): ServiceResponse
+    {
+        return self::findFrom(Category::class, []);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function findAll(DTOCategoryFilter $filter): ServiceResponse
     {
         $filters = [
