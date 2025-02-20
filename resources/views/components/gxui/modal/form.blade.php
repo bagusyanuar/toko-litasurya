@@ -16,7 +16,7 @@
         x-transition:leave-end="translate-y-[-100%] opacity-0"
         class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[251] flex items-center justify-center w-full h-[100dvh]"
     >
-        <div class="bg-white rounded flex flex-col shadow-lg max-h-full" style="width: {{ $width }}; max-height: {{ $maxHeight }};">
+        <div class="bg-white rounded flex flex-col shadow-lg max-h-full" style="width: {{ $width }};">
             {{ $slot }}
         </div>
     </div>

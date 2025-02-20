@@ -8,10 +8,10 @@
         {{ $attributes->merge(['class' => 'form-control w-full text-[0.825rem] text-neutral-700 border border-neutral-300 rounded-[4px] focus:ring-0 focus:outline-none focus:border-neutral-500 transition duration-300 ease-in-out']) }}
         x-bind:class="{{ $validatorKey !== '' ? "{ '!border-danger-500' : '{$validatorField}' in {$validatorKey} }" : "{}" }}"
     >
-        <option value="">Pilih Opsi</option>
-        <option value="a">Option 1</option>
-        <option value="b">Option 2</option>
-        <option value="c">Option 3</option>
+        <option value="">choose an option</option>
+        <template x-for="(data, index) in $store.{{ $store }}.{{ $options }}" :key="index">
+            <option :value="data.id" x-text="data.text"></option>
+        </template>
     </select>
     @if($validatorKey !== '')
         <template x-if="'{{ $validatorField }}' in {{ $validatorKey }}">

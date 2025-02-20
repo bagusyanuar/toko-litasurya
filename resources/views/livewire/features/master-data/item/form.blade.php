@@ -4,8 +4,7 @@
 >
     <x-gxui.modal.form
         show="true"
-        width="80%"
-        maxHeight="90%"
+        width="40rem"
     >
         <div
             class="modal-header flex items-center justify-between px-4 py-3 border-b border-neutral-300 rounded-t">
@@ -25,14 +24,37 @@
                 <span class="sr-only">Close modal</span>
             </button>
         </div>
-        <div class="modal-body p-6 overflow-y-scroll flex-grow-1">
+        <div
+            class="modal-body px-6 pt-3 pb-6 overflow-y-scroll flex-grow-1 h-96"
+            x-data="{step: 1}"
+        >
+            <div class="w-full flex items-start gap-1">
+                <div class="w-fit flex flex-col justify-center items-center mb-6">
+                    <div class="w-6 h-6 text-xs rounded-full bg-brand-500 text-white flex items-center justify-center mb-1">1</div>
+                    <span class="text-neutral-700 text-xs text-center max-w-[5rem]">Item Information</span>
+                </div>
+                <div class="h-6 flex flex-col justify-center w-full">
+                    <div class="spacer h-[2px] w-full bg-brand-500" x-bind:class="step === 2 ? 'bg-brand-500' : 'bg-neutral-500'"></div>
+                </div>
+                <div class="w-fit flex flex-col justify-center items-center mb-6">
+                    <div
+                        class="w-6 h-6 text-xs rounded-full bg-brand-500 text-white flex items-center justify-center mb-1"
+                        x-bind:class="step === 2 ? 'bg-brand-500 text-white' : 'bg-neutral-500 text-neutral-700'"
+                    >2</div>
+                    <span
+                        class="text-neutral-700 text-xs text-center max-w-[5rem]"
+                    >Item Pricing</span>
+                </div>
+            </div>
+
             <x-gxui.input.select.select2
-                placeholder="Name"
+                store="itemFormStore"
+                options="categoryOptions"
                 label="Category"
                 parentClassName="mb-3"
                 selectID="categorySelect"
-{{--                validatorKey="$store.itemFormStore.formValidator"--}}
-{{--                validatorField="name"--}}
+                validatorKey="$store.itemFormStore.formValidator"
+                validatorField="category"
             ></x-gxui.input.select.select2>
             <x-gxui.input.text.text
                 placeholder="Name"
@@ -48,37 +70,11 @@
                 label="Image"
                 dropperID="itemImageDropper"
                 dropperLoading="$store.itemFormStore.loading"
+                parentClassName="mb-3"
             ></x-gxui.input.file.file-dropper>
             <x-gxui.input.text.text
-                placeholder="Name"
-                label="Name"
-                parentClassName="mb-3"
-                x-model="$store.itemFormStore.form.name"
-                x-bind:disabled="$store.itemFormStore.loading"
-                validatorKey="$store.itemFormStore.formValidator"
-                validatorField="name"
-            ></x-gxui.input.text.text>
-            <x-gxui.input.text.text
-                placeholder="Name"
-                label="Name"
-                parentClassName="mb-3"
-                x-model="$store.itemFormStore.form.name"
-                x-bind:disabled="$store.itemFormStore.loading"
-                validatorKey="$store.itemFormStore.formValidator"
-                validatorField="name"
-            ></x-gxui.input.text.text>
-            <x-gxui.input.text.text
-                placeholder="Name"
-                label="Name"
-                parentClassName="mb-3"
-                x-model="$store.itemFormStore.form.name"
-                x-bind:disabled="$store.itemFormStore.loading"
-                validatorKey="$store.itemFormStore.formValidator"
-                validatorField="name"
-            ></x-gxui.input.text.text>
-            <x-gxui.input.text.text
-                placeholder="Name"
-                label="Name"
+                placeholder="Description"
+                label="Description"
                 parentClassName="mb-3"
                 x-model="$store.itemFormStore.form.name"
                 x-bind:disabled="$store.itemFormStore.loading"
@@ -119,7 +115,11 @@
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
-            const INITIAL_FORM = {id: '', name: ''};
+            const INITIAL_FORM = {
+                id: '',
+                name: '',
+                category: '',
+            };
             const STORE_PROPS = {
                 component: null,
                 toastStore: null,
@@ -131,6 +131,7 @@
                 formType: 'create',
                 formValidator: {},
                 form: {...INITIAL_FORM},
+                categoryOptions: [],
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
                         const componentID = document.querySelector('[data-component-id="form-item"]')?.getAttribute('wire:id');
@@ -141,12 +142,19 @@
                             const dropperElement = document.getElementById('itemImageDropper');
                             this.fileDropper = Alpine.store('gxuiFileDropperStore').initDropper(dropperElement);
                             let selectElement = document.getElementById("categorySelect");
-                            this.select2Store = Alpine.store('gxuiSelectStore').initSelect2(selectElement, function (item) {
-                                console.log(item);
-                            });
-                            Alpine.store('gxuiSelectStore').setValue('a');
+                            this.select2Store = Alpine.store('gxuiSelectStore')
+                                .initSelect2(
+                                    selectElement,
+                                    this.onChangeCategory.bind(this),
+                                    {placeholder: 'choose a category'}
+                                );
+                            this.categoryOptions = [{id: '1', text: 'Option 1'}, {id: '2', text: 'Option 2'}];
                         }
                     });
+                },
+                onChangeCategory(item) {
+                    this.form.category = item.id;
+                    console.log(this.form);
                 },
                 formReset() {
                     this.form = {...INITIAL_FORM};
