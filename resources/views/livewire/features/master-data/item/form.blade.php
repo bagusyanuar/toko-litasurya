@@ -94,32 +94,34 @@
                 x-cloak
                 x-show="$store.itemFormStore.step === 2"
             >
-                <p class="text-sm text-neutral-700 font-bold mb-3">Retail Price</p>
-                <x-gxui.input.text.text
-                    placeholder="ex: 91285996869"
-                    label="PLU"
-                    parentClassName="mb-3"
-                    x-model="$store.itemFormStore.form.pricing[0].plu"
-                    x-bind:disabled="$store.itemFormStore.loading"
-                    validatorKey="$store.itemFormStore.formValidator"
-                    validatorField="pricing.0.plu"
-                ></x-gxui.input.text.text>
-                <x-gxui.input.text.text
-                    placeholder="ex: 91285996869"
-                    label="Price (IDR)"
-                    parentClassName="mb-3"
-                    x-model="$store.itemFormStore.form.pricing[0].price"
-                    x-bind:disabled="$store.itemFormStore.loading"
-                    validatorKey="$store.itemFormStore.formValidator"
-                    validatorField="pricing.0.price"
-                ></x-gxui.input.text.text>
-                <x-gxui.input.text.text
-                    placeholder="description"
-                    label="Description"
-                    parentClassName="mb-3"
-                    x-model="$store.itemFormStore.form.pricing[0].description"
-                    x-bind:disabled="$store.itemFormStore.loading"
-                ></x-gxui.input.text.text>
+                <div class="w-full mb-5">
+                    <p class="text-sm text-neutral-700 font-bold mb-3">Retail Price</p>
+                    <x-gxui.input.text.text
+                        placeholder="ex: 91285996869"
+                        label="PLU"
+                        parentClassName="mb-3"
+                        x-model="$store.itemFormStore.form.pricing[0].plu"
+                        x-bind:disabled="$store.itemFormStore.loading"
+                        validatorKey="$store.itemFormStore.formValidator"
+                        validatorField="pricing.0.plu"
+                    ></x-gxui.input.text.text>
+                    <x-gxui.input.text.text
+                        placeholder="ex: 91285996869"
+                        label="Price (IDR)"
+                        parentClassName="mb-3"
+                        x-model="$store.itemFormStore.form.pricing[0].price"
+                        x-bind:disabled="$store.itemFormStore.loading"
+                        validatorKey="$store.itemFormStore.formValidator"
+                        validatorField="pricing.0.price"
+                    ></x-gxui.input.text.text>
+                    <x-gxui.input.text.text
+                        placeholder="description"
+                        label="Description"
+                        parentClassName="mb-3"
+                        x-model="$store.itemFormStore.form.pricing[0].description"
+                        x-bind:disabled="$store.itemFormStore.loading"
+                    ></x-gxui.input.text.text>
+                </div>
                 <p class="text-sm text-neutral-700 font-bold mb-3">Dozen Price</p>
                 <x-gxui.input.text.text
                     placeholder="ex: 25.000"
