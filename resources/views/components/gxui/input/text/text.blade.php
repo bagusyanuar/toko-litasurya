@@ -7,7 +7,7 @@
     >
     @if($validatorKey !== '')
         <template x-if="'{{ $validatorField }}' in {{ $validatorKey }}">
-            <span class="text-xs text-danger-500 mt-1 block" x-text="{{ $validatorKey }}.{{ $validatorField }}[0]"></span>
+            <span class="text-xs text-danger-500 mt-1 block" x-text="{{ $validatorKey }}['{{ $validatorField }}'][0]"></span>
         </template>
     @endif
 </div>

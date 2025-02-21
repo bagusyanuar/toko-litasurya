@@ -45,7 +45,7 @@
                 wire:ignore
                 x-on:click="$store.categoryFormStore.setCloseModalForm()"
                 x-bind:disabled="$store.categoryFormStore.loading"
-                class="!px-6 bg-white !border-brand-500 !text-brand-500 hover:!text-white disabled:!bg-white"
+                class="!px-6 bg-white !border-brand-500 !text-brand-500 hover:!text-white disabled:!bg-white disabled:!text-brand-500"
             >
                 <div class="w-full flex justify-center items-center gap-1 text-sm">
                     <span>Cancel</span>

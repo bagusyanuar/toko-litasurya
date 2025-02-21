@@ -4,11 +4,14 @@
 namespace App\Services\Web;
 
 
+use App\Commons\Constant\Path;
 use App\Commons\Response\MetaPagination;
 use App\Commons\Response\ServiceResponse;
 use App\Commons\Traits\Eloquent\Finder;
+use App\Commons\Traits\Eloquent\Mutator;
 use App\Domain\Web\Item\DTOFilterItem;
 use App\Domain\Web\Item\DTOMutateItem;
+use App\Models\Category;
 use App\Models\Item;
 use App\Services\CustomService;
 use App\Usecase\Web\ItemInterface;
@@ -16,7 +19,7 @@ use Illuminate\Database\Query\Builder;
 
 class ItemService extends CustomService implements ItemInterface
 {
-    use Finder;
+    use Finder, Mutator;
 
     /**
      * @inheritDoc
@@ -46,6 +49,19 @@ class ItemService extends CustomService implements ItemInterface
      */
     public function create(DTOMutateItem $dto): ServiceResponse
     {
-        // TODO: Implement create() method.
+        $config = [
+            'type' => 'create',
+            'upload' => [
+                'key' => 'getFile',
+                'column' => 'image',
+                'path' => Path::ITEM_ASSET
+            ],
+            'template_message' => 'category',
+            'child' => [
+                'target' => 'prices',
+                'data' => 'pricing'
+            ]
+        ];
+        return self::mutateTo(Item::class, $dto, $config);
     }
 }

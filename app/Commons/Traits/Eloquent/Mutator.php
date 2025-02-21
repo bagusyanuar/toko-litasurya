@@ -9,6 +9,8 @@ use App\Commons\Request\DTORequest;
 use App\Commons\Response\ServiceResponse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 trait Mutator
 {
@@ -17,6 +19,7 @@ trait Mutator
 
     public static function mutateTo($class, DTORequest $dto, $config = []): ServiceResponse
     {
+        DB::beginTransaction();
         try {
             $type = 'create';
             if (array_key_exists('type', $config)) {
@@ -47,12 +50,28 @@ trait Mutator
                 }
                 $entity->update($data);
             } else {
-                $model::create($data);
+                $self->mutateCreate($model, $data, $config);
             }
+            DB::commit();
             return ServiceResponse::created("successfully update {$templateMessage}");
         } catch (\Exception $e) {
+            DB::rollBack();
             return ServiceResponse::internalServerError($e->getMessage());
         }
+    }
+
+    private function mutateCreate(Model $model, $data, $config)
+    {
+        if (array_key_exists('child', $config)) {
+            $target = $config['child']['target'];
+            $keyChild = $config['child']['data'];
+            $dataChild = $data[$keyChild];
+            $parent = $model::create($data);
+            $parent->{$target}()->createMany($dataChild);
+        } else {
+            $model::create($data);
+        }
+
     }
 
     public static function removeFrom($class, $config = []): ServiceResponse
@@ -111,4 +130,6 @@ trait Mutator
         }
         return "";
     }
+
+
 }

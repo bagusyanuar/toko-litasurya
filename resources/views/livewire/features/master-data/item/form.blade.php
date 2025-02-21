@@ -29,11 +29,15 @@
         >
             <div class="w-full flex items-start gap-1 border-b border-neutral-300 mb-3">
                 <div class="w-fit flex flex-col justify-center items-center mb-6">
-                    <div class="w-6 h-6 text-xs rounded-full bg-brand-500 text-white flex items-center justify-center mb-1">1</div>
+                    <div
+                        class="w-6 h-6 text-xs rounded-full bg-brand-500 text-white flex items-center justify-center mb-1">
+                        1
+                    </div>
                     <span class="text-neutral-700 text-xs text-center max-w-[5rem]">Item Information</span>
                 </div>
                 <div class="h-6 flex flex-col justify-center w-full">
-                    <div class="spacer h-[2px] w-full bg-brand-500" x-bind:class="$store.itemFormStore.step === 2 ? 'bg-brand-500' : 'bg-neutral-500'"></div>
+                    <div class="spacer h-[2px] w-full bg-brand-500"
+                         x-bind:class="$store.itemFormStore.step === 2 ? 'bg-brand-500' : 'bg-neutral-500'"></div>
                 </div>
                 <div class="w-fit flex flex-col justify-center items-center mb-6">
                     <div
@@ -57,7 +61,7 @@
                     parentClassName="mb-3"
                     selectID="categorySelect"
                     validatorKey="$store.itemFormStore.formValidator"
-                    validatorField="category"
+                    validatorField="category_id"
                 ></x-gxui.input.select.select2>
                 <x-gxui.input.text.text
                     placeholder="Name"
@@ -97,8 +101,8 @@
                     parentClassName="mb-3"
                     x-model="$store.itemFormStore.form.pricing[0].plu"
                     x-bind:disabled="$store.itemFormStore.loading"
-{{--                    validatorKey="$store.itemFormStore.formValidator"--}}
-{{--                    validatorField="name"--}}
+                    validatorKey="$store.itemFormStore.formValidator"
+                    validatorField="pricing.0.plu"
                 ></x-gxui.input.text.text>
                 <x-gxui.input.text.text
                     placeholder="ex: 91285996869"
@@ -106,8 +110,8 @@
                     parentClassName="mb-3"
                     x-model="$store.itemFormStore.form.pricing[0].price"
                     x-bind:disabled="$store.itemFormStore.loading"
-{{--                    validatorKey="$store.itemFormStore.formValidator"--}}
-{{--                    validatorField="name"--}}
+                    validatorKey="$store.itemFormStore.formValidator"
+                    validatorField="pricing.0.price"
                 ></x-gxui.input.text.text>
                 <x-gxui.input.text.text
                     placeholder="description"
@@ -115,8 +119,6 @@
                     parentClassName="mb-3"
                     x-model="$store.itemFormStore.form.pricing[0].description"
                     x-bind:disabled="$store.itemFormStore.loading"
-{{--                    validatorKey="$store.itemFormStore.formValidator"--}}
-{{--                    validatorField="name"--}}
                 ></x-gxui.input.text.text>
                 <p class="text-sm text-neutral-700 font-bold mb-3">Dozen Price</p>
                 <x-gxui.input.text.text
@@ -125,8 +127,8 @@
                     parentClassName="mb-3"
                     x-model="$store.itemFormStore.form.pricing[1].plu"
                     x-bind:disabled="$store.itemFormStore.loading"
-{{--                    validatorKey="$store.itemFormStore.formValidator"--}}
-{{--                    validatorField="name"--}}
+                    validatorKey="$store.itemFormStore.formValidator"
+                    validatorField="pricing.1.plu"
                 ></x-gxui.input.text.text>
                 <x-gxui.input.text.text
                     placeholder="ex: 10.000"
@@ -134,8 +136,8 @@
                     parentClassName="mb-3"
                     x-model="$store.itemFormStore.form.pricing[1].price"
                     x-bind:disabled="$store.itemFormStore.loading"
-                    {{--                    validatorKey="$store.itemFormStore.formValidator"--}}
-                    {{--                    validatorField="name"--}}
+                    validatorKey="$store.itemFormStore.formValidator"
+                    validatorField="pricing.1.price"
                 ></x-gxui.input.text.text>
                 <x-gxui.input.text.text
                     placeholder="description"
@@ -143,8 +145,6 @@
                     parentClassName="mb-3"
                     x-model="$store.itemFormStore.form.pricing[1].description"
                     x-bind:disabled="$store.itemFormStore.loading"
-                    {{--                    validatorKey="$store.itemFormStore.formValidator"--}}
-                    {{--                    validatorField="name"--}}
                 ></x-gxui.input.text.text>
                 <p class="text-sm text-neutral-700 font-bold mb-3">Carton Price</p>
                 <x-gxui.input.text.text
@@ -153,8 +153,8 @@
                     parentClassName="mb-3"
                     x-model="$store.itemFormStore.form.pricing[2].plu"
                     x-bind:disabled="$store.itemFormStore.loading"
-{{--                    validatorKey="$store.itemFormStore.formValidator"--}}
-{{--                    validatorField="name"--}}
+                    validatorKey="$store.itemFormStore.formValidator"
+                    validatorField="pricing.2.plu"
                 ></x-gxui.input.text.text>
                 <x-gxui.input.text.text
                     placeholder="ex: 10.000"
@@ -162,8 +162,8 @@
                     parentClassName="mb-3"
                     x-model="$store.itemFormStore.form.pricing[2].price"
                     x-bind:disabled="$store.itemFormStore.loading"
-                    {{--                    validatorKey="$store.itemFormStore.formValidator"--}}
-                    {{--                    validatorField="name"--}}
+                    validatorKey="$store.itemFormStore.formValidator"
+                    validatorField="pricing.2.price"
                 ></x-gxui.input.text.text>
                 <x-gxui.input.text.text
                     placeholder="description"
@@ -171,8 +171,6 @@
                     parentClassName="mb-3"
                     x-model="$store.itemFormStore.form.pricing[2].description"
                     x-bind:disabled="$store.itemFormStore.loading"
-                    {{--                    validatorKey="$store.itemFormStore.formValidator"--}}
-                    {{--                    validatorField="name"--}}
                 ></x-gxui.input.text.text>
                 <p class="text-sm text-neutral-700 font-bold mb-3">Trader Price</p>
                 <x-gxui.input.text.text
@@ -181,8 +179,8 @@
                     parentClassName="mb-3"
                     x-model="$store.itemFormStore.form.pricing[3].plu"
                     x-bind:disabled="$store.itemFormStore.loading"
-{{--                    validatorKey="$store.itemFormStore.formValidator"--}}
-{{--                    validatorField="name"--}}
+                    validatorKey="$store.itemFormStore.formValidator"
+                    validatorField="pricing.3.plu"
                 ></x-gxui.input.text.text>
                 <x-gxui.input.text.text
                     placeholder="ex: 10.000"
@@ -190,8 +188,8 @@
                     parentClassName="mb-3"
                     x-model="$store.itemFormStore.form.pricing[3].price"
                     x-bind:disabled="$store.itemFormStore.loading"
-                    {{--                    validatorKey="$store.itemFormStore.formValidator"--}}
-                    {{--                    validatorField="name"--}}
+                    validatorKey="$store.itemFormStore.formValidator"
+                    validatorField="pricing.3.price"
                 ></x-gxui.input.text.text>
                 <x-gxui.input.text.text
                     placeholder="description"
@@ -199,8 +197,6 @@
                     parentClassName="mb-3"
                     x-model="$store.itemFormStore.form.pricing[3].description"
                     x-bind:disabled="$store.itemFormStore.loading"
-                    {{--                    validatorKey="$store.itemFormStore.formValidator"--}}
-                    {{--                    validatorField="name"--}}
                 ></x-gxui.input.text.text>
             </div>
         </div>
@@ -266,21 +262,25 @@
                         plu: '',
                         price: 0,
                         description: '',
+                        unit: 'retail'
                     },
                     {
                         plu: '',
                         price: 0,
                         description: '',
+                        unit: 'dozen'
                     },
                     {
                         plu: '',
                         price: 0,
                         description: '',
+                        unit: 'carton'
                     },
                     {
                         plu: '',
                         price: 0,
                         description: '',
+                        unit: 'trader'
                     },
                 ]
             };
@@ -296,7 +296,7 @@
                 formValidator: {},
                 form: {...INITIAL_FORM},
                 categoryOptions: [],
-                step: 2,
+                step: 1,
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
                         const componentID = document.querySelector('[data-component-id="form-item"]')?.getAttribute('wire:id');
@@ -359,31 +359,32 @@
                     //     });
                     // });
                     // await Promise.all(uploadPromises);
-                    // const response = await this.component.$wire.call(this.formType, this.form);
-                    // const {success, data, status, message} = response;
-                    // if (success) {
-                    //     this.fileDropper.removeAllFiles();
-                    //     if (this.formType === 'update') {
-                    //         this.closeModal();
-                    //     } else {
-                    //         this.formReset();
-                    //     }
-                    //     this.toastStore.success(message);
-                    //     this.tableStore.onFindAll();
-                    // } else {
-                    //     switch (status) {
-                    //         case 422:
-                    //             this.formValidator = data;
-                    //             this.toastStore.failed('please fill the correct form');
-                    //             break;
-                    //         case 500:
-                    //             this.toastStore.failed('internal server error');
-                    //             break;
-                    //         default:
-                    //             this.toastStore.failed('unknown error');
-                    //             break;
-                    //     }
-                    // }
+                    const response = await this.component.$wire.call('create', this.form);
+                    console.log(response)
+                    const {success, data, status, message} = response;
+                    if (success) {
+                        this.fileDropper.removeAllFiles();
+                        if (this.formType === 'update') {
+                            this.closeModal();
+                        } else {
+                            this.formReset();
+                        }
+                        this.toastStore.success(message);
+                        this.tableStore.onFindAll();
+                    } else {
+                        switch (status) {
+                            case 422:
+                                this.formValidator = data;
+                                this.toastStore.failed('please fill the correct form');
+                                break;
+                            case 500:
+                                this.toastStore.failed('internal server error');
+                                break;
+                            default:
+                                this.toastStore.failed('unknown error');
+                                break;
+                        }
+                    }
                     // this.fileDropper.enable();
                     // this.loading = false;
                 },

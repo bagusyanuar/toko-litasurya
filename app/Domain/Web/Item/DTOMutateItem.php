@@ -29,6 +29,9 @@ class DTOMutateItem extends DTORequest
         return [
             'name' => 'required',
             'category_id' => 'required',
+            'pricing' => 'required|array|min:1',
+            'pricing.*.plu' => 'required',
+            'pricing.*.price' => 'required|numeric',
         ];
     }
 
@@ -45,8 +48,8 @@ class DTOMutateItem extends DTORequest
 
         if (is_array($pricing)) {
             foreach ($pricing as $data) {
-                $itemID = $data['item_id'];
-                $priceListUnit = $data['price_list_unit'];
+                $itemID = $data['item_id'] ?? '';
+                $priceListUnit = $data['plu'];
                 $price = $data['price'];
                 $unit = $data['unit'];
                 $description = $data['description'];
@@ -69,11 +72,20 @@ class DTOMutateItem extends DTORequest
 
     public function dehydrate()
     {
+        $pricing = [];
+        foreach ($this->pricing as $price) {
+            $tmpPricing['price_list_unit'] = $price->getPriceListUnit();
+            $tmpPricing['price'] = $price->getPrice();
+            $tmpPricing['unit'] = $price->getUnit();
+            $tmpPricing['description'] = $price->getDescription();
+            array_push($pricing, $tmpPricing);
+        }
         return [
             'name' => $this->getName(),
             'category_id' => $this->getCategoryID(),
             'description' => $this->getDescription(),
-            'file' => $this->getFile()
+            'file' => $this->getFile(),
+            'pricing' => $pricing
         ];
     }
 
