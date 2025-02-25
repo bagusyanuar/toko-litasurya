@@ -63,7 +63,7 @@
                         </div>
                     </x-gxui.table.td>
                     <x-gxui.table.td className="flex justify-center relative">
-                        -
+                        <span x-text="data.retail_price?.price.toLocaleString('id-ID') ?? '-'"></span>
                     </x-gxui.table.td>
                     <x-gxui.table.td className="flex justify-center relative">
                         <x-gxui.table.action store="itemTableStore"></x-gxui.table.action>
@@ -87,7 +87,29 @@
                 toastStore: null,
                 masterDataStore: null,
                 paginationStore: null,
-                actions: [],
+                actions: [
+                    {
+                        label: 'Edit',
+                        icon: 'pencil',
+                        dispatch: function (id) {
+                            // this.onEdit(id)
+                        }
+                    },
+                    {
+                        label: 'Delete',
+                        icon: 'trash',
+                        dispatch: function (id) {
+                            // this.onDelete(id)
+                        }
+                    },
+                    {
+                        label: 'Pricing',
+                        icon: 'circle-dollar-sign',
+                        dispatch: function (id) {
+                            // this.onDelete(id)
+                        }
+                    },
+                ],
                 init: function () {
                     const componentID = document.querySelector('[data-component-id="table-item"]')?.getAttribute('wire:id');
                     Livewire.hook('component.init', ({component}) => {

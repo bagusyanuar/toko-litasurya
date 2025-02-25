@@ -12,6 +12,20 @@ class DTOFilterItem extends DTORequest
     private $page;
     private $perPage;
 
+    /**
+     * DTOFilterItem constructor.
+     * @param $param
+     * @param $page
+     * @param $perPage
+     */
+    public function __construct($param = '', $page = 1, $perPage = 10)
+    {
+        $this->param = $param;
+        $this->page = $page;
+        $this->perPage = $perPage;
+    }
+
+
     public function hydrateQuery()
     {
         $param = $this->query['param'] ?? '';

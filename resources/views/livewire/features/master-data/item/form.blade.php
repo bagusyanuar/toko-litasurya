@@ -3,7 +3,7 @@
     data-component-id="form-item"
 >
     <x-gxui.modal.form
-        show="true"
+        show="false"
         width="40rem"
     >
         <div

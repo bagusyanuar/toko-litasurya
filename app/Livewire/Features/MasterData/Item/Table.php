@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Features\MasterData\Item;
 
+use App\Domain\Web\Category\DTOCategoryFilter;
 use App\Domain\Web\Item\DTOFilterItem;
 use App\Helpers\Alpine\AlpineResponse;
 use App\Services\Web\ItemService;
@@ -19,15 +20,7 @@ class Table extends Component
 
     public function findAll($param, $page, $perPage)
     {
-        $query = [
-            'param' => $param,
-            'page' => $page,
-            'per_page' => $perPage
-        ];
-        $filter = new DTOFilterItem();
-        $filter
-            ->hydrateQueryForm($query)
-            ->hydrateQuery();
+        $filter = new DTOFilterItem($param, $page, $perPage);
         $response = $this->service->findAll($filter);
         return AlpineResponse::toJSON($response);
     }

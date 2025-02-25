@@ -29,7 +29,7 @@ class ItemService extends CustomService implements ItemInterface
         $filters = [
             self::filterQueryLikeBy($filter->getParam(), 'name', "%{$filter->getParam()}%")
         ];
-        $config = self::useBasicConfig('category', ['category'], $filter->getPage(), $filter->getPerPage(), $filters);
+        $config = self::useBasicConfig('category', ['category', 'retail_price'], $filter->getPage(), $filter->getPerPage(), $filters);
         return self::findFrom(
             Item::class,
             $config
