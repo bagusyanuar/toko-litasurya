@@ -59,7 +59,8 @@ class ItemService extends CustomService implements ItemInterface
             'template_message' => 'category',
             'child' => [
                 'target' => 'prices',
-                'data' => 'pricing'
+                'data' => 'price',
+                'type' => 'single'
             ]
         ];
         return self::mutateTo(Item::class, $dto, $config);

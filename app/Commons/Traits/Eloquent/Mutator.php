@@ -65,9 +65,14 @@ trait Mutator
         if (array_key_exists('child', $config)) {
             $target = $config['child']['target'];
             $keyChild = $config['child']['data'];
+            $type = $config['child']['type'];
             $dataChild = $data[$keyChild];
             $parent = $model::create($data);
-            $parent->{$target}()->createMany($dataChild);
+            if ($type === 'multiple') {
+                $parent->{$target}()->createMany($dataChild);
+            } else {
+                $parent->{$target}()->create($dataChild);
+            }
         } else {
             $model::create($data);
         }

@@ -36,6 +36,10 @@
                     align="left"
                 ></x-gxui.table.th>
                 <x-gxui.table.th
+                    title="Price"
+                    className="w-[120px]"
+                ></x-gxui.table.th>
+                <x-gxui.table.th
                     title="Action"
                     className="w-[80px]"
                 ></x-gxui.table.th>
@@ -57,6 +61,9 @@
                             >
                             <span x-text="data.name"></span>
                         </div>
+                    </x-gxui.table.td>
+                    <x-gxui.table.td className="flex justify-center relative">
+                        -
                     </x-gxui.table.td>
                     <x-gxui.table.td className="flex justify-center relative">
                         <x-gxui.table.action store="itemTableStore"></x-gxui.table.action>

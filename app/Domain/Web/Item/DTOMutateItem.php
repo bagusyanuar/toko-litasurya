@@ -21,17 +21,17 @@ class DTOMutateItem extends DTORequest
     /** @var string $description */
     private $description;
 
-    /** @var DTOPriceItem[] */
-    private $pricing;
+    /** @var DTOPriceItem|null $price */
+    private $price;
 
     protected function rules()
     {
         return [
             'name' => 'required',
             'category_id' => 'required',
-            'pricing' => 'required|array|min:1',
-            'pricing.*.plu' => 'required',
-            'pricing.*.price' => 'required|numeric',
+            'price' => 'required|array|min:1',
+            'price.plu' => 'required',
+            'price.price' => 'required|numeric',
         ];
     }
 
@@ -41,51 +41,41 @@ class DTOMutateItem extends DTORequest
         $categoryID = $this->dtoForm['category_id'];
         $file = $this->dtoForm['file'];
         $description = $this->dtoForm['description'];
-        $pricing = $this->dtoForm['pricing'];
-
-        /** @var DTOPriceItem[] $arrPricing */
-        $arrPricing = [];
-
-        if (is_array($pricing)) {
-            foreach ($pricing as $data) {
-                $itemID = $data['item_id'] ?? '';
-                $priceListUnit = $data['plu'];
-                $price = $data['price'];
-                $unit = $data['unit'];
-                $description = $data['description'];
-                $price = new DTOPriceItem(
-                    $itemID,
-                    $priceListUnit,
-                    $price,
-                    $unit,
-                    $description
-                );
-                array_push($arrPricing, $price);
-            }
+        $price = $this->dtoForm['price'];
+        $tmpPrice = null;
+        if (is_array($price)) {
+            $itemID = $price['item_id'] ?? '';
+            $priceListUnit = $price['plu'] ?? null;
+            $nominal = $price['price'] ? intval(str_replace('.', '', $price['price'])) : 0;
+            $unit = $price['unit'] ?? 'retail';
+            $description = $price['description'] ?? '';
+            $tmpPrice = new DTOPriceItem(
+                $itemID,
+                $priceListUnit,
+                $nominal,
+                $unit,
+                $description
+            );
         }
         $this->setName($name)
             ->setCategoryID($categoryID)
             ->setDescription($description)
             ->setFile($file)
-            ->setPricing($arrPricing);
+            ->setPrice($tmpPrice);
     }
 
     public function dehydrate()
     {
-        $pricing = [];
-        foreach ($this->pricing as $price) {
-            $tmpPricing['price_list_unit'] = $price->getPriceListUnit();
-            $tmpPricing['price'] = $price->getPrice();
-            $tmpPricing['unit'] = $price->getUnit();
-            $tmpPricing['description'] = $price->getDescription();
-            array_push($pricing, $tmpPricing);
-        }
+        $price['price_list_unit'] = $this->getPrice()->getPriceListUnit();
+        $price['price'] = $this->getPrice()->getPrice();
+        $price['unit'] = $this->getPrice()->getUnit();
+        $price['description'] = $this->getPrice()->getDescription();
         return [
             'name' => $this->getName(),
             'category_id' => $this->getCategoryID(),
             'description' => $this->getDescription(),
             'file' => $this->getFile(),
-            'pricing' => $pricing
+            'price' => $price
         ];
     }
 
@@ -162,20 +152,20 @@ class DTOMutateItem extends DTORequest
     }
 
     /**
-     * @return DTOPriceItem[]
+     * @return DTOPriceItem|null
      */
-    public function getPricing()
+    public function getPrice()
     {
-        return $this->pricing;
+        return $this->price;
     }
 
     /**
-     * @param DTOPriceItem[] $pricing
+     * @param DTOPriceItem|null $price
      * @return DTOMutateItem
      */
-    public function setPricing($pricing)
+    public function setPrice($price)
     {
-        $this->pricing = $pricing;
+        $this->price = $price;
         return $this;
     }
 }

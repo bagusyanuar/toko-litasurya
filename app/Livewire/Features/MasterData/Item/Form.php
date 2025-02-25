@@ -46,7 +46,7 @@ class Form extends Component
             'name' => $formData['name'],
             'file' => $this->file,
             'description' => $formData['description'],
-            'pricing' => $formData['pricing']
+            'price' => $formData['price']
         ];
         $this->dto->hydrateForm($dtoForm);
         $response = $this->service->create($this->dto);

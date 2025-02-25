@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Item extends Model
 {
@@ -27,5 +28,11 @@ class Item extends Model
     public function prices(): HasMany
     {
         return $this->hasMany(ItemPrice::class, 'item_id');
+    }
+
+    public function retail_price(): HasOne
+    {
+        return $this->hasOne(ItemPrice::class, 'item_id')
+            ->where('unit', '=', 'retail');
     }
 }
