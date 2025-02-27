@@ -84,6 +84,7 @@
             const COMPONENT_PROPS = {
                 component: null,
                 formStore: null,
+                priceListStore: null,
                 toastStore: null,
                 masterDataStore: null,
                 paginationStore: null,
@@ -99,14 +100,14 @@
                         label: 'Delete',
                         icon: 'trash',
                         dispatch: function (id) {
-                            // this.onDelete(id)
+                            this.onDelete(id)
                         }
                     },
                     {
                         label: 'Pricing',
                         icon: 'circle-dollar-sign',
                         dispatch: function (id) {
-                            // this.onDelete(id)
+                            this.onPriceList(id);
                         }
                     },
                 ],
@@ -115,6 +116,7 @@
                     Livewire.hook('component.init', ({component}) => {
                         if (component.id === componentID) {
                             this.formStore = Alpine.store('itemFormStore');
+                            this.priceListStore = Alpine.store('priceListStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.masterDataStore = Alpine.store('masterDataStore');
                             this.paginationStore = Alpine.store('gxuiPaginationStore');
@@ -148,19 +150,19 @@
                     })
                 },
                 onDelete(id) {
-                    // this.masterDataStore.showLoading('Deleting Process...');
-                    // this.component.$wire.call('delete', id)
-                    //     .then(response => {
-                    //         const {success} = response;
-                    //         if (success) {
-                    //             this.toastStore.success('success delete category');
-                    //             this.onFindAll();
-                    //         } else {
-                    //             this.toastStore.failed('failed to load data');
-                    //         }
-                    //     }).finally(() => {
-                    //     this.masterDataStore.closeLoading();
-                    // })
+                    this.masterDataStore.showLoading('Deleting Process...');
+                    this.component.$wire.call('delete', id)
+                        .then(response => {
+                            const {success} = response;
+                            if (success) {
+                                this.toastStore.success('success delete category');
+                                this.onFindAll();
+                            } else {
+                                this.toastStore.failed('failed to load data');
+                            }
+                        }).finally(() => {
+                        this.masterDataStore.closeLoading();
+                    })
                 },
                 onEdit(id) {
                     this.masterDataStore.showLoading('Finding Item Process...');
@@ -176,6 +178,9 @@
                         }).finally(() => {
                         this.masterDataStore.closeLoading();
                     })
+                },
+                onPriceList(id) {
+                    this.priceListStore.showModal();
                 }
             };
             const PROPS = Object.assign({}, window.TableStore, COMPONENT_PROPS);

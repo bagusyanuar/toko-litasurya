@@ -31,6 +31,12 @@ class Table extends Component
         return AlpineResponse::toJSON($response);
     }
 
+    public function delete($id)
+    {
+        $response = $this->service->delete($id);
+        return AlpineResponse::toJSON($response);
+    }
+
     public function render()
     {
         return view('livewire.features.master-data.item.table');

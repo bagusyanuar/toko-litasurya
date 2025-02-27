@@ -56,6 +56,24 @@ class Form extends Component
         return AlpineResponse::toJSON($response);
     }
 
+    public function update($formData)
+    {
+        $id = $formData['id'];
+        $dtoForm = [
+            'category_id' => $formData['category'],
+            'name' => $formData['name'],
+            'file' => $this->file,
+            'description' => $formData['description'],
+            'price' => $formData['price']
+        ];
+        $this->dto->hydrateForm($dtoForm);
+        $response = $this->service->update($id, $this->dto);
+        if ($response->isSuccess()) {
+            $this->reset(['file']);
+        }
+        return AlpineResponse::toJSON($response);
+    }
+
     public function render()
     {
         return view('livewire.features.master-data.item.form');

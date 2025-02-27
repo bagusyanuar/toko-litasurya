@@ -147,7 +147,6 @@
                 formValidator: {},
                 form: {...INITIAL_FORM},
                 categoryOptions: [],
-                step: 1,
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
                         const componentID = document.querySelector('[data-component-id="form-item"]')?.getAttribute('wire:id');
@@ -208,7 +207,7 @@
                         });
                     });
                     await Promise.all(uploadPromises);
-                    const response = await this.component.$wire.call('create', this.form);
+                    const response = await this.component.$wire.call(this.formType, this.form);
                     const {success, data, status, message} = response;
                     if (success) {
                         this.fileDropper.removeAllFiles();
@@ -242,6 +241,7 @@
                     this.form.id = data['id'];
                     this.form.name = data['name'];
                     this.form.description = data['description'];
+                    this.form.category = data['category_id'];
                     this.form.price.plu = data['retail_price']['price_list_unit'];
                     this.form.price.price = data['retail_price']['price'].toLocaleString('id-ID');
                     this.form.price.unit = 'retail';

@@ -48,7 +48,7 @@ trait Mutator
                 if (!$entity) {
                     return ServiceResponse::notFound("{$templateMessage} not found");
                 }
-                $entity->update($data);
+                $self->mutateUpdate($entity, $data, $config);
             } else {
                 $self->mutateCreate($model, $data, $config);
             }
@@ -78,17 +78,58 @@ trait Mutator
         }
     }
 
+    private function mutateUpdate(Model $model, $data, $config)
+    {
+        if (array_key_exists('child', $config)) {
+            $target = $config['child']['target'];
+            $keyChild = $config['child']['data'];
+            $type = $config['child']['type'];
+            $dataChild = $data[$keyChild];
+            $model->update($data);
+            if ($type === 'multiple') {
+                if (is_array($model->{$target}())) {
+                    foreach ($model->{$target}() as $child) {
+                        $child->delete();
+                    }
+                }
+                if (is_array($dataChild)) {
+                    foreach ($dataChild as $datumChild) {
+                        $model->{$target}()->create($datumChild);
+                    }
+                }
+            } else {
+                $model->{$target}()->delete();
+                $model->{$target}()->create($dataChild);
+            }
+        } else {
+            $model->update($data);
+        }
+    }
+
     public static function removeFrom($class, $config = []): ServiceResponse
     {
+        DB::beginTransaction();
         try {
             $id = $config['key'];
             $self = new self();
             $templateMessage = $self->getTemplateMutatorMessage($config);
             /** @var Model $model */
             $model = app($class);
-            $model::destroy($id);
+            $entity = $model::find($id);
+            if (!$entity) {
+                return ServiceResponse::notFound("{$templateMessage} not found");
+            }
+            if (array_key_exists('children', $config)) {
+                $children = $config['children'];
+                foreach ($children as $child) {
+                    $entity->{$child}()->delete();
+                }
+            }
+            $entity->delete();
+            DB::commit();
             return ServiceResponse::statusOK("successfully delete {$templateMessage}");
         } catch (\Exception $e) {
+            DB::rollBack();
             return ServiceResponse::internalServerError($e->getMessage());
         }
     }

@@ -31,7 +31,7 @@ class DTOMutateItem extends DTORequest
             'category_id' => 'required',
             'price' => 'required|array|min:1',
             'price.plu' => 'required',
-            'price.price' => 'required|numeric',
+            'price.price' => 'required',
         ];
     }
 
@@ -48,13 +48,13 @@ class DTOMutateItem extends DTORequest
             $priceListUnit = $price['plu'] ?? null;
             $nominal = $price['price'] ? intval(str_replace('.', '', $price['price'])) : 0;
             $unit = $price['unit'] ?? 'retail';
-            $description = $price['description'] ?? '';
+            $priceDescription = $price['description'] ?? '';
             $tmpPrice = new DTOPriceItem(
                 $itemID,
                 $priceListUnit,
                 $nominal,
                 $unit,
-                $description
+                $priceDescription
             );
         }
         $this->setName($name)

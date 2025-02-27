@@ -81,7 +81,7 @@ class ItemService extends CustomService implements ItemInterface
             ],
             'template_message' => 'category',
             'child' => [
-                'target' => 'prices',
+                'target' => 'retail_price',
                 'data' => 'price',
                 'type' => 'single'
             ]
@@ -94,6 +94,9 @@ class ItemService extends CustomService implements ItemInterface
      */
     public function delete($id): ServiceResponse
     {
-        // TODO: Implement delete() method.
+        return self::removeFrom(Item::class, [
+            'key' => $id,
+            'children' => ['prices']
+        ]);
     }
 }
