@@ -76,7 +76,6 @@ trait Mutator
         } else {
             $model::create($data);
         }
-
     }
 
     public static function removeFrom($class, $config = []): ServiceResponse

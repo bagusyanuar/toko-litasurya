@@ -3,7 +3,7 @@
     data-component-id="form-item"
 >
     <x-gxui.modal.form
-        show="false"
+        show="$store.itemFormStore.showModalForm"
         width="40rem"
     >
         <div
@@ -171,7 +171,7 @@
                                     data.forEach(function (v, k) {
                                         const option = {id: v.id, text: v.name};
                                         categoryOptions.push(option);
-                                    })
+                                    });
                                     this.categoryOptions = categoryOptions;
                                 } else {
                                     this.toastStore.failed('failed to load item data');
@@ -184,7 +184,6 @@
                 },
                 onChangeCategory(item) {
                     this.form.category = item.id;
-                    console.log(this.form);
                 },
                 formReset() {
                     this.form = {...INITIAL_FORM};
@@ -201,49 +200,53 @@
                     this.showModalForm = false;
                 },
                 async mutate() {
-                    console.log(this.form.pricing)
-                    // this.fileDropper.disable();
                     this.loading = true;
-                    // const uploadPromises = this.fileDropper.files.map(file => {
-                    //     return new Promise((resolve, reject) => {
-                    //         this.component.$wire.upload('file', file, resolve, reject);
-                    //     });
-                    // });
-                    // await Promise.all(uploadPromises);
+                    this.fileDropper.disable();
+                    const uploadPromises = this.fileDropper.files.map(file => {
+                        return new Promise((resolve, reject) => {
+                            this.component.$wire.upload('file', file, resolve, reject);
+                        });
+                    });
+                    await Promise.all(uploadPromises);
                     const response = await this.component.$wire.call('create', this.form);
-                    console.log(response);
                     const {success, data, status, message} = response;
-                    // if (success) {
-                    //     this.fileDropper.removeAllFiles();
-                    //     if (this.formType === 'update') {
-                    //         this.closeModal();
-                    //     } else {
-                    //         this.formReset();
-                    //     }
-                    //     this.toastStore.success(message);
-                    //     this.tableStore.onFindAll();
-                    // } else {
-                    //     switch (status) {
-                    //         case 422:
-                    //             this.formValidator = data;
-                    //             this.toastStore.failed('please fill the correct form');
-                    //             break;
-                    //         case 500:
-                    //             this.toastStore.failed('internal server error');
-                    //             break;
-                    //         default:
-                    //             this.toastStore.failed('unknown error');
-                    //             break;
-                    //     }
-                    // }
-                    // this.fileDropper.enable();
+                    if (success) {
+                        this.fileDropper.removeAllFiles();
+                        if (this.formType === 'update') {
+                            this.closeModal();
+                        } else {
+                            this.formReset();
+                        }
+                        this.toastStore.success(message);
+                        this.tableStore.onFindAll();
+                    } else {
+                        switch (status) {
+                            case 422:
+                                this.formValidator = data;
+                                this.toastStore.failed('please fill the correct form');
+                                break;
+                            case 500:
+                                this.toastStore.failed('internal server error');
+                                break;
+                            default:
+                                this.toastStore.failed('unknown error');
+                                break;
+                        }
+                    }
+                    this.fileDropper.enable();
                     this.loading = false;
                 },
                 hydrateForm(data) {
+                    let categoryID = data['category_id'];
                     this.formType = 'update';
                     this.form.id = data['id'];
                     this.form.name = data['name'];
+                    this.form.description = data['description'];
+                    this.form.price.plu = data['retail_price']['price_list_unit'];
+                    this.form.price.price = data['retail_price']['price'].toLocaleString('id-ID');
+                    this.form.price.unit = 'retail';
                     this.showModalForm = true;
+                    $('#categorySelect').val(categoryID).trigger('change');
                 }
             };
             Alpine.store('itemFormStore', STORE_PROPS);

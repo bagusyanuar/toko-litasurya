@@ -196,18 +196,33 @@ trait Finder
     /**
      * @param $class
      * @param $id
-     * @param string $templateMessage
+     * @param array $config
      * @return ServiceResponse
      */
-    public static function getOneByID($class, $id, $templateMessage = 'item')
+    public static function getOneByID($class, $id, $config = [])
     {
         try {
+            $self = new self();
             /** @var Model $model */
+
+            $relation = [];
+            if (array_key_exists('relation', $config)) {
+                $relation = $config['relation'];
+            }
             $model = app($class);
-            $data = $model::find($id);
+            $data = $model::with($relation)
+                ->where('id', '=', $id)
+                ->first();
+
+            $templateMessage = $self->getTemplateMessage($config);
             if (!$data) {
                 return ServiceResponse::notFound("{$templateMessage} not found");
             }
+
+            if (!$data) {
+                return ServiceResponse::notFound("{$templateMessage} not found");
+            }
+
             return ServiceResponse::statusOK("successfully get {$templateMessage}", $data);
         } catch (\Exception $e) {
             return ServiceResponse::notFound($e->getMessage());

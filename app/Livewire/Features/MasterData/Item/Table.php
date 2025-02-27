@@ -25,6 +25,12 @@ class Table extends Component
         return AlpineResponse::toJSON($response);
     }
 
+    public function findByID($id)
+    {
+        $response = $this->service->findByID($id);
+        return AlpineResponse::toJSON($response);
+    }
+
     public function render()
     {
         return view('livewire.features.master-data.item.table');

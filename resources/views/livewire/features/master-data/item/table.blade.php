@@ -92,7 +92,7 @@
                         label: 'Edit',
                         icon: 'pencil',
                         dispatch: function (id) {
-                            // this.onEdit(id)
+                            this.onEdit(id)
                         }
                     },
                     {
@@ -163,18 +163,19 @@
                     // })
                 },
                 onEdit(id) {
-                    // this.masterDataStore.showLoading('Finding Item Process...');
-                    // this.component.$wire.call('findByID', id)
-                    //     .then(response => {
-                    //         const {success, data, message} = response;
-                    //         if (success) {
-                    //             this.formStore.hydrateForm(data);
-                    //         } else {
-                    //             this.toastStore.failed(message);
-                    //         }
-                    //     }).finally(() => {
-                    //     this.masterDataStore.closeLoading();
-                    // })
+                    this.masterDataStore.showLoading('Finding Item Process...');
+                    this.component.$wire.call('findByID', id)
+                        .then(response => {
+                            const {success, data, message} = response;
+                            console.log(response);
+                            if (success) {
+                                this.formStore.hydrateForm(data);
+                            } else {
+                                this.toastStore.failed(message);
+                            }
+                        }).finally(() => {
+                        this.masterDataStore.closeLoading();
+                    })
                 }
             };
             const PROPS = Object.assign({}, window.TableStore, COMPONENT_PROPS);

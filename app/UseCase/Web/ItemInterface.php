@@ -28,4 +28,17 @@ interface ItemInterface
      */
     public function create(DTOMutateItem $dto): ServiceResponse;
 
+    /**
+     * @param $id
+     * @param DTOMutateItem $dto
+     * @return ServiceResponse
+     */
+    public function update($id, DTOMutateItem $dto): ServiceResponse;
+
+    /**
+     * @param $id
+     * @return ServiceResponse
+     */
+    public function delete($id): ServiceResponse;
+
 }

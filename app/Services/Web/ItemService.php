@@ -41,7 +41,7 @@ class ItemService extends CustomService implements ItemInterface
      */
     public function findByID($id): ServiceResponse
     {
-        return self::getOneByID(Item::class, $id, 'item');
+        return self::getOneByID(Item::class, $id, ['relation' => ['category', 'retail_price']]);
     }
 
     /**
@@ -56,6 +56,29 @@ class ItemService extends CustomService implements ItemInterface
                 'column' => 'image',
                 'path' => Path::ITEM_ASSET
             ],
+            'template_message' => 'item',
+            'child' => [
+                'target' => 'prices',
+                'data' => 'price',
+                'type' => 'single'
+            ]
+        ];
+        return self::mutateTo(Item::class, $dto, $config);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function update($id, DTOMutateItem $dto): ServiceResponse
+    {
+        $config = [
+            'type' => 'update',
+            'key' => $id,
+            'upload' => [
+                'key' => 'getFile',
+                'column' => 'image',
+                'path' => Path::ITEM_ASSET
+            ],
             'template_message' => 'category',
             'child' => [
                 'target' => 'prices',
@@ -64,5 +87,13 @@ class ItemService extends CustomService implements ItemInterface
             ]
         ];
         return self::mutateTo(Item::class, $dto, $config);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function delete($id): ServiceResponse
+    {
+        // TODO: Implement delete() method.
     }
 }
