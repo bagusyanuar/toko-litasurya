@@ -180,7 +180,18 @@
                     })
                 },
                 onPriceList(id) {
-                    this.priceListStore.showModal();
+                    this.masterDataStore.showLoading('Finding Item Process...');
+                    this.component.$wire.call('findByID', id)
+                        .then(response => {
+                            const {success, data, message} = response;
+                            if (success) {
+                                this.priceListStore.hydrateForm(data);
+                            } else {
+                                this.toastStore.failed(message);
+                            }
+                        }).finally(() => {
+                        this.masterDataStore.closeLoading();
+                    })
                 }
             };
             const PROPS = Object.assign({}, window.TableStore, COMPONENT_PROPS);

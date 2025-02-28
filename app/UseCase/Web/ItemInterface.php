@@ -7,6 +7,7 @@ namespace App\Usecase\Web;
 use App\Commons\Response\ServiceResponse;
 use App\Domain\Web\Item\DTOFilterItem;
 use App\Domain\Web\Item\DTOMutateItem;
+use App\Domain\Web\Item\DTOMutatePriceList;
 
 interface ItemInterface
 {
@@ -40,5 +41,11 @@ interface ItemInterface
      * @return ServiceResponse
      */
     public function delete($id): ServiceResponse;
+
+    /**
+     * @param DTOMutatePriceList $dto
+     * @return ServiceResponse
+     */
+    public function mutatePriceList(DTOMutatePriceList $dto): ServiceResponse;
 
 }

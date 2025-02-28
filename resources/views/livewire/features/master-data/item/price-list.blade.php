@@ -3,7 +3,7 @@
     data-component-id="price-list-item"
 >
     <x-gxui.modal.form
-        show="true"
+        show="$store.priceListStore.showModalPriceList"
         width="80%"
     >
         <div
@@ -229,6 +229,8 @@
                 traderPrice: {...INITIAL_PRICE, unit: 'trader'},
                 saveProcess: '',
                 formValidator: {},
+                itemID: '',
+                priceKeys: ['retail', 'dozen', 'carton', 'trader'],
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
                         const componentID = document.querySelector('[data-component-id="price-list-item"]')?.getAttribute('wire:id');
@@ -246,8 +248,76 @@
                     this.formReset();
                     this.showModalPriceList = false;
                 },
+                hydrateForm(item) {
+                    this.itemID = item['id'];
+                    const prices = item['prices'];
+                    this.priceKeys.forEach(function (v, k) {
+                        const price = prices.find(el => el.unit === v);
+                        if (price) {
+                            console.log(this.retailPrice);
+                            switch (v) {
+                                case 'retail':
+                                    this.retailPrice = {
+                                        item_id: this.itemID,
+                                        unit: 'retail',
+                                        plu: price['price_list_unit'],
+                                        price: price['price']
+                                    };
+                                    break;
+                                case 'dozen':
+                                    this.dozenPrice = {
+                                        item_id: this.itemID,
+                                        unit: 'dozen',
+                                        plu: price['price_list_unit'],
+                                        price: price['price']
+                                    };
+                                    break;
+                                case 'carton':
+                                    this.cartonPrice = {
+                                        item_id: this.itemID,
+                                        unit: 'carton',
+                                        plu: price['price_list_unit'],
+                                        price: price['price']
+                                    };
+                                    break;
+                                case 'trader':
+                                    this.traderPrice = {
+                                        item_id: this.itemID,
+                                        unit: 'trader',
+                                        plu: price['price_list_unit'],
+                                        price: price['price']
+                                    };
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }).bind(this);
+
+                    this.showModalPriceList = true;
+                },
                 async mutate(type = 'retail') {
                     this.saveProcess = type;
+                    let form = {};
+                    switch (type) {
+                        case 'retail':
+                            form = {...this.retailPrice, item_id: this.itemID,};
+                            break;
+                        case 'dozen':
+                            form = {...this.dozenPrice, item_id: this.itemID};
+                            break;
+                        case 'carton':
+                            form = {...this.cartonPrice, item_id: this.itemID};
+                            break;
+                        case 'trader':
+                            form = {...this.traderPrice, item_id: this.itemID};
+                            break;
+                        default:
+                            break;
+                    }
+                    const response = await this.component.$wire.call('mutate', form);
+                    console.log(response);
+                    this.saveProcess = '';
                 }
             };
             Alpine.store('priceListStore', STORE_PROPS);

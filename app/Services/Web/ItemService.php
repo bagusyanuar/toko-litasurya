@@ -11,8 +11,10 @@ use App\Commons\Traits\Eloquent\Finder;
 use App\Commons\Traits\Eloquent\Mutator;
 use App\Domain\Web\Item\DTOFilterItem;
 use App\Domain\Web\Item\DTOMutateItem;
+use App\Domain\Web\Item\DTOMutatePriceList;
 use App\Models\Category;
 use App\Models\Item;
+use App\Models\ItemPrice;
 use App\Services\CustomService;
 use App\Usecase\Web\ItemInterface;
 use Illuminate\Database\Query\Builder;
@@ -41,7 +43,7 @@ class ItemService extends CustomService implements ItemInterface
      */
     public function findByID($id): ServiceResponse
     {
-        return self::getOneByID(Item::class, $id, ['relation' => ['category', 'retail_price']]);
+        return self::getOneByID(Item::class, $id, ['relation' => ['category', 'retail_price', 'prices']]);
     }
 
     /**
@@ -98,5 +100,30 @@ class ItemService extends CustomService implements ItemInterface
             'key' => $id,
             'children' => ['prices']
         ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function mutatePriceList(DTOMutatePriceList $dto): ServiceResponse
+    {
+        try {
+            $validator = $dto->validate();
+            if ($validator->fails()) {
+                return ServiceResponse::unprocessableEntity($validator->errors()->toArray());
+            }
+            $dto->hydrate();
+            $data = $dto->dehydrate();
+            ItemPrice::updateOrCreate(
+                [
+                    'item_id' => $data['item_id'],
+                    'unit' => $data['unit']
+                ],
+                $data
+            );
+            return ServiceResponse::created('successfully create price list');
+        } catch (\Exception $e) {
+            return ServiceResponse::internalServerError($e->getMessage());
+        }
     }
 }
