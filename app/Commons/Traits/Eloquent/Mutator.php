@@ -35,7 +35,11 @@ trait Mutator
             $data = $dto->dehydrate();
             if (array_key_exists('upload', $config)) {
                 $uploadResult = $self->upload($dto, $config, function ($column, $fileName) use (&$data) {
-                    $data[$column] = $fileName;
+                    if ($fileName) {
+                        $data[$column] = $fileName;
+                    } else {
+                        $data = Arr::except($data, $column);
+                    }
                 });
                 if ($uploadResult instanceof ServiceResponse) {
                     return $uploadResult;
@@ -153,6 +157,7 @@ trait Mutator
         $key = $config['upload']['key'];
         $path = $config['upload']['path'];
         $column = $config['upload']['column'];
+        $fileName = '';
         if (method_exists($dto, $key)) {
             $file = call_user_func([$dto, $key]);
             if ($file && $file instanceof UploadedFile) {
@@ -162,8 +167,8 @@ trait Mutator
                     return ServiceResponse::internalServerError('failed to upload');
                 }
                 $fileName = $fileUploadResponse->getFileName();
-                $callback($column, $fileName);
             }
+            $callback($column, $fileName);
         }
         return null;
     }

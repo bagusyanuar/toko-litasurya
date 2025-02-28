@@ -22,7 +22,7 @@
             active="$store.masterDataStore.selectedTab === 'reward'"
             icon="gem"
             title="Reward"
-            handleChange="$store.masterDataStore.onChangeTab('gift')"
+            handleChange="$store.masterDataStore.onChangeTab('reward')"
         ></x-gxui.tab.tab-item>
         <x-gxui.tab.tab-item
             active="$store.masterDataStore.selectedTab === 'route'"
@@ -44,10 +44,11 @@
         <livewire:features.master-data.item.price-list />
     </div>
     <div
-        x-show="$store.masterDataStore.selectedTab === 'gift'"
+        x-show="$store.masterDataStore.selectedTab === 'reward'"
         x-cloak
     >
-        <div>Gift</div>
+        <livewire:features.master-data.reward.table />
+        <livewire:features.master-data.reward.form />
     </div>
     <div
         x-show="$store.masterDataStore.selectedTab === 'route'"
@@ -82,7 +83,7 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('masterDataStore', {
-                selectedTab: 'item',
+                selectedTab: 'reward',
                 processLoading: false,
                 processText: 'Loading...',
                 onChangeTab(selectedTab) {

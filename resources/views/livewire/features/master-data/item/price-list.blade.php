@@ -39,8 +39,6 @@
                             parentClassName="mb-3"
                             x-model="$store.priceListStore.retailPrice.plu"
                             x-bind:disabled="$store.priceListStore.saveProcess === 'retail'"
-                            validatorKey="$store.priceListStore.formValidator"
-                            validatorField="price.plu"
                         ></x-gxui.input.text.text>
                         <x-gxui.input.text.text
                             placeholder="0"
@@ -49,8 +47,8 @@
                             x-model="$store.priceListStore.retailPrice.price"
                             x-mask:dynamic="$money($input, ',')"
                             x-bind:disabled="$store.priceListStore.saveProcess === 'retail'"
-                            validatorKey="$store.priceListStore.formValidator"
-                            validatorField="price.price"
+                            validatorKey="$store.priceListStore.retailValidator"
+                            validatorField="price"
                         ></x-gxui.input.text.text>
                         <hr/>
                         <div class="flex justify-end w-full mt-3">
@@ -66,7 +64,7 @@
                                     </div>
                                 </template>
                                 <template x-if="$store.priceListStore.saveProcess === 'retail'">
-                                    <x-gxui.loader.button-loader></x-gxui.loader.button-loader>
+                                    <x-gxui.loader.button-loader class="!text-xs"></x-gxui.loader.button-loader>
                                 </template>
                             </x-gxui.button.button>
                         </div>
@@ -83,8 +81,6 @@
                             parentClassName="mb-3"
                             x-model="$store.priceListStore.dozenPrice.plu"
                             x-bind:disabled="$store.priceListStore.saveProcess === 'dozen'"
-                            validatorKey="$store.priceListStore.formValidator"
-                            validatorField="price.plu"
                         ></x-gxui.input.text.text>
                         <x-gxui.input.text.text
                             placeholder="0"
@@ -93,8 +89,8 @@
                             x-model="$store.priceListStore.dozenPrice.price"
                             x-mask:dynamic="$money($input, ',')"
                             x-bind:disabled="$store.priceListStore.saveProcess === 'dozen'"
-                            validatorKey="$store.priceListStore.formValidator"
-                            validatorField="price.price"
+                            validatorKey="$store.priceListStore.dozenValidator"
+                            validatorField="price"
                         ></x-gxui.input.text.text>
                         <hr/>
                         <div class="flex justify-end w-full mt-3">
@@ -110,7 +106,7 @@
                                     </div>
                                 </template>
                                 <template x-if="$store.priceListStore.saveProcess === 'dozen'">
-                                    <x-gxui.loader.button-loader></x-gxui.loader.button-loader>
+                                    <x-gxui.loader.button-loader class="!text-xs"></x-gxui.loader.button-loader>
                                 </template>
                             </x-gxui.button.button>
                         </div>
@@ -127,8 +123,6 @@
                             parentClassName="mb-3"
                             x-model="$store.priceListStore.cartonPrice.plu"
                             x-bind:disabled="$store.priceListStore.saveProcess === 'carton'"
-                            validatorKey="$store.priceListStore.formValidator"
-                            validatorField="price.plu"
                         ></x-gxui.input.text.text>
                         <x-gxui.input.text.text
                             placeholder="0"
@@ -137,8 +131,8 @@
                             x-model="$store.priceListStore.cartonPrice.price"
                             x-mask:dynamic="$money($input, ',')"
                             x-bind:disabled="$store.priceListStore.saveProcess === 'carton'"
-                            validatorKey="$store.priceListStore.formValidator"
-                            validatorField="price.price"
+                            validatorKey="$store.priceListStore.cartonValidator"
+                            validatorField="price"
                         ></x-gxui.input.text.text>
                         <hr/>
                         <div class="flex justify-end w-full mt-3">
@@ -154,7 +148,7 @@
                                     </div>
                                 </template>
                                 <template x-if="$store.priceListStore.saveProcess === 'carton'">
-                                    <x-gxui.loader.button-loader></x-gxui.loader.button-loader>
+                                    <x-gxui.loader.button-loader class="!text-xs"></x-gxui.loader.button-loader>
                                 </template>
                             </x-gxui.button.button>
                         </div>
@@ -171,8 +165,6 @@
                             parentClassName="mb-3"
                             x-model="$store.priceListStore.traderPrice.plu"
                             x-bind:disabled="$store.priceListStore.saveProcess === 'trader'"
-                            validatorKey="$store.priceListStore.formValidator"
-                            validatorField="price.plu"
                         ></x-gxui.input.text.text>
                         <x-gxui.input.text.text
                             placeholder="0"
@@ -181,8 +173,8 @@
                             x-model="$store.priceListStore.traderPrice.price"
                             x-mask:dynamic="$money($input, ',')"
                             x-bind:disabled="$store.priceListStore.saveProcess === 'trader'"
-                            validatorKey="$store.priceListStore.formValidator"
-                            validatorField="price.price"
+                            validatorKey="$store.priceListStore.traderValidator"
+                            validatorField="price"
                         ></x-gxui.input.text.text>
                         <hr/>
                         <div class="flex justify-end w-full mt-3">
@@ -215,7 +207,7 @@
         document.addEventListener('alpine:init', () => {
             const INITIAL_PRICE = {
                 plu: '',
-                price: 0,
+                price: '',
             };
 
             const STORE_PROPS = {
@@ -228,7 +220,10 @@
                 cartonPrice: {...INITIAL_PRICE, unit: 'carton'},
                 traderPrice: {...INITIAL_PRICE, unit: 'trader'},
                 saveProcess: '',
-                formValidator: {},
+                retailValidator: {},
+                dozenValidator: {},
+                cartonValidator: {},
+                traderValidator: {},
                 itemID: '',
                 priceKeys: ['retail', 'dozen', 'carton', 'trader'],
                 init: function () {
@@ -248,51 +243,57 @@
                     this.formReset();
                     this.showModalPriceList = false;
                 },
+                formReset() {
+                    this.retailPrice = {...INITIAL_PRICE, unit: 'retail'};
+                    this.dozenPrice = {...INITIAL_PRICE, unit: 'dozen'};
+                    this.cartonPrice = {...INITIAL_PRICE, unit: 'carton'};
+                    this.traderPrice = {...INITIAL_PRICE, unit: 'trader'};
+                    this.itemID = '';
+                    this.retailValidator = {};
+                    this.dozenValidator = {};
+                    this.cartonValidator = {};
+                    this.traderValidator = {};
+                },
                 hydrateForm(item) {
                     this.itemID = item['id'];
                     const prices = item['prices'];
-                    this.priceKeys.forEach(function (v, k) {
+                    this.priceKeys.forEach((v, k) => {
                         const price = prices.find(el => el.unit === v);
                         if (price) {
-                            console.log(this.retailPrice);
                             switch (v) {
                                 case 'retail':
                                     this.retailPrice = {
-                                        item_id: this.itemID,
-                                        unit: 'retail',
+                                        ...this.retailPrice,
                                         plu: price['price_list_unit'],
-                                        price: price['price']
+                                        price: price['price'].toLocaleString('id-ID')
                                     };
                                     break;
                                 case 'dozen':
                                     this.dozenPrice = {
-                                        item_id: this.itemID,
-                                        unit: 'dozen',
+                                        ...this.dozenPrice,
                                         plu: price['price_list_unit'],
-                                        price: price['price']
+                                        price: price['price'].toLocaleString('id-ID')
                                     };
                                     break;
                                 case 'carton':
                                     this.cartonPrice = {
-                                        item_id: this.itemID,
-                                        unit: 'carton',
+                                        ...this.cartonPrice,
                                         plu: price['price_list_unit'],
-                                        price: price['price']
+                                        price: price['price'].toLocaleString('id-ID')
                                     };
                                     break;
                                 case 'trader':
                                     this.traderPrice = {
-                                        item_id: this.itemID,
-                                        unit: 'trader',
+                                        ...this.traderPrice,
                                         plu: price['price_list_unit'],
-                                        price: price['price']
+                                        price: price['price'].toLocaleString('id-ID')
                                     };
                                     break;
                                 default:
                                     break;
                             }
                         }
-                    }).bind(this);
+                    });
 
                     this.showModalPriceList = true;
                 },
@@ -316,7 +317,38 @@
                             break;
                     }
                     const response = await this.component.$wire.call('mutate', form);
-                    console.log(response);
+                    const {success, data, status, message} = response;
+                    if (success) {
+                        this.toastStore.success(message);
+                    } else {
+                        switch (status) {
+                            case 422:
+                                switch (type) {
+                                    case 'retail':
+                                        this.retailValidator = data;
+                                        break;
+                                    case 'dozen':
+                                        this.dozenValidator = data;
+                                        break;
+                                    case 'carton':
+                                        this.cartonValidator = data;
+                                        break;
+                                    case 'trader':
+                                        this.traderValidator = data;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                this.toastStore.failed('please fill the correct form');
+                                break;
+                            case 500:
+                                this.toastStore.failed('internal server error');
+                                break;
+                            default:
+                                this.toastStore.failed('unknown error');
+                                break;
+                        }
+                    }
                     this.saveProcess = '';
                 }
             };
