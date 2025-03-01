@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Features\Customer\Store;
+namespace App\Livewire\Features\Customer\Personal;
 
 use App\Domain\Web\Customer\DTOMutate;
 use App\Helpers\Alpine\AlpineResponse;
@@ -38,6 +38,6 @@ class Form extends Component
 
     public function render()
     {
-        return view('livewire.features.customer.store.form');
+        return view('livewire.features.customer.personal.form');
     }
 }

@@ -24,6 +24,8 @@
         <livewire:features.customer.store.form/>
     </div>
     <div x-show="$store.customerStore.selectedTab === 'personal'">
+        <livewire:features.customer.personal.table/>
+        <livewire:features.customer.personal.form/>
     </div>
     <x-gxui.loader.action-loader
         show="$store.customerStore.processLoading"

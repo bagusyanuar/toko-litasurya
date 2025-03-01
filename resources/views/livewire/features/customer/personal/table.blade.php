@@ -1,19 +1,19 @@
 <section
-    id="section-table-customer-stores"
-    data-component-id="table-customer-store"
+    id="section-table-customer-personals"
+    data-component-id="table-customer-personal"
 >
     <div class="bg-white w-full p-6 rounded-lg shadow-md">
         <div class="w-full flex items-center justify-between mb-3">
-            <p class="text-neutral-700 font-semibold">Store Data</p>
+            <p class="text-neutral-700 font-semibold">Personal Data</p>
             <div class="flex items-center gap-3">
                 <x-gxui.table.search
                     placeholder="Search..."
-                    store="customerStoreTableStore"
+                    store="customerPersonalTableStore"
                     dispatcher="onFindAll"
                 ></x-gxui.table.search>
                 <x-gxui.button.button
                     wire:ignore
-                    x-on:click="$store.customerStoreFormStore.showModal()"
+                    x-on:click="$store.customerPersonalFormStore.showModal()"
                 >
                     <div class="w-full flex justify-center items-center gap-1 text-sm">
                         <i data-lucide="plus" class="h-3" style="width: fit-content;"></i>
@@ -24,7 +24,7 @@
         </div>
         <x-gxui.table.table
             class="mb-1"
-            store="customerStoreTableStore"
+            store="customerPersonalTableStore"
         >
             <x-slot name="header">
                 <x-gxui.table.th
@@ -63,13 +63,13 @@
                         <span x-text="data.point.toLocaleString('id-ID')"></span>
                     </x-gxui.table.td>
                     <x-gxui.table.td className="flex justify-center relative">
-                        <x-gxui.table.action store="customerStoreTableStore"></x-gxui.table.action>
+                        <x-gxui.table.action store="customerPersonalTableStore"></x-gxui.table.action>
                     </x-gxui.table.td>
                 </tr>
             </x-slot>
         </x-gxui.table.table>
         <x-gxui.table.pagination
-            store="customerStoreTableStore"
+            store="customerPersonalTableStore"
             dispatcher="onFindAll"
         ></x-gxui.table.pagination>
     </div>
@@ -79,7 +79,7 @@
     <script>
         document.addEventListener('alpine:init', () => {
             const componentProps = {
-                type: 'store',
+                type: 'personal',
                 component: null,
                 formStore: null,
                 toastStore: null,
@@ -102,10 +102,10 @@
                     },
                 ],
                 init: function () {
-                    const componentID = document.querySelector('[data-component-id="table-customer-store"]')?.getAttribute('wire:id');
+                    const componentID = document.querySelector('[data-component-id="table-customer-personal"]')?.getAttribute('wire:id');
                     Livewire.hook('component.init', ({component}) => {
                         if (component.id === componentID) {
-                            this.formStore = Alpine.store('customerStoreFormStore');
+                            this.formStore = Alpine.store('customerPersonalFormStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.customerStore = Alpine.store('customerStore');
                             this.paginationStore = Alpine.store('gxuiPaginationStore');
@@ -166,6 +166,7 @@
                     this.component.$wire.call('findByID', id)
                         .then(response => {
                             const {success, data, message} = response;
+                            console.log(response);
                             if (success) {
                                 this.formStore.hydrateForm(data);
                             } else {
@@ -177,7 +178,7 @@
                 }
             };
             const props = Object.assign({}, window.TableStore, componentProps);
-            Alpine.store('customerStoreTableStore', props);
+            Alpine.store('customerPersonalTableStore', props);
         });
     </script>
 @endpush

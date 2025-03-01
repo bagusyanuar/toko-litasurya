@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Features\Customer\Store;
+namespace App\Livewire\Features\Customer\Personal;
 
 use App\Domain\Web\Customer\DTOFilter;
 use App\Helpers\Alpine\AlpineResponse;
@@ -39,6 +39,6 @@ class Table extends Component
 
     public function render()
     {
-        return view('livewire.features.customer.store.table');
+        return view('livewire.features.customer.personal.table');
     }
 }

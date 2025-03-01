@@ -1,9 +1,9 @@
 <section
-    id="section-form-customer-store"
-    data-component-id="form-customer-store"
+    id="section-form-customer-personal"
+    data-component-id="form-customer-personal"
 >
     <x-gxui.modal.form
-        show="$store.customerStoreFormStore.showModalForm"
+        show="$store.customerPersonalFormStore.showModalForm"
         width="30rem"
     >
         <div
@@ -11,7 +11,7 @@
             <span class="text-neutral-700 font-semibold">Form New Store</span>
             <button
                 type="button"
-                x-on:click="$store.customerStoreFormStore.closeModal()"
+                x-on:click="$store.customerPersonalFormStore.closeModal()"
                 class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-4 h-4 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
             >
                 <svg class="w-2 h-2" aria-hidden="true"
@@ -29,35 +29,35 @@
                 placeholder="Name"
                 label="Name"
                 parentClassName="mb-3"
-                x-model="$store.customerStoreFormStore.form.name"
-                x-bind:disabled="$store.customerStoreFormStore.loading"
-                validatorKey="$store.customerStoreFormStore.formValidator"
+                x-model="$store.customerPersonalFormStore.form.name"
+                x-bind:disabled="$store.customerPersonalFormStore.loading"
+                validatorKey="$store.customerPersonalFormStore.formValidator"
                 validatorField="name"
             ></x-gxui.input.text.text>
             <x-gxui.input.text.text
                 placeholder="Phone"
                 label="Phone"
                 parentClassName="mb-3"
-                x-model="$store.customerStoreFormStore.form.phone"
-                x-bind:disabled="$store.customerStoreFormStore.loading"
-                validatorKey="$store.customerStoreFormStore.formValidator"
+                x-model="$store.customerPersonalFormStore.form.phone"
+                x-bind:disabled="$store.customerPersonalFormStore.loading"
+                validatorKey="$store.customerPersonalFormStore.formValidator"
                 validatorField="phone"
             ></x-gxui.input.text.text>
             <x-gxui.input.text.text
                 placeholder="Address"
                 label="Address"
                 parentClassName="mb-3"
-                x-model="$store.customerStoreFormStore.form.address"
-                x-bind:disabled="$store.customerStoreFormStore.loading"
-                validatorKey="$store.customerStoreFormStore.formValidator"
+                x-model="$store.customerPersonalFormStore.form.address"
+                x-bind:disabled="$store.customerPersonalFormStore.loading"
+                validatorKey="$store.customerPersonalFormStore.formValidator"
                 validatorField="address"
             ></x-gxui.input.text.text>
         </div>
         <div class="modal-footer w-full flex items-center justify-end gap-2 px-4 py-3 border-t border-neutral-300">
             <x-gxui.button.button
                 wire:ignore
-                x-on:click="$store.customerStoreFormStore.closeModal()"
-                x-bind:disabled="$store.customerStoreFormStore.loading"
+                x-on:click="$store.customerPersonalFormStore.closeModal()"
+                x-bind:disabled="$store.customerPersonalFormStore.loading"
                 class="!px-6 bg-white !border-brand-500 !text-brand-500 hover:!text-white disabled:!bg-white disabled:!text-brand-500"
             >
                 <div class="w-full flex justify-center items-center gap-1 text-sm">
@@ -66,16 +66,16 @@
             </x-gxui.button.button>
             <x-gxui.button.button
                 wire:ignore
-                x-on:click="$store.customerStoreFormStore.mutate()"
-                x-bind:disabled="$store.customerStoreFormStore.loading"
+                x-on:click="$store.customerPersonalFormStore.mutate()"
+                x-bind:disabled="$store.customerPersonalFormStore.loading"
                 class="!px-6"
             >
-                <template x-if="!$store.customerStoreFormStore.loading">
+                <template x-if="!$store.customerPersonalFormStore.loading">
                     <div class="w-full flex justify-center items-center gap-1 text-sm">
                         <span>Submit</span>
                     </div>
                 </template>
-                <template x-if="$store.customerStoreFormStore.loading">
+                <template x-if="$store.customerPersonalFormStore.loading">
                     <x-gxui.loader.button-loader></x-gxui.loader.button-loader>
                 </template>
             </x-gxui.button.button>
@@ -86,7 +86,7 @@
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
-            const INITIAL_FORM = {id: '', type: 'store', name: '', phone: '', address: '', point: 0};
+            const INITIAL_FORM = {id: '', type: 'personal', name: '', phone: '', address: '', point: 0};
             const STORE_PROPS = {
                 component: null,
                 toastStore: null,
@@ -98,11 +98,11 @@
                 form: {...INITIAL_FORM},
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
-                        const componentID = document.querySelector('[data-component-id="form-customer-store"]')?.getAttribute('wire:id');
+                        const componentID = document.querySelector('[data-component-id="form-customer-personal"]')?.getAttribute('wire:id');
                         if (component.id === componentID) {
                             this.component = component;
                             this.toastStore = Alpine.store('gxuiToastStore');
-                            this.tableStore = Alpine.store('customerStoreTableStore');
+                            this.tableStore = Alpine.store('customerPersonalTableStore');
                         }
                     });
                 },
@@ -153,7 +153,7 @@
                     this.showModalForm = true;
                 }
             };
-            Alpine.store('customerStoreFormStore', STORE_PROPS);
+            Alpine.store('customerPersonalFormStore', STORE_PROPS);
         });
     </script>
 @endpush

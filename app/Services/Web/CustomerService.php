@@ -42,15 +42,33 @@ class CustomerService implements CustomerInterface
 
     public function findByID($id): ServiceResponse
     {
-        // TODO: Implement findByID() method.
+        return self::getOneByID(Customer::class, $id);
     }
 
     public function create(DTOMutate $dto): ServiceResponse
     {
         $config = [
             'type' => 'create',
-            'template_message' => 'item',
+            'template_message' => 'customer',
         ];
         return self::mutateTo(Customer::class, $dto, $config);
+    }
+
+    public function update($id, DTOMutate $dto): ServiceResponse
+    {
+        // TODO: Implement update() method.
+        $config = [
+            'type' => 'update',
+            'key' => $id,
+            'template_message' => 'customer',
+        ];
+        return self::mutateTo(Customer::class, $dto, $config);
+    }
+
+    public function delete($id): ServiceResponse
+    {
+        return self::removeFrom(Customer::class, [
+            'key' => $id,
+        ]);
     }
 }

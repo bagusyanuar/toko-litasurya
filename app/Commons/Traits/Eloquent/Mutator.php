@@ -57,7 +57,10 @@ trait Mutator
                 $self->mutateCreate($model, $data, $config);
             }
             DB::commit();
-            return ServiceResponse::created("successfully update {$templateMessage}");
+            if ($type === 'update') {
+                return ServiceResponse::statusOK("successfully update {$templateMessage}");
+            }
+            return ServiceResponse::created("successfully create {$templateMessage}");
         } catch (\Exception $e) {
             DB::rollBack();
             return ServiceResponse::internalServerError($e->getMessage());
