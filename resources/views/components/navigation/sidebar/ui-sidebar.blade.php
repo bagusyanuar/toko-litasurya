@@ -23,20 +23,25 @@
             to="/master-data"
             title="Master Data"
         ></x-navigation.sidebar.ui-sidebar-item>
-        <x-navigation.sidebar.ui-sidebar-item-tree
-            icon="hard-drive"
-            title="Master Data"
-        >
-            <x-navigation.sidebar.ui-sidebar-item
-                icon="tags"
-                to="/category"
-                title="Category"
-            ></x-navigation.sidebar.ui-sidebar-item>
-            <x-navigation.sidebar.ui-sidebar-item
-                icon="box"
-                to="/item"
-                title="Item"
-            ></x-navigation.sidebar.ui-sidebar-item>
-        </x-navigation.sidebar.ui-sidebar-item-tree>
+        <x-navigation.sidebar.ui-sidebar-item
+            icon="users"
+            to="/customer"
+            title="Customer"
+        ></x-navigation.sidebar.ui-sidebar-item>
+{{--        <x-navigation.sidebar.ui-sidebar-item-tree--}}
+{{--            icon="hard-drive"--}}
+{{--            title="Master Data"--}}
+{{--        >--}}
+{{--            <x-navigation.sidebar.ui-sidebar-item--}}
+{{--                icon="tags"--}}
+{{--                to="/category"--}}
+{{--                title="Category"--}}
+{{--            ></x-navigation.sidebar.ui-sidebar-item>--}}
+{{--            <x-navigation.sidebar.ui-sidebar-item--}}
+{{--                icon="box"--}}
+{{--                to="/item"--}}
+{{--                title="Item"--}}
+{{--            ></x-navigation.sidebar.ui-sidebar-item>--}}
+{{--        </x-navigation.sidebar.ui-sidebar-item-tree>--}}
     </div>
 </div>

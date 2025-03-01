@@ -92,11 +92,27 @@ trait Finder
         };
     }
 
+    public static function queryIs($column, $value)
+    {
+        return function ($query) use ($column, $value) {
+            /** @var Builder $query */
+            return $query->where($column, '=', $value);
+        };
+    }
+
     public static function filterQueryLikeBy($key, $column, $value)
     {
         return [
             'key' => $key,
             'dispatcher' => self::queryLike($column, $value)
+        ];
+    }
+
+    public static function filterQueryIs($key, $column, $value)
+    {
+        return [
+            'key' => $key,
+            'dispatcher' => self::queryIs($column, $value)
         ];
     }
 
