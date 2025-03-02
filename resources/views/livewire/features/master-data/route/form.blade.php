@@ -3,7 +3,8 @@
     data-component-id="form-route"
 >
     <x-gxui.modal.form
-        show="$store.routeFormStore.showModalForm"
+{{--        show="$store.routeFormStore.showModalForm"--}}
+        show="true"
         width="30rem"
     >
         <div
@@ -34,6 +35,15 @@
                 validatorKey="$store.routeFormStore.formValidator"
                 validatorField="name"
             ></x-gxui.input.text.text>
+            <x-gxui.input.select.select2-multiple
+                store="routeFormStore"
+                options="storeOptions"
+                label="Store"
+                parentClassName="mb-3 flex-1"
+                selectID="storeSelect"
+                validatorKey="$store.routeFormStore.formValidator"
+                validatorField="store_id"
+            ></x-gxui.input.select.select2-multiple>
         </div>
         <div class="modal-footer w-full flex items-center justify-end gap-2 px-4 py-3 border-t border-neutral-300">
             <x-gxui.button.button
@@ -74,10 +84,21 @@
                 toastStore: null,
                 tableStore: null,
                 showModalForm: false,
+                select2Store: null,
                 loading: false,
                 formType: 'create',
                 formValidator: {},
                 form: {...INITIAL_FORM},
+                storeOptions: [
+                    {
+                        id: '1',
+                        text: 'Opt 1'
+                    },
+                    {
+                        id: '2',
+                        text: 'Opt 2'
+                    }
+                ],
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
                         const componentID = document.querySelector('[data-component-id="form-route"]')?.getAttribute('wire:id');
@@ -85,6 +106,13 @@
                             this.component = component;
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.tableStore = Alpine.store('routeTableStore');
+                            let selectElement = document.getElementById("storeSelect");
+                            this.select2Store = Alpine.store('gxuiSelectStore')
+                                .initSelect2Multiple(
+                                    selectElement,
+                                    () => {},
+                                    {placeholder: 'choose a store'}
+                                );
                         }
                     });
                 },
