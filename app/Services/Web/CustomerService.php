@@ -30,14 +30,18 @@ class CustomerService implements CustomerInterface
         );
     }
 
-    public function findAllPersonal(): ServiceResponse
-    {
-        // TODO: Implement findAllPersonal() method.
-    }
-
-    public function findAllStore(): ServiceResponse
+    public function findAllByType($type): ServiceResponse
     {
         // TODO: Implement findAllStore() method.
+        $filters = [
+            self::filterQueryIs($type, 'type', $type)
+        ];
+        return self::findFrom(
+            Customer::class,
+            [
+                'filter' => $filters
+            ]
+        );
     }
 
     public function findByID($id): ServiceResponse

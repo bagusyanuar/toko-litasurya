@@ -46,10 +46,10 @@
                         <span x-text="data.name"></span>
                     </x-gxui.table.td>
                     <x-gxui.table.td>
-                        <span x-text="data.address"></span>
+                        <span x-text="data.store_string"></span>
                     </x-gxui.table.td>
                     <x-gxui.table.td className="flex justify-center relative">
-                        <x-gxui.table.action store="customerStoreTableStore"></x-gxui.table.action>
+                        <x-gxui.table.action store="routeTableStore"></x-gxui.table.action>
                     </x-gxui.table.td>
                 </tr>
             </x-slot>

@@ -15,6 +15,10 @@ class RouteDetail extends Model
         'customer_id'
     ];
 
+    protected $with = [
+        'customer'
+    ];
+
     public function route()
     {
         return $this->belongsTo(Route::class, 'route_id');

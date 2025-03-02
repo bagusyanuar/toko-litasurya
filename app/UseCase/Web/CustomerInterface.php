@@ -11,8 +11,7 @@ use App\Domain\Web\Customer\DTOMutate;
 interface CustomerInterface
 {
     public function findAll(DTOFilter $filter): ServiceResponse;
-    public function findAllPersonal(): ServiceResponse;
-    public function findAllStore(): ServiceResponse;
+    public function findAllByType($type): ServiceResponse;
     public function findByID($id): ServiceResponse;
     public function create(DTOMutate $dto): ServiceResponse;
     public function update($id, DTOMutate $dto): ServiceResponse;

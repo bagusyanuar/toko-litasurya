@@ -76,7 +76,12 @@ trait Mutator
             $dataChild = $data[$keyChild];
             $parent = $model::create($data);
             if ($type === 'multiple') {
-                $parent->{$target}()->createMany($dataChild);
+                $newDataChild = [];
+                foreach ($dataChild as $datumChild) {
+                    $newChild = array_merge($datumChild, [$config['child']['foreign'] => $parent->id]);
+                    array_push($newDataChild, $newChild);
+                }
+                $parent->{$target}()->createMany($newDataChild);
             } else {
                 $parent->{$target}()->create($dataChild);
             }
