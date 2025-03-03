@@ -3,8 +3,7 @@
     data-component-id="form-route"
 >
     <x-gxui.modal.form
-                show="$store.routeFormStore.showModalForm"
-{{--        show="true"--}}
+        show="$store.routeFormStore.showModalForm"
         width="30rem"
     >
         <div
