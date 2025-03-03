@@ -68,7 +68,7 @@
                 component: null,
                 formStore: null,
                 toastStore: null,
-                customerStore: null,
+                masterDataStore: null,
                 paginationStore: null,
                 actions: [
                     {
@@ -90,9 +90,9 @@
                     const componentID = document.querySelector('[data-component-id="table-route"]')?.getAttribute('wire:id');
                     Livewire.hook('component.init', ({component}) => {
                         if (component.id === componentID) {
-                            // this.formStore = Alpine.store('customerStoreFormStore');
+                            this.formStore = Alpine.store('routeFormStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
-                            this.customerStore = Alpine.store('customerStore');
+                            this.masterDataStore = Alpine.store('masterDataStore');
                             this.paginationStore = Alpine.store('gxuiPaginationStore');
                             this.actions.forEach((action, key) => {
                                 action.dispatch = action.dispatch.bind(this);
@@ -132,22 +132,22 @@
                     })
                 },
                 onDelete(id) {
-                    this.customerStore.showLoading('Deleting Process...');
+                    this.masterDataStore.showLoading('Deleting Process...');
                     this.component.$wire.call('delete', id)
                         .then(response => {
                             const {success} = response;
                             if (success) {
-                                this.toastStore.success('success delete customer');
+                                this.toastStore.success('success delete route');
                                 this.onFindAll();
                             } else {
-                                this.toastStore.failed('failed to delete customer');
+                                this.toastStore.failed('failed to delete route');
                             }
                         }).finally(() => {
-                        this.customerStore.closeLoading();
+                        this.masterDataStore.closeLoading();
                     })
                 },
                 onEdit(id) {
-                    this.customerStore.showLoading('Finding Item Process...');
+                    this.masterDataStore.showLoading('Finding route process...');
                     this.component.$wire.call('findByID', id)
                         .then(response => {
                             const {success, data, message} = response;
@@ -157,7 +157,7 @@
                                 this.toastStore.failed(message);
                             }
                         }).finally(() => {
-                        this.customerStore.closeLoading();
+                        this.masterDataStore.closeLoading();
                     })
                 }
             };

@@ -11,5 +11,8 @@ use App\Domain\Web\Route\DTOMutate;
 interface RouteInterface
 {
     public function findAll(DTOFilter $filter): ServiceResponse;
+    public function findByID($id): ServiceResponse;
     public function create(DTOMutate $dto): ServiceResponse;
+    public function update($id, DTOMutate $dto): ServiceResponse;
+    public function delete($id): ServiceResponse;
 }

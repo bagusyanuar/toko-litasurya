@@ -43,4 +43,34 @@ class RouteService implements RouteInterface
         ];
         return self::mutateTo(Route::class, $dto, $config);
     }
+
+    public function findByID($id): ServiceResponse
+    {
+        return self::getOneByID(Route::class, $id, ['relation' => ['details.customer']]);
+    }
+
+    public function update($id, DTOMutate $dto): ServiceResponse
+    {
+        // TODO: Implement update() method.
+        $config = [
+            'type' => 'update',
+            'key' => $id,
+            'template_message' => 'route',
+            'child' => [
+                'target' => 'details',
+                'data' => 'stores',
+                'type' => 'multiple',
+                'foreign' => 'route_id'
+            ]
+        ];
+        return self::mutateTo(Route::class, $dto, $config);
+    }
+
+    public function delete($id): ServiceResponse
+    {
+        return self::removeFrom(Route::class, [
+            'key' => $id,
+            'children' => ['details']
+        ]);
+    }
 }

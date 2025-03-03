@@ -99,11 +99,7 @@ trait Mutator
             $dataChild = $data[$keyChild];
             $model->update($data);
             if ($type === 'multiple') {
-                if (is_array($model->{$target}())) {
-                    foreach ($model->{$target}() as $child) {
-                        $child->delete();
-                    }
-                }
+                $model->{$target}()->delete();
                 if (is_array($dataChild)) {
                     foreach ($dataChild as $datumChild) {
                         $model->{$target}()->create($datumChild);

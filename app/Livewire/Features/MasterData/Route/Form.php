@@ -39,6 +39,14 @@ class Form extends Component
         return AlpineResponse::toJSON($response);
     }
 
+    public function update($formData)
+    {
+        $id = $formData['id'];
+        $this->dto->hydrateForm($formData);
+        $response = $this->service->update($id, $this->dto);
+        return AlpineResponse::toJSON($response);
+    }
+
     public function render()
     {
         return view('livewire.features.master-data.route.form');

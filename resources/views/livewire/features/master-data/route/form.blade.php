@@ -174,6 +174,10 @@
                 hydrateForm(data) {
                     this.formType = 'update';
                     this.form = data;
+                    this.storeValues = data['details'].map((v, k) => {
+                        return v['customer_id'];
+                    });
+                    $('#storeSelect').val(this.storeValues).trigger('change');
                     this.showModalForm = true;
                 }
             };
