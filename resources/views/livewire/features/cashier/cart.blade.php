@@ -19,7 +19,7 @@
             </div>
             <x-gxui.button.button
                 wire:ignore
-                x-on:click="$store.cartStore.addCart()"
+                x-on:click="$store.cartStore.print()"
                 class="!w-fit"
                 x-bind:disabled="false"
             >
@@ -117,32 +117,55 @@
                     })
                 },
                 findByPLU() {
-                    this.cashierStore.showLoading('find product...');
-                    this.component.$wire.call('getProductByPLU', this.plu)
+                    const selectedItem = this.data.find(v => v.plu === this.plu);
+                    if (selectedItem) {
+                        selectedItem.qty = parseInt(selectedItem.qty) + 1;
+                        selectedItem.total = selectedItem.qty * selectedItem.price;
+                        this._setTotal();
+                    } else {
+                        this.cashierStore.showLoading('find product...');
+                        this.component.$wire.call('getProductByPLU', this.plu)
+                            .then(response => {
+                                const {success, message, data} = response;
+                                if (success) {
+                                    this._addToCart(data);
+                                } else {
+                                    // this.toastStore.failed(message);
+                                    console.log(response)
+                                }
+                            }).finally(() => {
+                            this.cashierStore.closeLoading();
+                        })
+                    }
+                    this.plu = '';
+                },
+                print() {
+                    this.component.$wire.call('print')
                         .then(response => {
                             const {success, message, data} = response;
-                            if (success) {
-                                this._addToCart(data);
-                            } else {
-                                // this.toastStore.failed(message);
-                                console.log(response)
-                            }
+                            console.log(response)
                         }).finally(() => {
-                        this.cashierStore.closeLoading();
                     })
                 },
                 _addToCart(item) {
+                    const plu = item['price_list_unit'];
                     const cartItem = {
                         id: item['id'],
                         itemID: item['item']['id'],
-                        plu: item['price_list_unit'],
+                        plu: plu,
                         name: item['item']['name'],
                         price: item['price'],
                         unit: item['unit'],
                         qty: 1,
                         total: item['price']
                     };
-                    this.data.push(cartItem);
+                    const selectedItem = this.data.find(v => v.plu === plu);
+                    if (selectedItem) {
+                        selectedItem.qty = parseInt(selectedItem.qty) + 1;
+                        selectedItem.total = selectedItem.qty * selectedItem.price;
+                    } else {
+                        this.data.push(cartItem);
+                    }
                     this._setTotal();
                 },
                 getCart() {
