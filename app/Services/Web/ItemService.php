@@ -126,4 +126,19 @@ class ItemService extends CustomService implements ItemInterface
             return ServiceResponse::internalServerError($e->getMessage());
         }
     }
+
+    public function findByPriceListUnit($plu): ServiceResponse
+    {
+        try {
+            $priceItem = ItemPrice::with(['item'])
+                ->where('price_list_unit', '=', $plu)
+                ->first();
+            if (!$priceItem) {
+                return ServiceResponse::notFound('product not found');
+            }
+            return ServiceResponse::statusOK('successfully get product', $priceItem);
+        } catch (\Exception $e) {
+            return ServiceResponse::internalServerError($e->getMessage());
+        }
+    }
 }

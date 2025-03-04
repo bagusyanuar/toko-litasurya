@@ -2,9 +2,9 @@
     id="section-cashier-billing"
     data-component-id="cashier-billing"
 >
-    <div class="w-96 bg-white p-6 rounded-md shadow-md">
+    <div class="w-80 bg-white p-6 rounded-md shadow-md">
         <p class="font-bold text-neutral-700 mb-3">Billing</p>
-        <hr class="mb-3" />
+        <hr class="mb-3"/>
         <x-gxui.input.select.select2
             store="billingStore"
             options="customerOptions"
@@ -12,10 +12,10 @@
             parentClassName="mb-3"
             selectID="customerSelect"
         ></x-gxui.input.select.select2>
-        <hr class="mb-3" />
+        <hr class="mb-3"/>
         <div class="w-full mb-5 flex items-center justify-between text-neutral-700 text-lg">
             <span class="">Total</span>
-            <span class="font-bold">: <span>Rp. 10.000</span></span>
+            <span class="font-bold">: <span x-text="'Rp. '+$store.billingStore.total.toLocaleString('id-ID')"></span></span>
         </div>
         <x-gxui.button.button
             wire:ignore
@@ -37,6 +37,7 @@
                 component: null,
                 customerSelectStore: null,
                 customerOptions: [],
+                total: 0,
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
                         const componentID = document.querySelector('[data-component-id="cashier-billing"]')?.getAttribute('wire:id');
@@ -51,6 +52,9 @@
                                 );
                         }
                     });
+                },
+                setTotal(total) {
+                    this.total = total;
                 },
                 onChangeCustomer(item) {
                 },

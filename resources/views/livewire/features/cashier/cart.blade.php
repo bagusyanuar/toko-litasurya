@@ -11,12 +11,15 @@
                        class="text-neutral-500 group-focus-within:text-neutral-900 h-4 aspect-[1/1]"></i>
                 </div>
                 <input
+                    x-model="$store.cartStore.plu"
                     placeholder="scan barcode"
-                    class="w-full text-sm ps-[2.05rem] pe-[0.825rem] py-[0.5rem] rounded text-neutral-700 border border-neutral-300 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500 transition duration-300 ease-in"/>
+                    class="w-full text-sm ps-[2.05rem] pe-[0.825rem] py-[0.5rem] rounded text-neutral-700 border border-neutral-300 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500 transition duration-300 ease-in"
+                    x-on:keydown.enter="$store.cartStore.findByPLU()"
+                />
             </div>
             <x-gxui.button.button
                 wire:ignore
-                x-on:click=""
+                x-on:click="$store.cartStore.addCart()"
                 class="!w-fit"
                 x-bind:disabled="false"
             >
@@ -27,27 +30,149 @@
             </x-gxui.button.button>
         </div>
     </div>
-    <div class="w-full grid grid-cols-2 gap-3">
-        <div class="w-full flex gap-3 bg-white rounded-md shadow-md p-3">
-            <img
-                src="{{ asset('/assets/images/category/494676e2-dae8-4705-83ce-882be4205b06.png') }}"
-                class="h-20 w-20 rounded-md border border-neutral-300 p-1"
-                alt="product-image" />
-            <div class="flex-1 flex-col gap-1">
-                <div class="flex-1">
-                    <p class="font-bold text-neutral-700 mb-0 leading-none">Product1</p>
-                    <p class="text-xs text-neutral-500 mb-0 leading-none">(PCS)</p>
-                    <p class="font-bold text-brand-500">Rp. 50.000</p>
-                </div>
-                <div class="w-full flex justify-between items-center">
-                    <div class="flex items-center">
-                        <div>+</div>
-                        <div>-</div>
+    <x-gxui.table.table
+        class="mb-1"
+        store="cartStore"
+    >
+        <x-slot name="header">
+            <x-gxui.table.th
+                title="Product"
+                align="left"
+            ></x-gxui.table.th>
+            <x-gxui.table.th
+                title="Unit"
+                className="w-[80px]"
+            ></x-gxui.table.th>
+            <x-gxui.table.th
+                title="Price"
+                className="!w-[80px]"
+                align="right"
+            ></x-gxui.table.th>
+            <x-gxui.table.th
+                title="Qty"
+                className="!w-[80px]"
+            ></x-gxui.table.th>
+            <x-gxui.table.th
+                title="Total"
+                className="!w-[80px]"
+                align="right"
+            ></x-gxui.table.th>
+            <x-gxui.table.th
+                title=""
+                className="w-[40px]"
+            ></x-gxui.table.th>
+        </x-slot>
+        <x-slot name="rows">
+            <tr class="border-b border-neutral-300">
+                <x-gxui.table.td className="min-w-[200px]">
+                    <span class="text-sm font-bold text-neutral-900" x-text="data.name"></span>
+                </x-gxui.table.td>
+                <x-gxui.table.td className="flex justify-center">
+                    <span x-text="data.unit"></span>
+                </x-gxui.table.td>
+                <x-gxui.table.td className="flex justify-end">
+                    <span x-text="data.price.toLocaleString('id-ID') ?? '-'"></span>
+                </x-gxui.table.td>
+                <x-gxui.table.td className="flex justify-center">
+                    <div x-data="{error: false}">
+                        <input
+                            class="w-10 px-1 py-1 text-xs rounded text-neutral-700 border border-neutral-300 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500 transition duration-300 ease-in"
+                            x-model="data.qty"
+                            x-on:input="
+                                $store.cartStore.updateCart(data.id, $event.target.value);
+                                error = $event.target.value.trim() === '';
+                            "
+                            :class="error ? 'border-red-500 focus:border-red-500' : 'border-neutral-300 focus:border-neutral-500'"
+                        />
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="w-full bg-white rounded-md shadow-md p-3"></div>
-        <div class="w-full bg-white rounded-md shadow-md p-3"></div>
-    </div>
+                </x-gxui.table.td>
+                <x-gxui.table.td className="flex justify-end">
+                    <span x-text="data.total.toLocaleString('id-ID') ?? '-'"></span>
+                </x-gxui.table.td>
+                <x-gxui.table.td className="flex justify-center relative">
+                </x-gxui.table.td>
+            </tr>
+        </x-slot>
+    </x-gxui.table.table>
 </section>
+
+@push('scripts')
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('cartStore', {
+                component: null,
+                cashierStore: null,
+                billingStore: null,
+                plu: '',
+                data: [],
+                init: function () {
+                    const componentID = document.querySelector('[data-component-id="cashier-cart"]')?.getAttribute('wire:id');
+                    Livewire.hook('component.init', ({component}) => {
+                        if (component.id === componentID) {
+                            this.component = component;
+                            this.billingStore = Alpine.store('billingStore');
+                            this.cashierStore = Alpine.store('cashierStore');
+                            this.getCart();
+                        }
+                    })
+                },
+                findByPLU() {
+                    this.cashierStore.showLoading('find product...');
+                    this.component.$wire.call('getProductByPLU', this.plu)
+                        .then(response => {
+                            const {success, message, data} = response;
+                            if (success) {
+                                this._addToCart(data);
+                            } else {
+                                // this.toastStore.failed(message);
+                                console.log(response)
+                            }
+                        }).finally(() => {
+                        this.cashierStore.closeLoading();
+                    })
+                },
+                _addToCart(item) {
+                    const cartItem = {
+                        id: item['id'],
+                        itemID: item['item']['id'],
+                        plu: item['price_list_unit'],
+                        name: item['item']['name'],
+                        price: item['price'],
+                        unit: item['unit'],
+                        qty: 1,
+                        total: item['price']
+                    };
+                    this.data.push(cartItem);
+                    this._setTotal();
+                },
+                getCart() {
+                    this.data = this._getStorageCart();
+                    this._setTotal();
+                },
+                updateCart(id, qty) {
+                    const item = this.data.find(item => item.id === id);
+                    if (item) {
+                        item.qty = qty;
+                        let intQty = qty.trim() === '' ? 0 : qty;
+                        item.total = intQty * item.price;
+                    }
+                    this._setTotal();
+                    this._updateStorageCart();
+                },
+                _getTotal() {
+                    return this.data.reduce((sum, item) => sum + item.total, 0);
+                },
+                _setTotal() {
+                    this.billingStore.setTotal(this._getTotal());
+                },
+                _getStorageCart() {
+                    const storage = JSON.parse(localStorage.getItem('cart') ?? '[]');
+                    return Array.isArray(storage) ? storage : [];
+                },
+                _updateStorageCart() {
+                    localStorage.setItem('cart', JSON.stringify(this.data));
+                }
+            });
+        });
+    </script>
+@endpush

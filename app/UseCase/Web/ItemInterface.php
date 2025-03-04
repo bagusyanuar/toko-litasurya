@@ -48,4 +48,6 @@ interface ItemInterface
      */
     public function mutatePriceList(DTOMutatePriceList $dto): ServiceResponse;
 
+    public function findByPriceListUnit($plu): ServiceResponse;
+
 }
