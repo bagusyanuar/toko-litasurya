@@ -6,6 +6,7 @@ namespace App\Usecase\Web;
 
 use App\Commons\Response\ServiceResponse;
 use App\Domain\Web\Item\DTOFilterItem;
+use App\Domain\Web\Item\DTOFilterItemPrice;
 use App\Domain\Web\Item\DTOMutateItem;
 use App\Domain\Web\Item\DTOMutatePriceList;
 
@@ -22,6 +23,8 @@ interface ItemInterface
      * @return ServiceResponse
      */
     public function findByID($id): ServiceResponse;
+
+    public function findAllItemPrice(DTOFilterItemPrice $filter): ServiceResponse;
 
     /**
      * @param DTOMutateItem $dto

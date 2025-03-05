@@ -19,7 +19,7 @@
             </div>
             <x-gxui.button.button
                 wire:ignore
-                x-on:click="$store.cartStore.print()"
+                x-on:click="$store.cartStore.searchProduct()"
                 class="!w-fit"
                 x-bind:disabled="false"
             >
@@ -44,7 +44,7 @@
                 className="w-[80px]"
             ></x-gxui.table.th>
             <x-gxui.table.th
-                title="Price"
+                title="Price (Rp.)"
                 className="!w-[80px]"
                 align="right"
             ></x-gxui.table.th>
@@ -53,7 +53,7 @@
                 className="!w-[80px]"
             ></x-gxui.table.th>
             <x-gxui.table.th
-                title="Total"
+                title="Total (Rp.)"
                 className="!w-[80px]"
                 align="right"
             ></x-gxui.table.th>
@@ -76,7 +76,7 @@
                 <x-gxui.table.td className="flex justify-center">
                     <div x-data="{error: false}">
                         <input
-                            class="w-10 px-1 py-1 text-xs rounded text-neutral-700 border border-neutral-300 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500 transition duration-300 ease-in"
+                            class="w-10 px-1 py-1 text-xs text-center rounded text-neutral-700 border border-neutral-300 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500 transition duration-300 ease-in"
                             x-model="data.qty"
                             x-on:input="
                                 $store.cartStore.updateCart(data.id, $event.target.value);
@@ -104,6 +104,7 @@
                 cashierStore: null,
                 billingStore: null,
                 toastStore: null,
+                searchStore: null,
                 plu: '',
                 data: [],
                 init: function () {
@@ -113,6 +114,7 @@
                             this.component = component;
                             this.billingStore = Alpine.store('billingStore');
                             this.cashierStore = Alpine.store('cashierStore');
+                            this.searchStore = Alpine.store('cartSearchStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.getCart();
                         }
@@ -130,7 +132,7 @@
                             .then(response => {
                                 const {success, message, data} = response;
                                 if (success) {
-                                    this._addToCart(data);
+                                    this.addToCart(data);
                                 } else {
                                     this.toastStore.failed(message);
                                 }
@@ -140,6 +142,9 @@
                     }
                     this.plu = '';
                 },
+                searchProduct() {
+                    this.searchStore.showModalSearch();
+                },
                 print() {
                     this.component.$wire.call('print')
                         .then(response => {
@@ -148,7 +153,7 @@
                         }).finally(() => {
                     })
                 },
-                _addToCart(item) {
+                addToCart(item) {
                     const plu = item['price_list_unit'];
                     const cartItem = {
                         id: item['id'],

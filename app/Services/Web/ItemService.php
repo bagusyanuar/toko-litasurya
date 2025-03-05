@@ -10,6 +10,7 @@ use App\Commons\Response\ServiceResponse;
 use App\Commons\Traits\Eloquent\Finder;
 use App\Commons\Traits\Eloquent\Mutator;
 use App\Domain\Web\Item\DTOFilterItem;
+use App\Domain\Web\Item\DTOFilterItemPrice;
 use App\Domain\Web\Item\DTOMutateItem;
 use App\Domain\Web\Item\DTOMutatePriceList;
 use App\Models\Category;
@@ -137,6 +138,36 @@ class ItemService extends CustomService implements ItemInterface
                 return ServiceResponse::notFound('product not found');
             }
             return ServiceResponse::statusOK('successfully get product', $priceItem);
+        } catch (\Exception $e) {
+            return ServiceResponse::internalServerError($e->getMessage());
+        }
+    }
+
+    public function findAllItemPrice(DTOFilterItemPrice $filter): ServiceResponse
+    {
+        try {
+            $filter->hydrateQuery();
+            $page = $filter->getPage();
+            $perPage = $filter->getPerPage();
+            $query = ItemPrice::with(['item'])
+                ->whereHas('item', function ($q) use ($filter){
+                    /** @var Builder $q */
+                    return $q->where('name', 'LIKE', "%{$filter->getParam()}%");
+                });
+            $totalRows = $query->count();
+            $offset = ($page - 1) * $perPage;
+            $query
+                ->offset($offset)
+                ->limit($perPage);
+            $metaPagination = new MetaPagination($page, $perPage, $totalRows);
+            $pagination = $metaPagination->dehydrate();
+            $meta['pagination'] = $pagination;
+            $data = $query->get();
+            return ServiceResponse::statusOK(
+                "successfully get item price",
+                $data,
+                $meta
+            );
         } catch (\Exception $e) {
             return ServiceResponse::internalServerError($e->getMessage());
         }
