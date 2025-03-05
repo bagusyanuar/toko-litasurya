@@ -42,6 +42,7 @@
                 cashierStore: null,
                 cartStore: null,
                 total: 0,
+                customerValue: '',
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
                         const componentID = document.querySelector('[data-component-id="cashier-billing"]')?.getAttribute('wire:id');
@@ -57,6 +58,19 @@
                                     this.onChangeCustomer.bind(this),
                                     {placeholder: 'choose a customer'}
                                 );
+                            this.component.$wire.call('customer').then(response => {
+                                const {success, data} = response;
+                                if (success) {
+                                    let customerOptions = [];
+                                    data.forEach(function (v, k) {
+                                        const option = {id: v.id, text: v.name};
+                                        customerOptions.push(option);
+                                    });
+                                    this.customerOptions = customerOptions;
+                                } else {
+                                    this.toastStore.failed('failed to load customer option');
+                                }
+                            });
                         }
                     });
                 },
@@ -66,24 +80,26 @@
                 submitOrder() {
                     this.cashierStore.showLoading('placing order...');
                     const form = {
-                        'customer_id': '',
+                        'customer_id': this.customerValue,
                         'carts': this.cartStore.data
                     };
-                    console.log(form)
                     this.component.$wire.call('submitOrder', form)
                         .then(response => {
                             const {success, message, data} = response;
-                            console.log(response);
-                            // if (success) {
-                            //     this._addToCart(data);
-                            // } else {
-                            //     this.toastStore.failed(message);
-                            // }
+                            if (success) {
+                                this.customerValue = '';
+                                $('#customerSelect').val(null).trigger('change');
+                                this.toastStore.success(message);
+                                this.cartStore.clearCart();
+                            } else {
+                                this.toastStore.failed(message);
+                            }
                         }).finally(() => {
                         this.cashierStore.closeLoading();
                     })
                 },
                 onChangeCustomer(item) {
+                    this.customerValue = item.id;
                 },
             })
         });

@@ -196,7 +196,12 @@
                 },
                 _updateStorageCart() {
                     localStorage.setItem('cart', JSON.stringify(this.data));
-                }
+                },
+                clearCart() {
+                    this.data = [];
+                    this._setTotal();
+                    localStorage.removeItem('cart');
+                },
             });
         });
     </script>
