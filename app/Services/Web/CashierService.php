@@ -20,7 +20,7 @@ class CashierService implements CashierUseCase
     {
         DB::beginTransaction();
         try {
-            $userID = '115f8c30-2b34-4f23-8beb-70f783a2424c';
+            $userID = auth()->user()->id;
             $dto->hydrate();
             /** @var DTOCart $cart */
             $total = array_sum(array_map(fn($cart) => $cart->getTotal(), $dto->getCarts()));

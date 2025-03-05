@@ -2,18 +2,32 @@
 
 namespace App\Livewire\Pages\Auth;
 
+use App\Domain\Web\Auth\DTOLogin;
+use App\Helpers\Alpine\AlpineResponse;
+use App\Services\Web\AuthService;
 use Livewire\Component;
 
 class Login extends Component
 {
-    public $username;
-    public $password;
-    public $onLoading = false;
 
-    public function login()
+    /** @var AuthService $service */
+    private $service;
+
+    /** @var DTOLogin $dto */
+    private $dto;
+
+    public function boot(AuthService $service)
     {
-        sleep(2);
-        return $this->redirectRoute('dashboard');
+        $this->service = $service;
+        $this->dto = new DTOLogin();
+    }
+
+
+    public function login($dtoForm)
+    {
+        $this->dto->hydrateForm($dtoForm);
+        $response = $this->service->login($this->dto);
+        return AlpineResponse::toJSON($response);
     }
 
     public function render()

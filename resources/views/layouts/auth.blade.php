@@ -23,10 +23,12 @@
 <body>
 {{ $slot }}
 
+<script src="https://code.jquery.com/jquery-3.7.0.js" type="text/javascript"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <script>
     lucide.createIcons();
 </script>
 @livewireScripts
+@stack('scripts')
 </body>
 </html>

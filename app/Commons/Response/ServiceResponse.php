@@ -173,5 +173,11 @@ class ServiceResponse
         return new self(false, 422, $msg, $data, null);
     }
 
+    public static function unauthorized($data = null, $message = ''): self
+    {
+        $msg = $message ? $message : 'unauthorized';
+        return new self(false, 401, $msg, $data, null);
+    }
+
 
 }
