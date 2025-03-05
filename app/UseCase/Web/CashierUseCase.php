@@ -5,8 +5,9 @@ namespace App\Usecase\Web;
 
 
 use App\Commons\Response\ServiceResponse;
+use App\Domain\Web\Cashier\DTOSubmit;
 
 interface CashierUseCase
 {
-    public function addToCart(): ServiceResponse;
+    public function submitOrder(DTOSubmit $dto): ServiceResponse;
 }

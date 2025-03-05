@@ -103,6 +103,7 @@
                 component: null,
                 cashierStore: null,
                 billingStore: null,
+                toastStore: null,
                 plu: '',
                 data: [],
                 init: function () {
@@ -112,6 +113,7 @@
                             this.component = component;
                             this.billingStore = Alpine.store('billingStore');
                             this.cashierStore = Alpine.store('cashierStore');
+                            this.toastStore = Alpine.store('gxuiToastStore');
                             this.getCart();
                         }
                     })
@@ -130,8 +132,7 @@
                                 if (success) {
                                     this._addToCart(data);
                                 } else {
-                                    // this.toastStore.failed(message);
-                                    console.log(response)
+                                    this.toastStore.failed(message);
                                 }
                             }).finally(() => {
                             this.cashierStore.closeLoading();
@@ -167,6 +168,7 @@
                         this.data.push(cartItem);
                     }
                     this._setTotal();
+                    this._updateStorageCart();
                 },
                 getCart() {
                     this.data = this._getStorageCart();
