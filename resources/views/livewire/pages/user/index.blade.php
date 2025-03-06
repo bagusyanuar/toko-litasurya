@@ -23,6 +23,10 @@
         <livewire:features.user.admin.table/>
         <livewire:features.user.admin.form/>
     </div>
+    <div x-show="$store.userStore.selectedTab === 'sales-team'">
+        <livewire:features.user.sales-team.table/>
+        <livewire:features.user.sales-team.form/>
+    </div>
     <x-gxui.loader.action-loader
         show="$store.userStore.processLoading"
         x-cloak
