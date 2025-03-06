@@ -8,6 +8,15 @@ use Livewire\Component;
 
 class UiNavbar extends Component
 {
+    public $username;
+    public $role;
+
+    public function boot()
+    {
+        $this->username = \auth()->user()->username;
+        $this->role = \auth()->user()->role;
+    }
+
     public function logout()
     {
         Auth::logout();

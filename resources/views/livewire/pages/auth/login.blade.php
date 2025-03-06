@@ -30,6 +30,7 @@
                         x-bind:disabled="$store.authStore.loading"
                         validatorKey="$store.authStore.formValidator"
                         validatorField="password"
+                        x-on:keydown.enter="$store.authStore.login()"
                     ></x-gxui.input.password.password-icon>
                 </div>
                 <div class="w-full mb-5">

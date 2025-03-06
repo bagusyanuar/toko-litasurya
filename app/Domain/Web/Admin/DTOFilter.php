@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Domain\Web\Customer;
+namespace App\Domain\Web\Admin;
 
 
 use App\Commons\Request\DTORequest;
@@ -11,17 +11,13 @@ class DTOFilter extends DTORequest
     private $param;
     private $page;
     private $perPage;
-    private $type;
 
     public function hydrateQuery()
     {
         $param = $this->query['param'] ?? '';
         $page = $this->query['page'] ?? 1;
         $perPage = $this->query['per_page'] ?? 10;
-        $type = $this->query['type'] ?? '';
-
         $this->setParam($param)
-            ->setType($type)
             ->setPage($page)
             ->setPerPage($perPage);
     }
@@ -77,24 +73,6 @@ class DTOFilter extends DTORequest
     public function setPerPage($perPage)
     {
         $this->perPage = $perPage;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param mixed $type
-     * @return DTOFilter
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
         return $this;
     }
 }

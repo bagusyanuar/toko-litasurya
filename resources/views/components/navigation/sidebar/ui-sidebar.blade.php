@@ -24,9 +24,14 @@
             title="Master Data"
         ></x-navigation.sidebar.ui-sidebar-item>
         <x-navigation.sidebar.ui-sidebar-item
-            icon="users"
+            icon="square-user"
             to="/customer"
             title="Customer"
+        ></x-navigation.sidebar.ui-sidebar-item>
+        <x-navigation.sidebar.ui-sidebar-item
+            icon="users"
+            to="/users"
+            title="User"
         ></x-navigation.sidebar.ui-sidebar-item>
 {{--        <x-navigation.sidebar.ui-sidebar-item-tree--}}
 {{--            icon="hard-drive"--}}

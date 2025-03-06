@@ -8,6 +8,7 @@ use App\Commons\Response\ServiceResponse;
 use App\Domain\Web\Auth\DTOLogin;
 use App\Models\User;
 use App\UseCase\Web\AuthUseCase;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -24,6 +25,7 @@ class AuthService implements AuthUseCase
             $dto->hydrate();
             $user = User::with([])
                 ->where('username', '=', $dto->getUsername())
+                ->whereIn('role', ['superadmin', 'admin'])
                 ->first();
             if (!$user) {
                 return ServiceResponse::notFound('user not found');
