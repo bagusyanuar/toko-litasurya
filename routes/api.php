@@ -45,6 +45,7 @@ Route::middleware([JwtMiddleware::class])->group(function () {
 
     //CUSTOMERS
     Route::get('/customers/toko', [CustomerController::class, 'getTokoCustomers']);
+    Route::get('/customers/{id}', [CustomerController::class, 'getTokoCustomerById']);
 
     Route::get('/attendance/weekly-schedule', [AttendanceController::class, 'getWeeklySchedule']);
     Route::get('/attendance/today-schedule', [AttendanceController::class, 'getTodaySchedule']);
