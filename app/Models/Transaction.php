@@ -17,7 +17,8 @@ class Transaction extends Model
         'reference_number',
         'date',
         'total',
-        'status'
+        'status',
+        'type'
     ];
 
     public function carts()

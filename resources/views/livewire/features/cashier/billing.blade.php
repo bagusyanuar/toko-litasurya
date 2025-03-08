@@ -2,7 +2,7 @@
     id="section-cashier-billing"
     data-component-id="cashier-billing"
 >
-    <div class="w-80 bg-white p-6 rounded-md shadow-md">
+    <div class="w-72 bg-white p-6 rounded-md shadow-md">
         <p class="font-bold text-neutral-700 mb-3">Billing</p>
         <hr class="mb-3"/>
         <x-gxui.input.select.select2
@@ -39,7 +39,7 @@
                 customerSelectStore: null,
                 customerOptions: [],
                 toastStore: null,
-                cashierStore: null,
+                transactionStore: null,
                 cartStore: null,
                 total: 0,
                 customerValue: '',
@@ -48,7 +48,7 @@
                         const componentID = document.querySelector('[data-component-id="cashier-billing"]')?.getAttribute('wire:id');
                         if (component.id === componentID) {
                             this.component = component;
-                            this.cashierStore = Alpine.store('cashierStore');
+                            this.transactionStore = Alpine.store('transactionStore');
                             this.cartStore = Alpine.store('cartStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
                             let selectElement = document.getElementById("customerSelect");
@@ -78,7 +78,7 @@
                     this.total = total;
                 },
                 submitOrder() {
-                    this.cashierStore.showLoading('placing order...');
+                    this.transactionStore.showLoading('placing order...');
                     const form = {
                         'customer_id': this.customerValue,
                         'carts': this.cartStore.data
@@ -87,16 +87,20 @@
                         .then(response => {
                             const {success, message, data} = response;
                             if (success) {
+                                this.transactionStore.closeLoading();
                                 this.customerValue = '';
                                 $('#customerSelect').val(null).trigger('change');
                                 this.toastStore.success(message);
                                 this.cartStore.clearCart();
+                                const {withPoint, point} = data;
+                                if (withPoint) {
+                                    this.transactionStore.showPoint(point);
+                                }
                             } else {
+                                this.transactionStore.closeLoading();
                                 this.toastStore.failed(message);
                             }
-                        }).finally(() => {
-                        this.cashierStore.closeLoading();
-                    })
+                        })
                 },
                 onChangeCustomer(item) {
                     this.customerValue = item.id;

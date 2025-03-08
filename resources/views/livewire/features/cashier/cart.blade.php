@@ -38,6 +38,7 @@
             <x-gxui.table.th
                 title="Product"
                 align="left"
+                className="min-w-[150px] !text-sm"
             ></x-gxui.table.th>
             <x-gxui.table.th
                 title="Unit"
@@ -101,7 +102,7 @@
         document.addEventListener('alpine:init', () => {
             Alpine.store('cartStore', {
                 component: null,
-                cashierStore: null,
+                transactionStore: null,
                 billingStore: null,
                 toastStore: null,
                 searchStore: null,
@@ -113,7 +114,7 @@
                         if (component.id === componentID) {
                             this.component = component;
                             this.billingStore = Alpine.store('billingStore');
-                            this.cashierStore = Alpine.store('cashierStore');
+                            this.transactionStore = Alpine.store('transactionStore');
                             this.searchStore = Alpine.store('cartSearchStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.getCart();
@@ -127,7 +128,7 @@
                         selectedItem.total = selectedItem.qty * selectedItem.price;
                         this._setTotal();
                     } else {
-                        this.cashierStore.showLoading('find product...');
+                        this.transactionStore.showLoading('find product...');
                         this.component.$wire.call('getProductByPLU', this.plu)
                             .then(response => {
                                 const {success, message, data} = response;
@@ -137,7 +138,7 @@
                                     this.toastStore.failed(message);
                                 }
                             }).finally(() => {
-                            this.cashierStore.closeLoading();
+                            this.transactionStore.closeLoading();
                         })
                     }
                     this.plu = '';

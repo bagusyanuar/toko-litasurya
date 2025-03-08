@@ -8,6 +8,8 @@ use App\Commons\Response\ServiceResponse;
 use App\Domain\Web\Cashier\DTOCart;
 use App\Domain\Web\Cashier\DTOSubmit;
 use App\Models\Cart;
+use App\Models\Customer;
+use App\Models\PointSetting;
 use App\Models\Transaction;
 use App\Usecase\Web\CashierUseCase;
 use Carbon\Carbon;
@@ -24,13 +26,21 @@ class CashierService implements CashierUseCase
             $dto->hydrate();
             /** @var DTOCart $cart */
             $total = array_sum(array_map(fn($cart) => $cart->getTotal(), $dto->getCarts()));
+
+            //checking point
+            $pointSetting = PointSetting::with([])
+                ->where('nominal', '<=', $total)
+                ->orderBy('nominal', 'DESC')
+                ->first();
+
             $dataTransaction = [
                 'user_id' => $userID,
                 'customer_id' => $dto->getCustomerID(),
-                'reference_number' => 'INV-LS-'.date('YmdHis'),
+                'reference_number' => 'INV-LS-' . date('YmdHis'),
                 'date' => Carbon::now(),
                 'total' => $total,
-                'status' => 'finish'
+                'status' => 'finish',
+                'type' => 'cashier'
             ];
             $transaction = Transaction::create($dataTransaction);
             $carts = [];
@@ -49,8 +59,28 @@ class CashierService implements CashierUseCase
                 array_push($carts, $dataCart);
             }
             $transaction->carts()->createMany($carts);
+
+            $withPoint = false;
+            $point = 0;
+            if ($dto->getCustomerID() && $pointSetting) {
+                $customer = Customer::with([])
+                    ->where('id', '=', $dto->getCustomerID())
+                    ->first();
+                if ($customer) {
+                    $withPoint = true;
+                    $point = $pointSetting->point;
+                    $currentPoint = $customer->point;
+                    $newPoint = $currentPoint + $point;
+                    $customer->update([
+                        'point' => $newPoint
+                    ]);
+                }
+            }
             DB::commit();
-            return ServiceResponse::created('successfully create order');
+            return ServiceResponse::created('successfully create order', [
+                'withPoint' => $withPoint,
+                'point' => $point
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
             return ServiceResponse::internalServerError($e->getMessage());

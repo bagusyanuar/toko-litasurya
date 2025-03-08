@@ -15,11 +15,11 @@
         ></x-navigation.sidebar.ui-sidebar-item>
         <x-navigation.sidebar.ui-sidebar-item
             icon="shopping-bag"
-            to="/cashier"
-            title="Cashier"
+            to="/transaction"
+            title="Transaction"
         ></x-navigation.sidebar.ui-sidebar-item>
         <x-navigation.sidebar.ui-sidebar-item
-            icon="tags"
+            icon="archive"
             to="/master-data"
             title="Master Data"
         ></x-navigation.sidebar.ui-sidebar-item>
@@ -33,20 +33,10 @@
             to="/users"
             title="User"
         ></x-navigation.sidebar.ui-sidebar-item>
-{{--        <x-navigation.sidebar.ui-sidebar-item-tree--}}
-{{--            icon="hard-drive"--}}
-{{--            title="Master Data"--}}
-{{--        >--}}
-{{--            <x-navigation.sidebar.ui-sidebar-item--}}
-{{--                icon="tags"--}}
-{{--                to="/category"--}}
-{{--                title="Category"--}}
-{{--            ></x-navigation.sidebar.ui-sidebar-item>--}}
-{{--            <x-navigation.sidebar.ui-sidebar-item--}}
-{{--                icon="box"--}}
-{{--                to="/item"--}}
-{{--                title="Item"--}}
-{{--            ></x-navigation.sidebar.ui-sidebar-item>--}}
-{{--        </x-navigation.sidebar.ui-sidebar-item-tree>--}}
+        <x-navigation.sidebar.ui-sidebar-item
+            icon="settings"
+            to="/setting"
+            title="Setting"
+        ></x-navigation.sidebar.ui-sidebar-item>
     </div>
 </div>

@@ -1,7 +1,7 @@
 <div
     {{ $attributes->merge(['class' => 'w-full rounded-lg border border-neutral-300 overflow-x-auto']) }}
 >
-    <table class="w-full ">
+    <table class="w-full overflow-x-auto">
         @if(isset($header))
             <thead>
             <tr class="border-b border-neutral-300 bg-brand-50">
