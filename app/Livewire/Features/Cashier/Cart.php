@@ -27,15 +27,24 @@ class Cart extends Component
     public function print()
     {
         try {
-            $connector = new WindowsPrintConnector("POS-58");
-            $printer = new Printer($connector);
-            $printer->pulse();
-            $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->text("===== STRUK PEMBELIAN =====\n");
-            $printer->cut();
-            $printer->close();
+//            $invoiceID = "INV-LS-20250308062615";
+//            $connector = new WindowsPrintConnector("POS-58");
+//            $printer = new Printer($connector);
+//            $printer->pulse();
+//            $printer->setJustification(Printer::JUSTIFY_CENTER);
+//            $printer->text("Toko Lita Surya\n");
+//            $printer->text("Jl. Veteran No. 14\n");
+//            $printer->text("(Telp: 0895712888490)\n");
+//            $printer->text(str_repeat("=", 32) . "\n");
+//            $printer->setJustification(Printer::JUSTIFY_LEFT);
+//            $printer->selectPrintMode(Printer::MODE_FONT_B);
+//            $printer->text("No. nota : {$invoiceID}");
+//
+//
+//            $printer->cut();
+//            $printer->close();
             dd("oke");
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

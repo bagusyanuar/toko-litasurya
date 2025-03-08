@@ -4,6 +4,7 @@
 namespace App\Services\Web;
 
 
+use App\Commons\Invoice\InvoiceService;
 use App\Commons\Response\ServiceResponse;
 use App\Domain\Web\Cashier\DTOCart;
 use App\Domain\Web\Cashier\DTOSubmit;
@@ -33,6 +34,8 @@ class CashierService implements CashierUseCase
                 ->orderBy('nominal', 'DESC')
                 ->first();
 
+            $referenceNumber = 'INV-LS-' . date('YmdHis');
+            $cashier = auth()->user()->username;
             $dataTransaction = [
                 'user_id' => $userID,
                 'customer_id' => $dto->getCustomerID(),
@@ -76,6 +79,13 @@ class CashierService implements CashierUseCase
                     ]);
                 }
             }
+
+            $dataPrint = [
+                'invoice_id' => $referenceNumber,
+                'cashier' => $cashier,
+                'carts' => $carts
+            ];
+            InvoiceService::printInvoice($transaction->id);
             DB::commit();
             return ServiceResponse::created('successfully create order', [
                 'withPoint' => $withPoint,
