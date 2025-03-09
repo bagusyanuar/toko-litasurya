@@ -29,8 +29,9 @@
     <div x-show="$store.transactionStore.selectedTab === 'cashier'">
         <livewire:pages.cashier.index/>
     </div>
-    <div x-show="$store.transactionStore.selectedTab === 'sales-team'">
-
+    <div x-show="$store.transactionStore.selectedTab === 'purchasing'">
+        <livewire:features.purchasing.table/>
+        <livewire:features.purchasing.filter/>
     </div>
     <x-gxui.loader.action-loader
         show="$store.transactionStore.processLoading"
@@ -89,7 +90,7 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('transactionStore', {
-                selectedTab: 'cashier',
+                selectedTab: 'purchasing',
                 gift: false,
                 point: 0,
                 processLoading: false,

@@ -170,3 +170,65 @@ body {
         }
     }
 }
+
+.datepicker-dropdown {
+    z-index: 9999;
+
+    .datepicker-header {
+        .datepicker-controls {
+            button {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.725rem;
+                svg {
+                    width: 0.75rem;
+                    height: 0.75rem;
+                }
+            }
+        }
+    }
+
+
+    .datepicker-main {
+        .days-of-week {
+            span {
+                font-size: 0.725rem;
+            }
+        }
+
+        .datepicker-grid {
+            width: 14rem;
+            .datepicker-cell {
+                font-size: 0.725rem;
+                color: #004540;
+                height: 2rem;
+                line-height: unset;
+                align-content: center;
+                &:hover {
+                    background-color: #004540;
+                    color: white;
+                }
+                &.selected {
+                    background-color: #004540 !important;
+                    color: white;
+                }
+            }
+        }
+    }
+
+    .datepicker-footer {
+        .datepicker-controls {
+            button {
+                padding-top: 0.25rem;
+                padding-bottom: 0.25rem;
+                font-size: 0.725rem;
+
+                &.today-btn {
+                    background-color: #004540 !important;
+                    color: white;
+                    outline: none !important;
+                }
+            }
+        }
+    }
+
+}
