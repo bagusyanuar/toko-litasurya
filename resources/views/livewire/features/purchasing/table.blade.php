@@ -78,6 +78,7 @@
                 filterStore: null,
                 toastStore: null,
                 transactionStore: null,
+                processStore: null,
                 paginationStore: null,
                 store: '',
                 sales: '',
@@ -102,14 +103,14 @@
                         label: 'Process',
                         icon: 'send',
                         dispatch: function (id) {
-                            this.onDelete(id)
+                            this.onProcess(id)
                         }
                     },
                     {
                         label: 'Cancel',
                         icon: 'undo-2',
                         dispatch: function (id) {
-                            this.onDelete(id)
+                            // this.onDelete(id)
                         }
                     },
                 ],
@@ -119,6 +120,7 @@
                         if (component.id === componentID) {
                             this.component = component;
                             this.filterStore = Alpine.store('filterPurchasingStore');
+                            this.processStore = Alpine.store('processPurchasingStore');
                             this.transactionStore = Alpine.store('transactionStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.paginationStore = Alpine.store('gxuiPaginationStore');
@@ -167,19 +169,19 @@
                     this.dateEnd = q['dateEnd'];
                     this.onFindAll();
                 },
-                onDelete(id) {
-                    this.customerStore.showLoading('Deleting Process...');
-                    this.component.$wire.call('delete', id)
+                onProcess(id) {
+                    this.transactionStore.showLoading('Deleting Process...');
+                    this.component.$wire.call('findByID', id)
                         .then(response => {
-                            const {success} = response;
+                            const {success, data, message} = response;
+                            console.log(response);
                             if (success) {
-                                this.toastStore.success('success delete customer');
-                                this.onFindAll();
+                                this.processStore.hydrateForm(data);
                             } else {
-                                this.toastStore.failed('failed to delete customer');
+                                this.toastStore.failed(message);
                             }
                         }).finally(() => {
-                        this.customerStore.closeLoading();
+                        this.transactionStore.closeLoading();
                     })
                 },
                 onEdit(id) {

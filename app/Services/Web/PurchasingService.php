@@ -46,4 +46,9 @@ class PurchasingService implements PurchasingUseCase
             return ServiceResponse::internalServerError($e->getMessage());
         }
     }
+
+    public function findByID($id): ServiceResponse
+    {
+        return self::getOneByID(Transaction::class, $id, ['relation' => ['carts.item', 'user.sales', 'customer']]);
+    }
 }
