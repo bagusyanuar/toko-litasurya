@@ -32,7 +32,7 @@
             <x-gxui.table.th
                 title="Sales"
                 className="min-w-[150px]"
-                alignl="left"
+                align="left"
             ></x-gxui.table.th>
             <x-gxui.table.th
                 title="Total"
@@ -47,16 +47,16 @@
         <x-slot name="rows">
             <tr class="border-b border-neutral-300">
                 <x-gxui.table.td className="flex justify-center">
-                    <span x-text="data.name"></span>
+                    <span x-text="data.date"></span>
                 </x-gxui.table.td>
                 <x-gxui.table.td className="flex justify-center">
-                    <span x-text="data.phone"></span>
+                    <span x-text="data.customer.name"></span>
                 </x-gxui.table.td>
                 <x-gxui.table.td>
-                    <span x-text="data.address"></span>
+                    <span x-text="data.user.sales.name"></span>
                 </x-gxui.table.td>
-                <x-gxui.table.td className="flex justify-center">
-                    <span x-text="data.point.toLocaleString('id-ID')"></span>
+                <x-gxui.table.td className="flex justify-end">
+                    <span x-text="data.total.toLocaleString('id-ID')"></span>
                 </x-gxui.table.td>
                 <x-gxui.table.td className="flex justify-center relative">
                     <x-gxui.table.action store="purchasingTableStore"></x-gxui.table.action>
@@ -79,17 +79,35 @@
                 toastStore: null,
                 transactionStore: null,
                 paginationStore: null,
+                store: '',
+                sales: '',
+                dateStart: '',
+                dateEnd: '',
                 actions: [
+                    // {
+                    //     label: 'Edit',
+                    //     icon: 'pencil',
+                    //     dispatch: function (id) {
+                    //         this.onEdit(id)
+                    //     }
+                    // },
+                    // {
+                    //     label: 'Delete',
+                    //     icon: 'trash',
+                    //     dispatch: function (id) {
+                    //         this.onDelete(id)
+                    //     }
+                    // },
                     {
-                        label: 'Edit',
-                        icon: 'pencil',
+                        label: 'Process',
+                        icon: 'send',
                         dispatch: function (id) {
-                            this.onEdit(id)
+                            this.onDelete(id)
                         }
                     },
                     {
-                        label: 'Delete',
-                        icon: 'trash',
+                        label: 'Cancel',
+                        icon: 'undo-2',
                         dispatch: function (id) {
                             this.onDelete(id)
                         }
@@ -107,7 +125,7 @@
                             this.actions.forEach((action, key) => {
                                 action.dispatch = action.dispatch.bind(this);
                             });
-                            // this.onFindAll();
+                            this.onFindAll();
                         }
 
                     })
@@ -115,15 +133,17 @@
                 onFindAll() {
                     this.loading = true;
                     const query = {
-                        type: this.type,
                         param: this.param,
                         page: this.page,
-                        per_page: this.perPage
+                        per_page: this.perPage,
+                        store: this.store,
+                        sales: this.sales,
+                        dateStart: this.dateStart,
+                        dateEnd: this.dateEnd,
                     };
                     this.component.$wire.call('findAll', query)
                         .then(response => {
                             const {success, data, meta} = response;
-
                             if (success) {
                                 this.data = data;
                                 const totalRows = meta['pagination'] ? meta['pagination']['total_rows'] : 0;
@@ -139,6 +159,13 @@
                         }).finally(() => {
                         this.loading = false;
                     })
+                },
+                hydrateQuery(q) {
+                    this.store = q['store'];
+                    this.sales = q['sales'];
+                    this.dateStart = q['dateStart'];
+                    this.dateEnd = q['dateEnd'];
+                    this.onFindAll();
                 },
                 onDelete(id) {
                     this.customerStore.showLoading('Deleting Process...');

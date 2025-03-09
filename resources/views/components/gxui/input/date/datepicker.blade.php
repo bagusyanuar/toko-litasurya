@@ -8,6 +8,8 @@
             id="{{ $id }}"
             {{ $attributes->merge(['class' => $baseClass]) }}
             x-bind:class="{{ $validatorKey !== '' ? "{ '!border-danger-500' : '{$validatorField}' in {$validatorKey} }" : "{}" }}"
+            x-bind="gxuiDatepickerBind"
+            x-init="initDatepicker()"
         >
     </div>
     @if($validatorKey !== '')

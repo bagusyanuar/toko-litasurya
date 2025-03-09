@@ -32,6 +32,7 @@
     <div x-show="$store.transactionStore.selectedTab === 'purchasing'">
         <livewire:features.purchasing.table/>
         <livewire:features.purchasing.filter/>
+        <livewire:features.purchasing.process/>
     </div>
     <x-gxui.loader.action-loader
         show="$store.transactionStore.processLoading"

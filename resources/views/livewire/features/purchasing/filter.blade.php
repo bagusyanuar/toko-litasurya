@@ -3,8 +3,8 @@
     data-component-id="filter-purchasing"
 >
     <x-gxui.modal.form
-        {{--        show="$store.filterPurchasingStore.showModal"--}}
-        show="true"
+        show="$store.filterPurchasingStore.showModal"
+        {{--        show="true"--}}
         width="24rem"
     >
         <div
@@ -32,6 +32,10 @@
                 label="Store"
                 parentClassName="mb-3"
                 selectID="storeSelect"
+                x-init="initSelect2({placeholder: 'choose a store'})"
+                x-bind="gxuiSelect2Bind"
+                x-bind:store-name="'$store.filterPurchasingStore.storeOptions'"
+                x-model="$store.filterPurchasingStore.storeValue"
             ></x-gxui.input.select.select2>
             <x-gxui.input.select.select2
                 store="filterPurchasingStore"
@@ -39,45 +43,46 @@
                 label="Sales Team"
                 parentClassName="mb-3"
                 selectID="salesSelect"
+                x-init="initSelect2({placeholder: 'choose a sales team'})"
+                x-bind="gxuiSelect2Bind"
+                x-bind:store-name="'$store.filterPurchasingStore.salesOptions'"
+                x-model="$store.filterPurchasingStore.salesValue"
             ></x-gxui.input.select.select2>
             <x-gxui.input.date.datepicker
                 id="dateStart"
                 label="Date Start"
-                placeholder="yyyy-mm-dd"
+                placeholder="dd/mm/yyyy"
                 parentClassName="mb-3"
+                x-model="$store.filterPurchasingStore.dateStartValue"
+                x-init="initDatepicker({format: 'dd/mm/yyyy'})"
             ></x-gxui.input.date.datepicker>
             <x-gxui.input.date.datepicker
                 id="dateEnd"
                 label="Date End"
-                placeholder="yyyy-mm-dd"
+                placeholder="dd/mm/yyyy"
                 parentClassName="mb-3"
+                x-model="$store.filterPurchasingStore.dateEndValue"
+                x-init="initDatepicker({format: 'dd/mm/yyyy'})"
             ></x-gxui.input.date.datepicker>
         </div>
         <div class="modal-footer w-full flex items-center justify-end gap-2 px-4 py-3 border-t border-neutral-300">
             <x-gxui.button.button
                 wire:ignore
-                x-on:click="$store.filterPurchasingStore.close()"
-                x-bind:disabled="$store.filterPurchasingStore.loading"
+                x-on:click="$store.filterPurchasingStore.reset()"
                 class="!px-6 bg-white !border-brand-500 !text-brand-500 hover:!text-white disabled:!bg-white disabled:!text-brand-500"
             >
                 <div class="w-full flex justify-center items-center gap-1 text-sm">
-                    <span>Cancel</span>
+                    <span>Reset</span>
                 </div>
             </x-gxui.button.button>
             <x-gxui.button.button
                 wire:ignore
-                x-on:click="$store.filterPurchasingStore.clearDate()"
-                x-bind:disabled="$store.filterPurchasingStore.loading"
+                x-on:click="$store.filterPurchasingStore.filter()"
                 class="!px-6"
             >
-                <template x-if="!$store.filterPurchasingStore.loading">
-                    <div class="w-full flex justify-center items-center gap-1 text-sm">
-                        <span>Filter</span>
-                    </div>
-                </template>
-                <template x-if="$store.filterPurchasingStore.loading">
-                    <x-gxui.loader.button-loader></x-gxui.loader.button-loader>
-                </template>
+                <div class="w-full flex justify-center items-center gap-1 text-sm">
+                    <span>Filter</span>
+                </div>
             </x-gxui.button.button>
         </div>
     </x-gxui.modal.form>
@@ -86,22 +91,17 @@
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
-            const INITIAL_FORM = {dateStart: '', dateEnd: ''};
             const STORE_PROPS = {
                 component: null,
                 toastStore: null,
                 tableStore: null,
                 showModal: false,
-                storeSelectStore: null,
                 storeOptions: [],
-                salesSelectStore: null,
                 salesOptions: [],
-                dateStartStore: null,
-                dateEndStore: null,
-                loading: false,
+                storeValue: '',
+                salesValue: '',
                 dateStartValue: '',
                 dateEndValue: '',
-                form: {...INITIAL_FORM},
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
                         const componentID = document.querySelector('[data-component-id="filter-purchasing"]')?.getAttribute('wire:id');
@@ -109,53 +109,26 @@
                             this.component = component;
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.tableStore = Alpine.store('purchasingTableStore');
-                            let selectStoreElement = document.getElementById("storeSelect");
-                            this.storeSelectStore = Alpine.store('gxuiSelectStore')
-                                .initSelect2(
-                                    selectStoreElement,
-                                    () => {
-                                    },
-                                    {placeholder: 'choose a store'}
-                                );
-                            let selectSalesElement = document.getElementById("salesSelect");
-                            this.storeSalesStore = Alpine.store('gxuiSelectStore')
-                                .initSelect2(
-                                    selectSalesElement,
-                                    () => {
-                                    },
-                                    {placeholder: 'choose a sales team'}
-                                );
-                            let dateStartElement = document.getElementById("dateStart");
-                            this.dateStartStore = Alpine.store('gxuiDatepickerStore')
-                                .initDatepicker(
-                                    dateStartElement,
-                                    (value) => {
-                                        this.dateStartValue = value;
-                                        console.log(value);
-                                    },
-                                    {
-                                        orientation: 'top right',
-                                        autoSelectToday: 1,
-                                        buttons: true,
-                                    });
-                            let dateEndElement = document.getElementById("dateEnd");
-                            this.dateEndStore = Alpine.store('gxuiDatepickerStore')
-                                .initDatepicker(
-                                    dateEndElement,
-                                    (value) => {
-                                        this.dateEndValue = value;
-                                    },
-                                    {
-                                        orientation: 'top right',
-                                        autoSelectToday: 1,
-                                        buttons: true,
-                                    });
+                            this.getStores();
+                            this.getSales();
                         }
                     });
                 },
-                clearDate() {
-                    // this.dateStartStore.clear();
-                    console.log(this.dateStartStore);
+                filter() {
+                    const query = {
+                        store: this.storeValue,
+                        sales: this.salesValue,
+                        dateStart: this.dateStartValue,
+                        dateEnd: this.dateEndValue,
+                    };
+                    this.showModal = false;
+                    this.tableStore.hydrateQuery(query);
+                },
+                reset() {
+                    this.storeValue = '';
+                    this.salesValue = '';
+                    this.dateStartValue = '';
+                    this.dateEndValue = '';
                 },
                 show() {
                     this.showModal = true;
@@ -163,6 +136,37 @@
                 close() {
                     this.showModal = false;
                 },
+                getStores() {
+                    this.component.$wire.call('stores').then(response => {
+                        const {success, data} = response;
+                        if (success) {
+                            let customerOptions = [];
+                            data.forEach(function (v, k) {
+                                const option = {id: v.id, text: v.name};
+                                customerOptions.push(option);
+                            });
+                            this.storeOptions = customerOptions;
+
+                        } else {
+                            this.toastStore.failed('failed to load store option');
+                        }
+                    });
+                },
+                getSales() {
+                    this.component.$wire.call('sales').then(response => {
+                        const {success, data} = response;
+                        if (success) {
+                            let salesOptions = [];
+                            data.forEach(function (v, k) {
+                                const option = {id: v['user_id'], text: v.name};
+                                salesOptions.push(option);
+                            });
+                            this.salesOptions = salesOptions;
+                        } else {
+                            this.toastStore.failed('failed to load sales option');
+                        }
+                    });
+                }
             };
             Alpine.store('filterPurchasingStore', STORE_PROPS);
         });

@@ -1,22 +1,32 @@
 document.addEventListener('alpine:init', () => {
-    Alpine.store('gxuiDatepickerStore', {
-        datepicker: null,
-        initDatepicker(element, callback, config = {}) {
-            if (element) {
+    Alpine.bind('gxuiDatepickerBind', () => ({
+        'x-data': () => ({
+            dateValue: '',
+            datepicker: null,
+            initDatepicker(config = {}) {
                 const baseConfig = {format: 'yyyy-mm-dd', autohide: true};
                 const cfg = Object.assign({}, baseConfig, config);
-                this.datepicker = new Datepicker(element, cfg);
-                element.addEventListener('changeDate', (event) => {
-                    const value = event.target.value;
-                    callback(value);
-                });
-            }
-            return this;
-        },
-        clear() {
-            // this.datepicker.setDate(null);
-            // console.log(this.datepicker);
-            // this.datepicker.setDate('2024-03-10');
-        }
-    });
+                this.$nextTick(() => {
+                    this.datepicker = new Datepicker(this.$el, cfg);
+                    const modelValue = this.$el._x_model?.get();
+                    if (modelValue) {
+                        this.$el.value = modelValue; // Set sebagai default value
+                    }
+                    this.$el.addEventListener('changeDate', (event) => {
+                        this.dateValue = event.target.value;
+                        this.$el._x_model.set(event.target.value);
+                    });
+
+                    this.$watch(() => {
+                        return this.$el._x_model.get();
+                    }, (val) => {
+                        this.$el._x_model.set(val);
+                        if (val === '') {
+                            this.datepicker.setDate(null);
+                        }
+                    });
+                })
+            },
+        }),
+    }))
 });

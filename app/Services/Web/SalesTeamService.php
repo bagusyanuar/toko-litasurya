@@ -9,6 +9,7 @@ use App\Commons\Traits\Eloquent\Finder;
 use App\Commons\Traits\Eloquent\Mutator;
 use App\Domain\Web\SalesTeam\DTOFilter;
 use App\Domain\Web\SalesTeam\DTOMutate;
+use App\Models\SalesTeam;
 use App\Models\User;
 use App\UseCase\Web\SalesTeamUseCase;
 
@@ -78,5 +79,10 @@ class SalesTeamService implements SalesTeamUseCase
             'key' => $id,
             'children' => ['sales']
         ]);
+    }
+
+    public function all(): ServiceResponse
+    {
+        return self::findFrom(SalesTeam::class);
     }
 }
