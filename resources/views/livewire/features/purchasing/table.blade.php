@@ -170,7 +170,7 @@
                     this.onFindAll();
                 },
                 onProcess(id) {
-                    this.transactionStore.showLoading('Deleting Process...');
+                    this.transactionStore.showLoading('processing purchase...');
                     this.component.$wire.call('findByID', id)
                         .then(response => {
                             const {success, data, message} = response;

@@ -7,10 +7,14 @@ namespace App\Services\Web;
 use App\Commons\Response\MetaPagination;
 use App\Commons\Response\ServiceResponse;
 use App\Commons\Traits\Eloquent\Finder;
+use App\Domain\Web\Cashier\DTOCart;
 use App\Domain\Web\Purchasing\DTOFilter;
+use App\Domain\Web\Purchasing\DTOOrder;
+use App\Models\Cart;
 use App\Models\Transaction;
 use App\UseCase\Web\PurchasingUseCase;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class PurchasingService implements PurchasingUseCase
 {
@@ -50,5 +54,45 @@ class PurchasingService implements PurchasingUseCase
     public function findByID($id): ServiceResponse
     {
         return self::getOneByID(Transaction::class, $id, ['relation' => ['carts.item', 'user.sales', 'customer']]);
+    }
+
+    public function placeOrder($id, DTOOrder $dto): ServiceResponse
+    {
+        DB::beginTransaction();
+        try {
+            $dto->hydrate();
+            $transaction = Transaction::with([])
+                ->where('reference_number', '=', $dto->getInvoiceID())
+                ->first();
+            if (!$transaction) {
+                return ServiceResponse::notFound('transaction not found');
+            }
+
+            /** @var DTOCart $cart */
+            $total = array_sum(array_map(fn($cart) => $cart->getTotal(), $dto->getCarts()));
+            foreach ($dto->getCarts() as $cart) {
+                $dataCart = [
+                    'qty' => $cart->getQty(),
+                    'price' => $cart->getPrice(),
+                    'unit' => $cart->getUnit(),
+                    'total' => $cart->getTotal(),
+                ];
+                Cart::updateOrCreate(
+                    [
+                        'id' => $cart->getId()
+                    ],
+                    $dataCart
+                );
+            }
+            $transaction->update([
+                'status' => 'finish',
+                'total' => $total
+            ]);
+            DB::commit();;
+            return ServiceResponse::statusOK('successfully place order');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ServiceResponse::internalServerError($e->getMessage());
+        }
     }
 }

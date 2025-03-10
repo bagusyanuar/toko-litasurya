@@ -8,6 +8,7 @@ use App\Commons\Request\DTORequest;
 
 class DTOCart extends DTORequest
 {
+    private $id;
     private $itemID;
     private $qty;
     private $price;
@@ -101,6 +102,24 @@ class DTOCart extends DTORequest
     public function setTotal($total)
     {
         $this->total = $total;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     * @return DTOCart
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
         return $this;
     }
 }

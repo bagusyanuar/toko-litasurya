@@ -26,52 +26,61 @@
             </button>
         </div>
         <div class="modal-body p-6 overflow-y-scroll flex-grow-1">
-            <div class="flex items-center gap-3 text-sm mb-1">
-                <div class="flex justify-between items-center w-[20%] font-bold">
-                    <p class="text-neutral-700">Invoice ID</p>
-                    <p class="text-neutral-700">:</p>
+            <div class="flex items-center gap-3 text-sm mb-1 w-full">
+                <div class="w-full flex items-center gap-1">
+                    <div class="flex justify-between items-center w-[20%] font-bold">
+                        <p class="text-neutral-700">Invoice ID</p>
+                        <p class="text-neutral-700">:</p>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-neutral-700"
+                           x-text="$store.processPurchasingStore.transactionInfo.invoiceID"></p>
+                    </div>
                 </div>
-                <div class="flex-1">
-                    <p class="text-neutral-700" x-text="$store.processPurchasingStore.transactionInfo.invoiceID"></p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3 text-sm mb-1">
-                <div class="flex justify-between items-center w-[20%] font-bold">
-                    <p class="text-neutral-700">Store</p>
-                    <p class="text-neutral-700">:</p>
-                </div>
-                <div class="flex-1">
-                    <p class="text-neutral-700" x-text="$store.processPurchasingStore.transactionInfo.customer"></p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3 text-sm mb-1">
-                <div class="flex justify-between items-center w-[20%] font-bold">
-                    <p class="text-neutral-700">Date</p>
-                    <p class="text-neutral-700">:</p>
-                </div>
-                <div class="flex-1">
-                    <p class="text-neutral-700" x-text="$store.processPurchasingStore.transactionInfo.date"></p>
+                <div class="w-full flex items-center gap-1">
+                    <div class="flex justify-between items-center w-[20%] font-bold">
+                        <p class="text-neutral-700">Date</p>
+                        <p class="text-neutral-700">:</p>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-neutral-700" x-text="$store.processPurchasingStore.transactionInfo.date"></p>
+                    </div>
                 </div>
             </div>
-            <div class="flex items-center gap-3 text-sm mb-1">
-                <div class="flex justify-between items-center w-[20%] font-bold">
-                    <p class="text-neutral-700">Sales</p>
-                    <p class="text-neutral-700">:</p>
+            <div class="flex items-center gap-3 text-sm mb-1 w-full">
+                <div class="w-full flex items-center gap-1">
+                    <div class="flex justify-between items-center w-[20%] font-bold">
+                        <p class="text-neutral-700">Store</p>
+                        <p class="text-neutral-700">:</p>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-neutral-700" x-text="$store.processPurchasingStore.transactionInfo.customer"></p>
+                    </div>
                 </div>
-                <div class="flex-1">
-                    <p class="text-neutral-700" x-text="$store.processPurchasingStore.transactionInfo.sales"></p>
+                <div class="w-full flex items-center gap-1">
+                    <div class="flex justify-between items-center w-[20%] font-bold">
+                        <p class="text-neutral-700">Sales</p>
+                        <p class="text-neutral-700">:</p>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-neutral-700" x-text="$store.processPurchasingStore.transactionInfo.sales"></p>
+                    </div>
                 </div>
             </div>
-            <div class="flex items-center gap-3 text-sm mb-1">
-                <div class="flex justify-between items-center w-[20%] font-bold">
-                    <p class="text-neutral-700">Status</p>
-                    <p class="text-neutral-700">:</p>
+            <div class="flex items-center gap-3 text-sm mb-1 w-full">
+                <div class="w-full flex items-center gap-1">
+                    <div class="flex justify-between items-center w-[20%] font-bold">
+                        <p class="text-neutral-700">Status</p>
+                        <p class="text-neutral-700">:</p>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-neutral-700" x-text="$store.processPurchasingStore.transactionInfo.sales"></p>
+                    </div>
                 </div>
-                <div class="flex-1">
-                    <p class="text-neutral-700" x-text="$store.processPurchasingStore.transactionInfo.sales"></p>
+                <div class="w-full flex items-center gap-1">
                 </div>
             </div>
-            <hr class="mb-3" />
+            <hr class="mb-3"/>
             <div class="">
                 <x-gxui.table.table
                     class="mb-1"
@@ -93,8 +102,12 @@
                             align="right"
                         ></x-gxui.table.th>
                         <x-gxui.table.th
+                            title="Requested Qty"
+                            className="!w-[90px]"
+                        ></x-gxui.table.th>
+                        <x-gxui.table.th
                             title="Qty"
-                            className="!w-[80px]"
+                            className="!w-[90px]"
                         ></x-gxui.table.th>
                         <x-gxui.table.th
                             title="Total (Rp.)"
@@ -113,13 +126,16 @@
                             <x-gxui.table.td className="flex justify-end">
                                 <span x-text="data.price.toLocaleString('id-ID') ?? '-'"></span>
                             </x-gxui.table.td>
+                            <x-gxui.table.td className="flex justify-end">
+                                <span x-text="data.request_qty.toLocaleString('id-ID') ?? '-'"></span>
+                            </x-gxui.table.td>
                             <x-gxui.table.td className="flex justify-center">
                                 <div x-data="{error: false}">
                                     <input
                                         class="w-10 px-1 py-1 text-xs text-center rounded text-neutral-700 border border-neutral-300 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500 transition duration-300 ease-in"
                                         x-model="data.qty"
                                         x-on:input="
-                                $store.cartStore.updateCart(data.id, $event.target.value);
+                                $store.processPurchasingStore.updateCart(data.id, $event.target.value);
                                 error = $event.target.value.trim() === '';
                             "
                                         :class="error ? 'border-red-500 focus:border-red-500' : 'border-neutral-300 focus:border-neutral-500'"
@@ -133,6 +149,18 @@
                         </tr>
                     </x-slot>
                 </x-gxui.table.table>
+                <div class="w-full flex justify-end">
+                    <div class="flex items-center text-xl gap-3">
+                        <div class="flex justify-between w-20">
+                            <p class="text-neutral-700 font-bold">Total</p>
+                            <p class="text-neutral-700 font-bold">:</p>
+                        </div>
+                        <div class="w-24 text-end">
+                            <p class="text-neutral-700 font-bold"
+                               x-text="$store.processPurchasingStore.total.toLocaleString('id-ID')">10.000</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -151,16 +179,16 @@
             </x-gxui.button.button>
             <x-gxui.button.button
                 wire:ignore
-                x-on:click="$store.processPurchasingStore.mutate()"
+                x-on:click="$store.processPurchasingStore.submitOrder()"
                 class="!px-6"
-                x-bind:disabled="$store.processPurchasingStore.loading"
+                x-bind:disabled="$store.processPurchasingStore.loadingOrder"
             >
-                <template x-if="!$store.processPurchasingStore.loading">
+                <template x-if="!$store.processPurchasingStore.loadingOrder">
                     <div class="w-full flex justify-center items-center gap-1 text-sm">
                         <span>Place Order</span>
                     </div>
                 </template>
-                <template x-if="$store.processPurchasingStore.loading">
+                <template x-if="$store.processPurchasingStore.loadingOrder">
                     <x-gxui.loader.button-loader></x-gxui.loader.button-loader>
                 </template>
             </x-gxui.button.button>
@@ -183,12 +211,17 @@
                 transactionInfo: {...INITIAL_TRANSACTION_INFO},
                 data: [],
                 loading: false,
+                loadingOrder: false,
+                total: 0,
+                toastStore: null,
+                tableStore: null,
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
                         const componentID = document.querySelector('[data-component-id="process-purchasing"]')?.getAttribute('wire:id');
                         if (component.id === componentID) {
                             this.component = component;
-
+                            this.toastStore = Alpine.store('gxuiToastStore');
+                            this.tableStore = Alpine.store('purchasingTableStore');
                         }
                     });
                 },
@@ -209,14 +242,48 @@
                     const carts = item['carts'];
                     this.data = carts.map((v, k) => {
                         return {
+                            id: v['id'],
+                            item_id: v['item']['id'],
                             name: v['item']['name'],
-                            price: v['price'].toLocaleString('id-ID'),
-                            qty: v['request_qty'],
+                            price: v['price'],
+                            request_qty: v['request_qty'],
+                            qty: v['qty'],
                             unit: v['unit'],
-                            total: v['total'].toLocaleString('id-ID'),
+                            total: v['total'],
+                            user_id: v['user_id'],
+                            transaction_id: v['transaction_id'],
+                            customer_id: v['customer_id']
                         }
                     });
+                    this._setTotal();
+                    this._updateStorageCart();
                     this.showModal = true;
+                },
+                submitOrder() {
+                    this.loadingOrder = true;
+                    this.component.$wire.call('order', this.transactionInfo.invoiceID, this.data)
+                        .then(response => {
+                            const {success, message, data} = response;
+                            if (success) {
+                                this.toastStore.success(message);
+                                this.showModal = false;
+                                this.tableStore.onFindAll();
+                            } else {
+                                this.toastStore.failed(message);
+                            }
+                        }).finally(() => {
+                            this.loadingOrder = false;
+                    })
+                },
+                updateCart(id, qty) {
+                    const item = this.data.find(item => item.id === id);
+                    if (item) {
+                        item.qty = qty;
+                        let intQty = qty.trim() === '' ? 0 : qty;
+                        item.total = intQty * item.price;
+                    }
+                    this._setTotal();
+                    this._updateStorageCart();
                 },
                 _getStorageCart() {
                     const storage = JSON.parse(localStorage.getItem('purchase_cart') ?? '[]');
@@ -227,6 +294,9 @@
                 },
                 _getTotal() {
                     return this.data.reduce((sum, item) => sum + item.total, 0);
+                },
+                _setTotal() {
+                    this.total = this._getTotal();
                 },
             };
             Alpine.store('processPurchasingStore', STORE_PROPS);
