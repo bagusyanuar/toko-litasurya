@@ -34,6 +34,11 @@
         <livewire:features.purchasing.filter/>
         <livewire:features.purchasing.process/>
     </div>
+    <div x-show="$store.transactionStore.selectedTab === 'selling-report'">
+        <livewire:features.selling-report.table/>
+{{--        <livewire:features.purchasing.filter/>--}}
+{{--        <livewire:features.purchasing.process/>--}}
+    </div>
     <x-gxui.loader.action-loader
         show="$store.transactionStore.processLoading"
         x-cloak
@@ -91,7 +96,7 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('transactionStore', {
-                selectedTab: 'purchasing',
+                selectedTab: 'selling-report',
                 gift: false,
                 point: 0,
                 processLoading: false,

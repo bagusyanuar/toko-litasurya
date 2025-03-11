@@ -11,6 +11,8 @@ use App\Domain\Web\Cashier\DTOCart;
 use App\Domain\Web\Purchasing\DTOFilter;
 use App\Domain\Web\Purchasing\DTOOrder;
 use App\Models\Cart;
+use App\Models\Customer;
+use App\Models\PointSetting;
 use App\Models\Transaction;
 use App\UseCase\Web\PurchasingUseCase;
 use Illuminate\Database\Eloquent\Builder;
@@ -68,8 +70,11 @@ class PurchasingService implements PurchasingUseCase
                 return ServiceResponse::notFound('transaction not found');
             }
 
+
             /** @var DTOCart $cart */
             $total = array_sum(array_map(fn($cart) => $cart->getTotal(), $dto->getCarts()));
+
+
             foreach ($dto->getCarts() as $cart) {
                 $dataCart = [
                     'qty' => $cart->getQty(),
@@ -84,10 +89,35 @@ class PurchasingService implements PurchasingUseCase
                     $dataCart
                 );
             }
+
+
             $transaction->update([
                 'status' => 'finish',
                 'total' => $total
             ]);
+
+            //checking point
+            $pointSetting = PointSetting::with([])
+                ->where('nominal', '<=', $total)
+                ->orderBy('nominal', 'DESC')
+                ->first();
+
+            $point = 0;
+            if ($pointSetting) {
+                $customerID = $transaction->customer_id;
+                $customer = Customer::with([])
+                    ->where('id', '=', $customerID)
+                    ->first();
+                if ($customer) {
+                    $withPoint = true;
+                    $point = $pointSetting->point;
+                    $currentPoint = $customer->point;
+                    $newPoint = $currentPoint + $point;
+                    $customer->update([
+                        'point' => $newPoint
+                    ]);
+                }
+            }
             DB::commit();;
             return ServiceResponse::statusOK('successfully place order');
         } catch (\Exception $e) {
