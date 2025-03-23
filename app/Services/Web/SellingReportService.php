@@ -18,7 +18,7 @@ class SellingReportService implements SellingReportUseCase
     {
         try {
             $filter->hydrateQuery();
-            $query = Transaction::with(['user.sales', 'customer'])
+            $query = Transaction::with(['user.sales', 'customer', 'carts.item'])
                 ->where('status', '=', 'finish')
                 ->when($filter->getInvoiceID(), function ($q) use ($filter) {
                     /** @var Builder $q */
