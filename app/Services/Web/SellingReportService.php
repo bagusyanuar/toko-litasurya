@@ -24,15 +24,16 @@ class SellingReportService implements SellingReportUseCase
                     /** @var Builder $q */
                     return $q->where('reference_number', '=', $filter->getInvoiceID());
                 })
-//                ->when($filter->getType(), function ($q) use ($filter) {
-//                    /** @var Builder $q */
-//                    return $q->where('type', '=', $filter->getType());
-//                })
+                ->when($filter->getType(), function ($q) use ($filter) {
+                    /** @var Builder $q */
+                    return $q->where('type', '=', $filter->getType());
+                })
                 ->when(($filter->getDateStart() && $filter->getDateEnd()), function ($q) use ($filter) {
                     /** @var Builder $q */
                     return $q->whereBetween('date', [$filter->getDateStart(), $filter->getDateEnd()]);
                 });
             $totalRows = $query->count();
+            $total = $query->sum('total');
             $offset = ($filter->getPage() - 1) * $filter->getPerPage();
             $query
                 ->offset($offset)
@@ -40,7 +41,10 @@ class SellingReportService implements SellingReportUseCase
             $metaPagination = new MetaPagination($filter->getPage(), $filter->getPerPage(), $totalRows);
             $meta['pagination'] = $metaPagination->dehydrate();
             $data = $query->get();
-            return ServiceResponse::statusOK('successfully get selling report', $data, $meta);
+            return ServiceResponse::statusOK('successfully get selling report', [
+                'data' => $data,
+                'total' => (int)$total
+            ], $meta);
         } catch (\Exception $e) {
             return ServiceResponse::internalServerError($e->getMessage());
         }

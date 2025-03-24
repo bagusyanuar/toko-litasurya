@@ -9,9 +9,7 @@
         x-bind:class="{{ $validatorKey !== '' ? "{ '!border-danger-500' : '{$validatorField}' in {$validatorKey} }" : "{}" }}"
         multiple="multiple"
     >
-        <template x-for="(data, index) in $store.{{ $store }}.{{ $options }}" :key="index">
-            <option :value="data.id" x-text="data.text"></option>
-        </template>
+
     </select>
     @if($validatorKey !== '')
         <template x-if="'{{ $validatorField }}' in {{ $validatorKey }}">
@@ -20,3 +18,8 @@
         </template>
     @endif
 </div>
+
+
+{{--        <template x-for="(data, index) in $store.{{ $store }}.{{ $options }}" :key="index">--}}
+{{--            <option :value="data.id" x-text="data.text"></option>--}}
+{{--        </template>--}}

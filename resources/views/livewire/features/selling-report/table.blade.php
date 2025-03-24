@@ -182,7 +182,7 @@
             </div>
             <div class="py-3 px-2.5 w-[120px] font-semibold">
                 <div class="w-full flex items-center justify-end text-neutral-700">
-                    <span>10.000.000</span>
+                    <span x-text="$store.sellingReportTableStore.total.toLocaleString('id-ID')"></span>
                 </div>
             </div>
         </div>
@@ -248,43 +248,6 @@
             </div>
         </div>
     </div>
-    {{--    <x-gxui.table.table--}}
-    {{--        class="mb-1"--}}
-    {{--        store="sellingReportTableStore"--}}
-    {{--    >--}}
-    {{--        <x-slot name="header">--}}
-    {{--            <x-gxui.table.th--}}
-    {{--                title=""--}}
-    {{--                className="w-[50px]"--}}
-    {{--            ></x-gxui.table.th>--}}
-    {{--            <x-gxui.table.th--}}
-    {{--                title="Date"--}}
-    {{--                className="w-[80px]"--}}
-    {{--            ></x-gxui.table.th>--}}
-    {{--            <x-gxui.table.th--}}
-    {{--                title="Invoice ID"--}}
-    {{--            ></x-gxui.table.th>--}}
-    {{--            <x-gxui.table.th--}}
-    {{--                title="Customer"--}}
-    {{--            ></x-gxui.table.th>--}}
-    {{--            <x-gxui.table.th--}}
-    {{--                title="Type"--}}
-    {{--                className="w-[100px]"--}}
-    {{--            ></x-gxui.table.th>--}}
-    {{--            <x-gxui.table.th--}}
-    {{--                title="Total (Rp.)"--}}
-    {{--                className="w-[150px]"--}}
-    {{--                align="right"--}}
-    {{--            ></x-gxui.table.th>--}}
-    {{--        </x-slot>--}}
-    {{--        <x-slot name="rows">--}}
-
-    {{--        </x-slot>--}}
-    {{--    </x-gxui.table.table>--}}
-    {{--    <x-gxui.table.pagination--}}
-    {{--        store="sellingReportTableStore"--}}
-    {{--        dispatcher="onFindAll"--}}
-    {{--    ></x-gxui.table.pagination>--}}
 </section>
 
 @push('scripts')
@@ -301,6 +264,7 @@
                 sales: '',
                 dateStart: '',
                 dateEnd: '',
+                total: 0,
                 actions: [],
                 init: function () {
                     const componentID = document.querySelector('[data-component-id="table-selling-report"]')?.getAttribute('wire:id');
@@ -335,7 +299,9 @@
                         .then(response => {
                             const {success, data, meta} = response;
                             if (success) {
-                                this.data = data;
+                                this.data = data['data'];
+                                this.total = data['total'];
+                                console.log(data['total']);
                                 const totalRows = meta['pagination'] ? meta['pagination']['total_rows'] : 0;
                                 const page = meta['pagination'] ? meta['pagination']['page'] : 1;
                                 this.totalRows = totalRows;
