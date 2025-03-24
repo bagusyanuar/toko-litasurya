@@ -24,9 +24,16 @@ class SellingReportService implements SellingReportUseCase
                     /** @var Builder $q */
                     return $q->where('reference_number', '=', $filter->getInvoiceID());
                 })
-                ->when($filter->getType(), function ($q) use ($filter) {
+                ->when((count($filter->getTypes()) > 0), function ($q) use ($filter) {
                     /** @var Builder $q */
-                    return $q->where('type', '=', $filter->getType());
+                    return $q->whereIn('type', $filter->getTypes());
+                })
+                ->when((count($filter->getCustomers()) > 0), function ($q) use ($filter) {
+                    /** @var Builder $q */
+                    if (!in_array('non-member', $filter->getCustomers())) {
+                        return $q->whereIn('type', $filter->getCustomers());
+                    }
+                    return $q->whereIn('customer_id', $filter->getCustomers())->orWhereNull('customer_id');
                 })
                 ->when(($filter->getDateStart() && $filter->getDateEnd()), function ($q) use ($filter) {
                     /** @var Builder $q */

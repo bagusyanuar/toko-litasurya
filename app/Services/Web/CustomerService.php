@@ -32,10 +32,12 @@ class CustomerService implements CustomerInterface
 
     public function findAllByType($type): ServiceResponse
     {
-        // TODO: Implement findAllStore() method.
-        $filters = [
-            self::filterQueryIs($type, 'type', $type)
-        ];
+        $filters = [];
+        if ($type) {
+            $filters = [
+                self::filterQueryIs($type, 'type', $type)
+            ];
+        }
         return self::findFrom(
             Customer::class,
             [

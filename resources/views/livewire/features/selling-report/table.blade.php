@@ -260,8 +260,9 @@
                 transactionStore: null,
                 processStore: null,
                 paginationStore: null,
-                store: '',
-                sales: '',
+                types: [],
+                customers: [],
+                invoiceID: '',
                 dateStart: '',
                 dateEnd: '',
                 total: 0,
@@ -284,17 +285,26 @@
 
                     })
                 },
+                hydrateQuery(q) {
+                    this.types = q['types'];
+                    this.dateStart = q['dateStart'];
+                    this.dateEnd = q['dateEnd'];
+                    this.invoiceID = q['invoiceID'];
+                    this.customers = q['customers'];
+                    this.onFindAll();
+                },
                 onFindAll() {
                     this.loading = true;
                     const query = {
-                        param: this.param,
                         page: this.page,
                         per_page: this.perPage,
-                        store: this.store,
-                        sales: this.sales,
+                        types: this.types,
                         dateStart: this.dateStart,
                         dateEnd: this.dateEnd,
+                        invoiceID: this.invoiceID,
+                        customers: this.customers
                     };
+                    console.log(query);
                     this.component.$wire.call('findAll', query)
                         .then(response => {
                             const {success, data, meta} = response;
@@ -315,13 +325,6 @@
                         }).finally(() => {
                         this.loading = false;
                     })
-                },
-                hydrateQuery(q) {
-                    this.store = q['store'];
-                    this.sales = q['sales'];
-                    this.dateStart = q['dateStart'];
-                    this.dateEnd = q['dateEnd'];
-                    this.onFindAll();
                 },
                 onProcess(id) {
                     this.transactionStore.showLoading('processing purchase...');

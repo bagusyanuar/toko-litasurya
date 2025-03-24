@@ -12,17 +12,19 @@ class DTOFilter extends DTORequest
     private $param;
     private $page;
     private $perPage;
-    private $type;
+    private $types;
     private $invoiceID;
     private $dateStart;
     private $dateEnd;
+    private $customers;
 
     public function hydrateQuery()
     {
         $param = $this->query['param'] ?? '';
         $page = $this->query['page'] ?? 1;
         $perPage = $this->query['per_page'] ?? 10;
-        $type = $this->query['type'] ?? '';
+        $types = $this->query['types'] ?? [];
+        $customers = $this->query['customers'] ?? [];
         $invoiceID = $this->query['invoiceID'] ?? '';
         $dateStart = $this->query['dateStart'] ? Carbon::createFromFormat('d/m/Y', $this->query['dateStart'])->format('Y-m-d') : '';
         $dateEnd = $this->query['dateEnd'] ? Carbon::createFromFormat('d/m/Y', $this->query['dateEnd'])->format('Y-m-d') : '';
@@ -31,8 +33,9 @@ class DTOFilter extends DTORequest
         $this->setParam($param)
             ->setPage($page)
             ->setPerPage($perPage)
+            ->setCustomers($customers)
             ->setInvoiceID($invoiceID)
-            ->setType($type)
+            ->setTypes($types)
             ->setDateStart($dateStart)
             ->setDateEnd($dateEnd);
     }
@@ -94,18 +97,18 @@ class DTOFilter extends DTORequest
     /**
      * @return mixed
      */
-    public function getType()
+    public function getTypes()
     {
-        return $this->type;
+        return $this->types;
     }
 
     /**
-     * @param mixed $type
+     * @param mixed $types
      * @return DTOFilter
      */
-    public function setType($type)
+    public function setTypes($types)
     {
-        $this->type = $type;
+        $this->types = $types;
         return $this;
     }
 
@@ -160,6 +163,24 @@ class DTOFilter extends DTORequest
     public function setInvoiceID($invoiceID)
     {
         $this->invoiceID = $invoiceID;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomers()
+    {
+        return $this->customers;
+    }
+
+    /**
+     * @param mixed $customers
+     * @return DTOFilter
+     */
+    public function setCustomers($customers)
+    {
+        $this->customers = $customers;
         return $this;
     }
 

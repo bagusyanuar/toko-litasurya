@@ -113,8 +113,7 @@ document.addEventListener('alpine:init', () => {
     Alpine.bind('gxuiSelect2MultipleBind', () => ({
         'x-data': () => ({
             element: null,
-            storeName: "filterSellingReportStore.customerOptions",
-            selectedValues: [],
+            storeName: '',
             data: [],
             initSelect2(config = {}) {
                 const baseConfig = {width: "100%", multiple: true, placeholder: "Choose an option"};
@@ -148,27 +147,8 @@ document.addEventListener('alpine:init', () => {
                     }
 
                     this.element.on('change', () => {
-                        this.selectedValue = this.element.val();
                         this.$el._x_model.set(this.element.val());
                     });
-
-                    // // Set nilai awal dari Alpine ke Select2
-                    // this.$watch("selectedValues", (val) => {
-                    //     this.element.val(val).trigger("change");
-                    // });
-                    //
-                    // // Update nilai Alpine saat select2 berubah
-                    // this.element.on("change", () => {
-                    //     this.selectedValues = this.element.val() || [];
-                    //     this.$el._x_model?.set(this.selectedValues);
-                    // });
-                    //
-                    // // Inisialisasi nilai jika menggunakan x-model
-                    // const modelValue = this.$el._x_model?.get();
-                    // if (modelValue) {
-                    //     this.selectedValues = modelValue;
-                    //     this.element.val(modelValue).trigger("change");
-                    // }
                 });
             },
             _initStyle() {

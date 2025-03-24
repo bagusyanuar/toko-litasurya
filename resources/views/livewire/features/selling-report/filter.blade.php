@@ -33,7 +33,7 @@
                         id="dateStart"
                         label=""
                         placeholder="dd/mm/yyyy"
-                        x-model="$store.filterPurchasingStore.dateStartValue"
+                        x-model="$store.filterSellingReportStore.dateStartValue"
                         x-init="initDatepicker({format: 'dd/mm/yyyy'})"
                     ></x-gxui.input.date.datepicker>
                     <span class="text-sm text-neutral-700">-</span>
@@ -41,14 +41,18 @@
                         id="dateEnd"
                         label=""
                         placeholder="dd/mm/yyyy"
-                        x-model="$store.filterPurchasingStore.dateEndValue"
+                        x-model="$store.filterSellingReportStore.dateEndValue"
                         x-init="initDatepicker({format: 'dd/mm/yyyy'})"
                     ></x-gxui.input.date.datepicker>
                 </div>
             </div>
+            <x-gxui.input.text.text
+                placeholder="Name"
+                label="Invoice ID"
+                parentClassName="mb-3"
+                x-model="$store.filterSellingReportStore.invoiceID"
+            ></x-gxui.input.text.text>
             <x-gxui.input.select.select2-multiple
-                store="sellingReportTableStore"
-                options="storeOptions"
                 label="Customer"
                 parentClassName="mb-3"
                 selectID="storeSelect"
@@ -58,7 +62,7 @@
                 x-model="$store.filterSellingReportStore.customerValues"
             ></x-gxui.input.select.select2-multiple>
 
-            <div class="w-full mb-3">
+            <div class="w-full">
                 <label class="text-sm text-neutral-700 block mb-2">Selling Type</label>
                 <div class="flex items-start gap-3">
                     <div class="flex items-center">
@@ -67,6 +71,8 @@
                             type="checkbox" value=""
                             class="w-4 h-4 text-brand-500 bg-gray-100 border-brand-500 rounded-sm !focus:ring-0 !focus:outline-none"
                             style="box-shadow: none"
+                            x-on:change="$store.filterSellingReportStore.onSellingTypeChange('cashier')"
+                            :checked="$store.filterSellingReportStore.sellingTypes.includes('cashier')"
                         >
                         <label for="cashier-type" class="ms-2 text-sm font-medium text-neutral-700">Cashier</label>
                     </div>
@@ -76,6 +82,8 @@
                             type="checkbox" value=""
                             class="w-4 h-4 text-brand-500 bg-gray-100 border-brand-500 rounded-sm !focus:ring-0 !focus:outline-none"
                             style="box-shadow: none"
+                            x-on:change="$store.filterSellingReportStore.onSellingTypeChange('sales')"
+                            :checked="$store.filterSellingReportStore.sellingTypes.includes('sales')"
                         >
                         <label for="sales-type" class="ms-2 text-sm font-medium text-neutral-700">Team Sales</label>
                     </div>
@@ -95,7 +103,7 @@
             </x-gxui.button.button>
             <x-gxui.button.button
                 wire:ignore
-                x-on:click="$store.filterPurchasingStore.filter()"
+                x-on:click="$store.filterSellingReportStore.filter()"
                 class="!px-6"
             >
                 <div class="w-full flex justify-center items-center gap-1 text-sm">
@@ -112,25 +120,62 @@
             const STORE_PROPS = {
                 component: null,
                 toastStore: null,
+                tableStore: null,
+                invoiceID: '',
+                dateStartValue: '',
+                dateEndValue: '',
                 customerOptions: [],
                 customerValues: [],
+                sellingTypes: [
+                    'cashier', 'sales'
+                ],
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
                         const componentID = document.querySelector('[data-component-id="filter-selling-report"]')?.getAttribute('wire:id');
                         if (component.id === componentID) {
                             this.component = component;
                             this.toastStore = Alpine.store('gxuiToastStore');
-                            setTimeout(() => {
-                                this.customerOptions = [
-                                    { id: '1', text: 'Customer 1' },
-                                    { id: '2', text: 'Customer 2' }
-                                ];
-                            }, 2000);
+                            this.tableStore = Alpine.store('sellingReportTableStore');
+                            this.getCustomers();
+                        }
+                    });
+                },
+                getCustomers() {
+                    this.component.$wire.call('customers').then(response => {
+                        const {success, data} = response;
+                        if (success) {
+                            let customerOptions = [];
+                            data.forEach(function (v, k) {
+                                const option = {id: v.id, text: v.name};
+                                customerOptions.push(option);
+                            });
+                            this.customerOptions = [{id: 'non-member', text: 'Non Member'}, ...customerOptions];
+
+                        } else {
+                            this.toastStore.failed('failed to load store option');
                         }
                     });
                 },
                 reset() {
                     console.log(this.customerValues);
+                    console.log(this.sellingTypes);
+                },
+                filter() {
+                    const query = {
+                        types: this.sellingTypes,
+                        dateStart: this.dateStartValue,
+                        dateEnd: this.dateEndValue,
+                        customers: this.customerValues,
+                        invoiceID: this.invoiceID
+                    };
+                    this.tableStore.hydrateQuery(query);
+                },
+                onSellingTypeChange(type) {
+                    if (this.sellingTypes.includes(type)) {
+                        this.sellingTypes = this.sellingTypes.filter(item => item !== type);
+                    } else {
+                        this.sellingTypes.push(type);
+                    }
                 }
             };
             Alpine.store('filterSellingReportStore', STORE_PROPS);
