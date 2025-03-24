@@ -3,8 +3,7 @@
     data-component-id="filter-selling-report"
 >
     <x-gxui.modal.form
-        {{--        show="$store.filterPurchasingStore.showModal"--}}
-        show="true"
+                show="$store.filterSellingReportStore.showModal"
         width="24rem"
     >
         <div
@@ -12,7 +11,7 @@
             <span class="text-neutral-700 font-semibold">Filter Selling Report</span>
             <button
                 type="button"
-                x-on:click="$store.sellingReportTableStore.close()"
+                x-on:click="$store.filterSellingReportStore.close()"
                 class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-4 h-4 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
             >
                 <svg class="w-2 h-2" aria-hidden="true"
@@ -121,6 +120,7 @@
                 component: null,
                 toastStore: null,
                 tableStore: null,
+                showModal: false,
                 invoiceID: '',
                 dateStartValue: '',
                 dateEndValue: '',
@@ -157,8 +157,11 @@
                     });
                 },
                 reset() {
-                    console.log(this.customerValues);
-                    console.log(this.sellingTypes);
+                    this.sellingTypes = ['cashier', 'sales'];
+                    this.customerValues = [];
+                    this.invoiceID = '';
+                    this.dateStartValue = '';
+                    this.dateEndValue = '';
                 },
                 filter() {
                     const query = {
@@ -168,6 +171,7 @@
                         customers: this.customerValues,
                         invoiceID: this.invoiceID
                     };
+                    this.showModal = false;
                     this.tableStore.hydrateQuery(query);
                 },
                 onSellingTypeChange(type) {
@@ -176,7 +180,13 @@
                     } else {
                         this.sellingTypes.push(type);
                     }
-                }
+                },
+                show() {
+                    this.showModal = true;
+                },
+                close() {
+                    this.showModal = false;
+                },
             };
             Alpine.store('filterSellingReportStore', STORE_PROPS);
         });

@@ -4,18 +4,141 @@
 >
     <div class="w-full flex items-center justify-between mb-3">
         <p class="text-neutral-700 font-semibold">Selling Report Data</p>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1">
             <x-gxui.button.button
                 wire:ignore
-                x-on:click="$store.sellingReportTableStore.show()"
+                x-on:click="$store.filterSellingReportStore.show()"
+                class="!rounded !px-1.5"
             >
                 <div wire:ignore>
                     <i data-lucide="filter"
-                       class="text-white h-4 aspect-[1/1]"></i>
+                       class="text-white h-3 aspect-[1/1]"></i>
                 </div>
             </x-gxui.button.button>
+            <div x-data="{ open: false }" class="relative">
+                <x-gxui.button.button
+                    wire:ignore
+                    x-on:click="open = true"
+                    class="!rounded !px-1.5 bg-white !border-brand-500 !text-brand-500 hover:!bg-white"
+                >
+                    <div wire:ignore>
+                        <i data-lucide="download"
+                           class="text-brand-500 h-3 aspect-[1/1]"></i>
+                    </div>
+                </x-gxui.button.button>
+                <div
+                    x-show="open"
+                    class="absolute right-0 bottom-[-4.5rem] transform"
+                    x-on:click.away="open = false;"
+                    x-cloak
+                    x-transition:enter="transition ease-out duration-300 transform"
+                    x-transition:enter-start="translate-y-[-100%] opacity-0"
+                    x-transition:enter-end="translate-y-0 opacity-100"
+                    x-transition:leave="transition ease-in duration-200 transform"
+                    x-transition:leave-start="translate-y-0 opacity-100"
+                    x-transition:leave-end="translate-y-[-100%] opacity-0"
+                >
+                    <div
+                        class="w-44 px-1 py-1 bg-white rounded shadow-md text-sm text-neutral-700"
+                    >
+                        <div
+                            class="rounded px-3 py-1.5 flex items-center gap-1 cursor-pointer hover:bg-neutral-100 transition-all ease-in duration-200"
+                            x-on:click=""
+                        >
+                            <div wire:ignore>
+                                <i data-lucide="file"
+                                   class="text-neutral-700 h-4 aspect-[1/1]"></i>
+                            </div>
+                            <span class="text-xs text-neutral-700">Export as PDF</span>
+                        </div>
+                        <div
+                            class="rounded px-3 py-1.5 flex items-center gap-1 cursor-pointer hover:bg-neutral-100 transition-all ease-in duration-200"
+                            x-on:click=""
+                        >
+                            <div wire:ignore>
+                                <i data-lucide="file-spreadsheet"
+                                   class="text-neutral-700 h-4 aspect-[1/1]"></i>
+                            </div>
+                            <span class="text-xs text-neutral-700">Export as Excel</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <x-gxui.table.dynamic.table>
+        <x-slot name="header">
+            <x-gxui.table.dynamic.th
+                contentClass="justify-center"
+                class="w-[40px]"
+            ></x-gxui.table.dynamic.th>
+            <x-gxui.table.dynamic.th
+                contentClass="justify-center"
+                class="w-[100px]"
+            >
+                <span>Date</span>
+            </x-gxui.table.dynamic.th>
+            <x-gxui.table.dynamic.th
+                contentClass="justify-center"
+                class="w-[170px]"
+            >
+                <span>Invoice ID</span>
+            </x-gxui.table.dynamic.th>
+            <x-gxui.table.dynamic.th
+                class="flex-1 min-w-[200px]"
+            >
+                <span>Customer</span>
+            </x-gxui.table.dynamic.th>
+            <x-gxui.table.dynamic.th
+                contentClass="justify-center"
+                class="w-[80px]"
+            >
+                <span>Type</span>
+            </x-gxui.table.dynamic.th>
+            <x-gxui.table.dynamic.th
+                contentClass="justify-end"
+                class="w-[120px]"
+            >
+                <span>Total (Rp.)</span>
+            </x-gxui.table.dynamic.th>
+        </x-slot>
+        <x-slot name="rows">
+            <x-gxui.table.dynamic.collapsible-row>
+                <x-gxui.table.dynamic.td
+                    contentClass="justify-center"
+                    class="w-[40px]"
+                >
+                    <div
+                        wire:ignore
+                        @click="toggleIcon"
+                        class="flex items-center justify-center p-1 cursor-pointer hover:bg-neutral-100 transition-all ease-in duration-200"
+                    >
+                        <i x-bind:data-lucide="isOpen ? 'chevron-up' : 'chevron-down'"
+                           class="text-neutral-700 h-3 aspect-[1/1]"></i>
+                    </div>
+                </x-gxui.table.dynamic.td>
+                <x-gxui.table.dynamic.td
+                    contentClass="justify-center"
+                    class="w-[100px]"
+                >
+                    <span
+                        x-text="new Date(data.date).toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' })">
+                    </span>
+                </x-gxui.table.dynamic.td>
+                <x-slot name="collapsible">
+                    <div class="w-full flex items-start border-b" x-show="isOpen" x-collapse>
+                        <x-gxui.table.dynamic.td
+                            contentClass="justify-center"
+                            class="w-[40px]"
+                        ></x-gxui.table.dynamic.td>
+                        <div class="py-3 px-2.5 flex-1">
+                            <p>cart</p>
+                        </div>
+                    </div>
+                </x-slot>
+            </x-gxui.table.dynamic.collapsible-row>
+        </x-slot>
+    </x-gxui.table.dynamic.table>
     <div class="w-full rounded-lg border border-neutral-300 overflow-x-auto">
         <div class="flex items-center rounded-t-lg bg-brand-50 w-full text-xs">
             <div class="py-3 px-2.5 font-semibold w-[50px]">
@@ -46,10 +169,11 @@
                 </div>
             </div>
         </div>
-        <template x-for="(data, index) in $store.sellingReportTableStore.data" :key="index">
-            <div
-                class="w-full"
-                x-data="{
+        <div class="w-full" x-cloak x-show="!$store.sellingReportTableStore.loading">
+            <template x-for="(data, index) in $store.sellingReportTableStore.data" :key="index">
+                <div
+                    class="w-full"
+                    x-data="{
                             isOpen: false,
                             toggleIcon() {
                                 this.isOpen = !this.isOpen;
@@ -59,119 +183,125 @@
                                 setTimeout(() => { lucide.createIcons(); }, 0);
                             }
                         }"
-                x-init="initIcons()"
-                x-effect="initIcons()"
-            >
-                <div class="w-full flex items-center text-xs border-b last:border-b-0">
-                    <div class="py-3 px-2.5 font-semibold w-[50px]">
-                        <div
-                            wire:ignore
-                            @click="toggleIcon"
-                            class="flex items-center justify-center p-1 cursor-pointer hover:bg-neutral-100 transition-all ease-in duration-200"
-                        >
-                            <i x-bind:data-lucide="isOpen ? 'chevron-up' : 'chevron-down'"
-                               class="text-neutral-700 h-3 aspect-[1/1]"></i>
+                    x-init="initIcons()"
+                    x-effect="initIcons()"
+                >
+                    <div class="w-full flex items-center text-xs border-b last:border-b-0">
+                        <div class="py-3 px-2.5 font-semibold w-[50px]">
+                            <div
+                                wire:ignore
+                                @click="toggleIcon"
+                                class="flex items-center justify-center p-1 cursor-pointer hover:bg-neutral-100 transition-all ease-in duration-200"
+                            >
+                                <i x-bind:data-lucide="isOpen ? 'chevron-up' : 'chevron-down'"
+                                   class="text-neutral-700 h-3 aspect-[1/1]"></i>
+                            </div>
                         </div>
-                    </div>
-                    <div class="py-3 px-2.5 w-[100px]">
-                        <div class="w-full flex items-center justify-center text-neutral-700">
-                            <span x-text="new Date(data.date).toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' })"></span>
+                        <div class="py-3 px-2.5 w-[100px]">
+                            <div class="w-full flex items-center justify-center text-neutral-700">
+                                <span
+                                    x-text="new Date(data.date).toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' })"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="py-3 px-2.5 w-[170px]">
-                        <div class="w-full flex items-center justify-center text-neutral-700">
-                            <span x-text="data.reference_number"></span>
+                        <div class="py-3 px-2.5 w-[170px]">
+                            <div class="w-full flex items-center justify-center text-neutral-700">
+                                <span x-text="data.reference_number"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="py-3 px-2.5 flex-1 min-w-[200px]">
-                        <div class="w-full flex justify-start text-neutral-700">
-                            <span x-text="data.customer ? data.customer?.name : '-'"></span>
+                        <div class="py-3 px-2.5 flex-1 min-w-[200px]">
+                            <div class="w-full flex justify-start text-neutral-700">
+                                <span x-text="data.customer ? data.customer?.name : '-'"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="py-3 px-2.5 w-[80px]">
-                        <div class="w-full flex items-center justify-center">
+                        <div class="py-3 px-2.5 w-[80px]">
+                            <div class="w-full flex items-center justify-center">
                             <span
                                 x-text="data.type"
                                 class="capitalize font-bold"
                                 x-bind:class="data.type === 'cashier' ? 'text-brand-300' : 'text-neutral-700'"
                             ></span>
-                        </div>
-                    </div>
-                    <div class="py-3 px-2.5 w-[120px]">
-                        <div class="w-full flex items-center justify-end text-neutral-700">
-                            <span x-text="data.total.toLocaleString('id-ID')"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="w-full flex items-start border-b" x-show="isOpen" x-collapse>
-                    <div class="py-3 px-2.5 font-semibold w-[50px]">
-                    </div>
-                    <div class="py-3 px-2.5 flex-1">
-                        <p class="text-xs text-neutral-700 font-semibold mb-1">Cart</p>
-                        <div class="w-full rounded-lg border border-neutral-300 overflow-x-auto">
-                            <div class="flex items-center bg-brand-50 w-full text-xs">
-                                <div class="py-3 px-2.5 flex-1 min-w-[200px] font-semibold">
-                                    <div class="w-full flex justify-start text-neutral-700">
-                                        <span>Product</span>
-                                    </div>
-                                </div>
-                                <div class="py-3 px-2.5 w-[80px] font-semibold">
-                                    <div class="w-full flex items-center justify-center text-neutral-700">
-                                        <span>Qty</span>
-                                    </div>
-                                </div>
-                                <div class="py-3 px-2.5 w-[80px] font-semibold">
-                                    <div class="w-full flex items-center justify-center text-neutral-700">
-                                        <span>Unit</span>
-                                    </div>
-                                </div>
-                                <div class="py-3 px-2.5 w-[120px] font-semibold">
-                                    <div class="w-full flex items-center justify-end text-neutral-700">
-                                        <span>Price (Rp.)</span>
-                                    </div>
-                                </div>
-                                <div class="py-3 px-2.5 w-[120px] font-semibold">
-                                    <div class="w-full flex items-center justify-end text-neutral-700">
-                                        <span>Total (Rp.)</span>
-                                    </div>
-                                </div>
                             </div>
-                            <template x-for="(cart, index) in data.carts" :key="index">
-                                <div class="w-full flex items-center text-xs text-neutral-700 border-b last:border-b-0">
-                                    <div class="py-3 px-2.5 flex-1 min-w-[200px]">
-                                        <div class="w-full flex justify-start">
-                                            <span x-text="cart.item.name"></span>
+                        </div>
+                        <div class="py-3 px-2.5 w-[120px]">
+                            <div class="w-full flex items-center justify-end text-neutral-700">
+                                <span x-text="data.total.toLocaleString('id-ID')"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full flex items-start border-b" x-show="isOpen" x-collapse>
+                        <div class="py-3 px-2.5 font-semibold w-[50px]">
+                        </div>
+                        <div class="py-3 px-2.5 flex-1">
+                            <p class="text-xs text-neutral-700 font-semibold mb-1">Cart</p>
+                            <div class="w-full rounded-lg border border-neutral-300 overflow-x-auto">
+                                <div class="flex items-center bg-brand-50 w-full text-xs">
+                                    <div class="py-3 px-2.5 flex-1 min-w-[200px] font-semibold">
+                                        <div class="w-full flex justify-start text-neutral-700">
+                                            <span>Product</span>
                                         </div>
                                     </div>
-                                    <div class="py-3 px-2.5 w-[80px]">
-                                        <div class="w-full flex items-center justify-center">
-                                            <span x-text="cart.qty.toLocaleString('id-ID')"></span>
+                                    <div class="py-3 px-2.5 w-[80px] font-semibold">
+                                        <div class="w-full flex items-center justify-center text-neutral-700">
+                                            <span>Qty</span>
                                         </div>
                                     </div>
-                                    <div class="py-3 px-2.5 w-[80px]">
-                                        <div class="w-full flex items-center justify-center">
-                                            <span x-text="cart.unit" class="capitalize"></span>
-                                        </div>
-                                    </div>
-                                    <div class="py-3 px-2.5 w-[120px]">
-                                        <div class="w-full flex items-center justify-end">
-                                            <span x-text="cart.price.toLocaleString('id-ID')"></span>
+                                    <div class="py-3 px-2.5 w-[80px] font-semibold">
+                                        <div class="w-full flex items-center justify-center text-neutral-700">
+                                            <span>Unit</span>
                                         </div>
                                     </div>
                                     <div class="py-3 px-2.5 w-[120px] font-semibold">
-                                        <div class="w-full flex items-center justify-end">
-                                            <span x-text="cart.total.toLocaleString('id-ID')"></span>
+                                        <div class="w-full flex items-center justify-end text-neutral-700">
+                                            <span>Price (Rp.)</span>
+                                        </div>
+                                    </div>
+                                    <div class="py-3 px-2.5 w-[120px] font-semibold">
+                                        <div class="w-full flex items-center justify-end text-neutral-700">
+                                            <span>Total (Rp.)</span>
                                         </div>
                                     </div>
                                 </div>
-                            </template>
+                                <template x-for="(cart, index) in data.carts" :key="index">
+                                    <div
+                                        class="w-full flex items-center text-xs text-neutral-700 border-b last:border-b-0">
+                                        <div class="py-3 px-2.5 flex-1 min-w-[200px]">
+                                            <div class="w-full flex justify-start">
+                                                <span x-text="cart.item.name"></span>
+                                            </div>
+                                        </div>
+                                        <div class="py-3 px-2.5 w-[80px]">
+                                            <div class="w-full flex items-center justify-center">
+                                                <span x-text="cart.qty.toLocaleString('id-ID')"></span>
+                                            </div>
+                                        </div>
+                                        <div class="py-3 px-2.5 w-[80px]">
+                                            <div class="w-full flex items-center justify-center">
+                                                <span x-text="cart.unit" class="capitalize"></span>
+                                            </div>
+                                        </div>
+                                        <div class="py-3 px-2.5 w-[120px]">
+                                            <div class="w-full flex items-center justify-end">
+                                                <span x-text="cart.price.toLocaleString('id-ID')"></span>
+                                            </div>
+                                        </div>
+                                        <div class="py-3 px-2.5 w-[120px] font-semibold">
+                                            <div class="w-full flex items-center justify-end">
+                                                <span x-text="cart.total.toLocaleString('id-ID')"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                        <div class="py-3 px-2.5 w-[120px]">
                         </div>
                     </div>
-                    <div class="py-3 px-2.5 w-[120px]">
-                    </div>
                 </div>
-            </div>
-        </template>
+            </template>
+        </div>
+        <div class="w-full" x-show="$store.sellingReportTableStore.loading">
+            <x-gxui.table.loader></x-gxui.table.loader>
+        </div>
         <div class="flex items-center rounded-b-lg bg-brand-50 w-full text-xs">
             <div class="py-3 px-2.5 font-semibold w-[50px]">
             </div>
@@ -188,7 +318,8 @@
         </div>
     </div>
     <div class="flex items-center justify-between gap-3 mt-1">
-        <div class="text-xs text-neutral-500">Total Data: <span x-text="$store.sellingReportTableStore.totalRows"></span></div>
+        <div class="text-xs text-neutral-500">Total Data: <span
+                x-text="$store.sellingReportTableStore.totalRows"></span></div>
         <div class="flex items-center">
             <div class="flex gap-2 items-center text-xs text-neutral-500">
                 <span>Lines per page</span>
@@ -277,9 +408,6 @@
                             this.transactionStore = Alpine.store('transactionStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.paginationStore = Alpine.store('gxuiPaginationStore');
-                            // this.actions.forEach((action, key) => {
-                            //     action.dispatch = action.dispatch.bind(this);
-                            // });
                             this.onFindAll();
                         }
 
@@ -304,14 +432,12 @@
                         invoiceID: this.invoiceID,
                         customers: this.customers
                     };
-                    console.log(query);
                     this.component.$wire.call('findAll', query)
                         .then(response => {
                             const {success, data, meta} = response;
                             if (success) {
                                 this.data = data['data'];
                                 this.total = data['total'];
-                                console.log(data['total']);
                                 const totalRows = meta['pagination'] ? meta['pagination']['total_rows'] : 0;
                                 const page = meta['pagination'] ? meta['pagination']['page'] : 1;
                                 this.totalRows = totalRows;
