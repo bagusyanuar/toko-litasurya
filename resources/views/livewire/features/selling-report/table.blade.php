@@ -125,6 +125,33 @@
                         x-text="new Date(data.date).toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' })">
                     </span>
                 </x-gxui.table.dynamic.td>
+                <x-gxui.table.dynamic.td
+                    contentClass="justify-center"
+                    class="w-[170px]"
+                >
+                    <span x-text="data.reference_number"></span>
+                </x-gxui.table.dynamic.td>
+                <x-gxui.table.dynamic.td
+                    class="flex-1 min-w-[200px]"
+                >
+                    <span x-text="data.customer ? data.customer?.name : '-'"></span>
+                </x-gxui.table.dynamic.td>
+                <x-gxui.table.dynamic.td
+                    contentClass="justify-center"
+                    class="w-[80px]"
+                >
+                   <span
+                       x-text="data.type"
+                       class="capitalize font-bold"
+                       x-bind:class="data.type === 'cashier' ? 'text-brand-300' : 'text-neutral-700'"
+                   ></span>
+                </x-gxui.table.dynamic.td>
+                <x-gxui.table.dynamic.td
+                    contentClass="justify-end"
+                    class="w-[120px]"
+                >
+                    <span x-text="data.total.toLocaleString('id-ID')"></span>
+                </x-gxui.table.dynamic.td>
                 <x-slot name="collapsible">
                     <div class="w-full flex items-start border-b" x-show="isOpen" x-collapse>
                         <x-gxui.table.dynamic.td
@@ -137,6 +164,23 @@
                     </div>
                 </x-slot>
             </x-gxui.table.dynamic.collapsible-row>
+        </x-slot>
+        <x-slot name="footer">
+            <x-gxui.table.dynamic.th
+                contentClass="justify-center"
+                class="w-[40px]"
+            ></x-gxui.table.dynamic.th>
+            <x-gxui.table.dynamic.th
+                class="flex-1"
+            >
+                <span>Total Selling</span>
+            </x-gxui.table.dynamic.th>
+            <x-gxui.table.dynamic.th
+                contentClass="justify-end"
+                class="w-[120px]"
+            >
+                <span x-text="$store.sellingReportTableStore.total.toLocaleString('id-ID')"></span>
+            </x-gxui.table.dynamic.th>
         </x-slot>
     </x-gxui.table.dynamic.table>
     <div class="w-full rounded-lg border border-neutral-300 overflow-x-auto">

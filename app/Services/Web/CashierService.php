@@ -85,7 +85,7 @@ class CashierService implements CashierUseCase
                 'cashier' => $cashier,
                 'carts' => $carts
             ];
-            InvoiceService::printInvoice($transaction->id);
+//            InvoiceService::printInvoice($transaction->id);
             DB::commit();
             return ServiceResponse::created('successfully create order', [
                 'withPoint' => $withPoint,
