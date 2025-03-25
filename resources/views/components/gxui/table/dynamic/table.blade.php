@@ -58,11 +58,24 @@
         @endif
     </div>
     <div x-cloak x-show="{{ $pagination }}" class="flex items-center justify-between gap-3 mt-1">
-        <div class="text-xs text-neutral-500">Total Data: <span
-                x-text="totalRows"></span>
+        <div x-show="loading" class="flex items-center gap-1">
+            <x-gxui.loader.shimmer class="!w-24"></x-gxui.loader.shimmer>
+            <x-gxui.loader.shimmer class="!w-8"></x-gxui.loader.shimmer>
+        </div>
+        <div x-show="!loading" x-cloak class="text-xs text-neutral-500">Total Data: <span
+                x-text="totalRows" class="font-semibold"></span>
         </div>
         <div class="flex items-center">
-            <div class="flex gap-2 items-center text-xs text-neutral-500">
+            <div x-show="loading" class="flex gap-2 items-center">
+                <x-gxui.loader.shimmer></x-gxui.loader.shimmer>
+                <x-gxui.loader.shimmer class="!w-8 !h-6"></x-gxui.loader.shimmer>
+            </div>
+            <div x-show="loading" class="flex gap-1 items-center ms-2">
+                <template x-for="i in 3">
+                    <x-gxui.loader.shimmer class="!h-4 !w-4"></x-gxui.loader.shimmer>
+                </template>
+            </div>
+            <div x-show="!loading" x-cloak class="flex gap-2 items-center text-xs text-neutral-500">
                 <span>Lines per page</span>
                 <select
                     class="border border-neutral-500 w-fit appearance-none rounded-[4px] text-xs pl-2 !pr-[1.5rem] py-1 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500 cursor-pointer"
@@ -77,7 +90,7 @@
                     </template>
                 </select>
             </div>
-            <div class="flex items-center gap-1 py-1.5 ps-1.5" wire:ignore>
+            <div x-show="!loading" x-cloak class="flex items-center gap-1 py-1.5 ps-1.5" wire:ignore>
                 <button
                     class="h-6 aspect-[1/1] rounded-full flex items-center justify-center text-brand-500 cursor-pointer hover:bg-brand-50 transition-all ease-in duration-200 disabled:text-neutral-300 disabled:cursor-default disabled:hover:bg-transparent"
                     x-bind:disabled="(currentPage == 1 || totalPages <= 0)"

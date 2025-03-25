@@ -38,6 +38,11 @@ document.addEventListener('alpine:init', () => {
                                 this.perPageOptions = [10, 25, 50];
                             }
                         }
+                        this.perPage = this.perPageOptions[0];
+                        let store = Alpine.store(this.storeName);
+                        if (store && this.statePerPage in store) {
+                            store[this.statePerPage] = this.perPage;
+                        }
 
                         this.$watch(() => {
                             return Alpine.store(this.storeName)?.[this.stateData];
@@ -71,28 +76,50 @@ document.addEventListener('alpine:init', () => {
                             }
                         });
 
-                        this.$watch("currentPage", (page) => {
-                            let store = Alpine.store(this.storeName);
-                            if (store && this.stateCurrentPage in store) {
-                                store[this.stateCurrentPage] = page;
-                                this.dispatch();
-                            }
+                        // this.$watch("currentPage", (page) => {
+                        //     let store = Alpine.store(this.storeName);
+                        //     if (store && this.stateCurrentPage in store) {
+                        //         store[this.stateCurrentPage] = page;
+                        //         this.dispatch();
+                        //     }
+                        // });
+
+                        this.$watch(() => {
+                            return Alpine.store(this.storeName)?.[this.stateCurrentPage]
+                        }, (currentPage) => {
+                            this.currentPage = currentPage;
+                            this.dispatch();
                         });
+
+                        this.dispatch();
                     }
                 });
             },
             onPerPageChange(perPage) {
-                this.currentPage = 1;
+                let store = Alpine.store(this.storeName);
+                if (store && this.stateCurrentPage in store) {
+                    store[this.stateCurrentPage] = 1;
+                }
                 this.perPage = perPage;
             },
             onPrevious() {
-                this.currentPage -= 1;
+                let store = Alpine.store(this.storeName);
+                if (store && this.stateCurrentPage in store) {
+                    store[this.stateCurrentPage] -= 1;
+                }
             },
             onNext() {
-                this.currentPage += 1;
+                let store = Alpine.store(this.storeName);
+                if (store && this.stateCurrentPage in store) {
+                    store[this.stateCurrentPage] += 1;
+                }
             },
             onPageChange(page) {
-                this.currentPage = page;
+                let store = Alpine.store(this.storeName);
+                if (store && this.stateCurrentPage in store) {
+                    store[this.stateCurrentPage] = page;
+                }
+
             },
             dispatch() {
                 if (this.storeName && this.dispatcher) {
@@ -117,7 +144,6 @@ document.addEventListener('alpine:init', () => {
                     }
                 }
                 this.shownPages = Array.from({length: endPage - startPage + 1}, (_, i) => startPage + i);
-                console.log(this.shownPages);
                 this.totalPages = totalPages;
             }
         }),

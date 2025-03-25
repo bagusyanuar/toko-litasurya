@@ -1,11 +1,11 @@
 const TABLE_STORE = {
     loading: true,
-    page: 1,
+    currentPage: 1,
     perPage: 10,
     shownPages: [],
-    perPageOptions: [10, 25, 50],
     totalPages: 0,
     totalRows: 0,
+    perPageOptions: [10, 25, 50],
     param: '',
     data: [],
     actions: {
