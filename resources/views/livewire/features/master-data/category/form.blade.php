@@ -32,6 +32,7 @@
                 x-bind:disabled="$store.categoryFormStore.loading"
                 validatorKey="$store.categoryFormStore.formValidator"
                 validatorField="name"
+                class="text-xs"
             ></x-gxui.input.text.text>
             <x-gxui.input.file.file-dropper
                 placeholder="Name"

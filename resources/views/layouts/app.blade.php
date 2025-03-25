@@ -22,14 +22,16 @@
 
 </head>
 <body class="bg-background">
-<x-navigation.sidebar.ui-sidebar></x-navigation.sidebar.ui-sidebar>
+{{--<x-navigation.sidebar.ui-sidebar></x-navigation.sidebar.ui-sidebar>--}}
+<livewire:features.layout.sidebar />
 <livewire:features.layout.ui-navbar />
-{{--<livewire:features.layout.sidebar />--}}
 <div class="ps-[theme(width.sidebar)] pt-[theme(height.navbar)]">
     <div class="px-5 py-5">
         {{ $slot }}
     </div>
 </div>
+<x-gxui.loader.action-loader></x-gxui.loader.action-loader>
+<x-gxui.toast.toast></x-gxui.toast.toast>
 <script src="https://code.jquery.com/jquery-3.7.0.js" type="text/javascript"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>

@@ -1,19 +1,19 @@
 <?php
 
-namespace App\View\Components\Gxui\Loader;
+namespace App\View\Components\Gxui\Table\Dynamic;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class ActionLoader extends Component
+class Action extends Component
 {
-
     /**
      * Create a new component instance.
      */
     public function __construct()
     {
+        //
     }
 
     /**
@@ -21,6 +21,6 @@ class ActionLoader extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.gxui.loader.action-loader');
+        return view('components.gxui.table.dynamic.action');
     }
 }

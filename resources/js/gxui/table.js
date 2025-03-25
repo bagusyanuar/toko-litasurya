@@ -76,14 +76,6 @@ document.addEventListener('alpine:init', () => {
                             }
                         });
 
-                        // this.$watch("currentPage", (page) => {
-                        //     let store = Alpine.store(this.storeName);
-                        //     if (store && this.stateCurrentPage in store) {
-                        //         store[this.stateCurrentPage] = page;
-                        //         this.dispatch();
-                        //     }
-                        // });
-
                         this.$watch(() => {
                             return Alpine.store(this.storeName)?.[this.stateCurrentPage]
                         }, (currentPage) => {
@@ -164,4 +156,41 @@ document.addEventListener('alpine:init', () => {
             }
         })
     }));
+
+    Alpine.bind('gxuiTableSearch', () => ({
+        'x-data': () => ({
+            element: null,
+            debounce: null,
+            debounceTime: null,
+            storeName: '',
+            dispatcher: '',
+            stateParam: '',
+            stateCurrentPage: '',
+            initSearch() {
+                this.$nextTick(() => {
+                    this.element = $(this.$el);
+                    this.storeName = this.$el.getAttribute("store-name") || '';
+                    this.dispatcher = this.$el.getAttribute("dispatcher") || '';
+                    this.stateParam = this.$el.getAttribute("state-param") || '';
+                    this.stateCurrentPage = this.$el.getAttribute("state-current-page") || '';
+                    this.debounceTime = this.$el.getAttribute('state-debounce-time') || 500;
+                })
+            },
+            onInput(event) {
+                let store = Alpine.store(this.storeName);
+                if (store && this.stateCurrentPage in store) {
+                    clearTimeout(this.debounce);
+                    this.debounce = setTimeout(() => {
+                        let value = event.target.value;
+                        store[this.stateCurrentPage] = 1;
+                        store[this.stateParam] = value;
+                        if (this.dispatcher && typeof store[this.dispatcher] === "function") {
+                            store[this.dispatcher]();
+                        }
+                    }, this.debounceTime);
+                }
+            }
+        }),
+        'x-init': "initSearch()"
+    }))
 });

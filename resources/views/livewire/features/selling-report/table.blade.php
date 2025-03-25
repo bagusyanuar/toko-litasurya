@@ -301,7 +301,6 @@
                             this.transactionStore = Alpine.store('transactionStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
                         }
-
                     })
                 },
                 hydrateQuery(q) {

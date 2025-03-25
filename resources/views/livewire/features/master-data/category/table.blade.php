@@ -2,65 +2,69 @@
     id="section-table-categories"
     data-component-id="table-category"
 >
-    <div class="bg-white w-full p-6 rounded-lg shadow-md">
+    <div class="bg-white w-full px-6 py-4 rounded-lg shadow-md">
         <div class="w-full flex items-center justify-between mb-3">
             <p class="text-neutral-700 font-semibold">Category Data</p>
             <div class="flex items-center gap-3">
-                <x-gxui.table.search
-                    placeholder="Search..."
+                <x-gxui.table.dynamic.search
                     store="categoryTableStore"
                     dispatcher="onFindAll"
-                ></x-gxui.table.search>
+                ></x-gxui.table.dynamic.search>
                 <x-gxui.button.button
                     wire:ignore
                     x-on:click="$store.categoryFormStore.showModal()"
                 >
-                    <div class="w-full flex justify-center items-center gap-1 text-sm">
+                    <div class="w-full flex justify-center items-center gap-1 text-xs">
                         <i data-lucide="plus" class="h-3" style="width: fit-content;"></i>
                         <span>Create New</span>
                     </div>
                 </x-gxui.button.button>
             </div>
         </div>
-        <x-gxui.table.table
-            class="mb-1"
+        <x-gxui.table.dynamic.table
             store="categoryTableStore"
+            dispatcher="onFindAll"
+            pagination="true"
         >
             <x-slot name="header">
-                <x-gxui.table.th
-                    title="Name"
-                    align="left"
-                ></x-gxui.table.th>
-                <x-gxui.table.th
-                    title="Action"
-                    className="w-[80px]"
-                ></x-gxui.table.th>
+                <x-gxui.table.dynamic.th
+                    class="flex-1 min-w-[200px]"
+                >
+                    <span>Category</span>
+                </x-gxui.table.dynamic.th>
+                <x-gxui.table.dynamic.th
+                    contentClass="justify-center"
+                    class="w-[50px]"
+                >
+                    <span>Action</span>
+                </x-gxui.table.dynamic.th>
             </x-slot>
             <x-slot name="rows">
-                <tr class="border-b border-neutral-300">
-                    <x-gxui.table.td>
+                <x-gxui.table.dynamic.row>
+                    <x-gxui.table.dynamic.td
+                        class="flex-1 min-w-[200px]"
+                    >
                         <div class="flex items-center gap-3">
                             <img
                                 x-data
                                 alt="category-image"
-                                class="w-10 h-10 rounded-full border border-neutral-200"
+                                class="w-10 h-10 rounded-lg border border-neutral-200"
                                 x-bind:src="data.image"
                             >
                             <span x-text="data.name"></span>
                         </div>
-                    </x-gxui.table.td>
-                    <x-gxui.table.td className="flex justify-center relative">
-                        <x-gxui.table.action store="categoryTableStore"></x-gxui.table.action>
-                    </x-gxui.table.td>
-                </tr>
-            </x-slot>
-        </x-gxui.table.table>
-        <x-gxui.table.pagination
-            store="categoryTableStore"
-            dispatcher="onFindAll"
-        ></x-gxui.table.pagination>
-    </div>
 
+                    </x-gxui.table.dynamic.td>
+                    <x-gxui.table.dynamic.td
+                        contentClass="justify-center relative"
+                        class="w-[55px]"
+                    >
+                        <x-gxui.table.dynamic.action store="categoryTableStore"></x-gxui.table.dynamic.action>
+                    </x-gxui.table.dynamic.td>
+                </x-gxui.table.dynamic.row>
+            </x-slot>
+        </x-gxui.table.dynamic.table>
+    </div>
 </section>
 
 @push('scripts')
@@ -76,15 +80,15 @@
                     {
                         label: 'Edit',
                         icon: 'pencil',
-                        dispatch: function (id) {
-                            this.onEdit(id)
+                        dispatch: function (data) {
+                            this.onEdit(data)
                         }
                     },
                     {
                         label: 'Delete',
                         icon: 'trash',
-                        dispatch: function (id) {
-                            this.onDelete(id)
+                        dispatch: function (data) {
+                            this.onDelete(data)
                         }
                     },
                 ],
@@ -92,6 +96,7 @@
                     const componentID = document.querySelector('[data-component-id="table-category"]')?.getAttribute('wire:id');
                     Livewire.hook('component.init', ({component}) => {
                         if (component.id === componentID) {
+                            this.component = component;
                             this.formStore = Alpine.store('categoryFormStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.masterDataStore = Alpine.store('masterDataStore');
@@ -99,8 +104,7 @@
                             this.actions.forEach((action, key) => {
                                 action.dispatch = action.dispatch.bind(this);
                             });
-                            this.component = component;
-                            this.onFindAll();
+
                         }
 
                     })
@@ -116,9 +120,6 @@
                                 const page = meta['pagination'] ? meta['pagination']['page'] : 1;
                                 this.totalRows = totalRows;
                                 this.page = page;
-                                this.paginationStore.paginate(totalRows, this.perPage, this.page);
-                                this.totalPages = this.paginationStore.totalPages;
-                                this.shownPages = this.paginationStore.shownPages;
                             } else {
                                 this.toastStore.failed('failed to load data');
                             }
@@ -126,7 +127,8 @@
                         this.loading = false;
                     })
                 },
-                onDelete(id) {
+                onDelete(data) {
+                    const id = data['id'];
                     this.masterDataStore.showLoading('Deleting Process...');
                     this.component.$wire.call('delete', id)
                         .then(response => {
@@ -141,7 +143,8 @@
                         this.masterDataStore.closeLoading();
                     })
                 },
-                onEdit(id) {
+                onEdit(data) {
+                    const id = data['id'];
                     this.masterDataStore.showLoading('Finding Item Process...');
                     this.component.$wire.call('findByID', id)
                         .then(response => {

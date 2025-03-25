@@ -7,6 +7,7 @@ import './gxui/popper'
 import './gxui/select'
 import './gxui/datepicker'
 import './gxui/table'
+import './gxui/loader'
 import TABLE_STORE from "./gxui/const/table-store";
 import Dropzone from "dropzone";
 import "dropzone/dist/dropzone.css";
