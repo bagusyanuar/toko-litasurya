@@ -66,7 +66,17 @@
             </div>
         </div>
     </div>
-    <x-gxui.table.dynamic.table>
+    <x-gxui.table.dynamic.table
+        store="sellingReportTableStore"
+        dispatcher="onFindAll"
+        stateData="data"
+        stateLoader="loading"
+        stateTotalRows="totalRows"
+        statePerPageOptions="perPageOptions"
+        statePerPage="perPage"
+        stateCurrentPage="currentPage"
+        pagination="true"
+    >
         <x-slot name="header">
             <x-gxui.table.dynamic.th
                 contentClass="justify-center"
@@ -430,6 +440,9 @@
         document.addEventListener('alpine:init', () => {
             const componentProps = {
                 component: null,
+                perPageOptions: [1, 2, 3],
+                perPage: 1,
+                currentPage: 1,
                 filterStore: null,
                 toastStore: null,
                 transactionStore: null,
@@ -468,7 +481,7 @@
                 onFindAll() {
                     this.loading = true;
                     const query = {
-                        page: this.page,
+                        page: this.currentPage,
                         per_page: this.perPage,
                         types: this.types,
                         dateStart: this.dateStart,
@@ -485,10 +498,10 @@
                                 const totalRows = meta['pagination'] ? meta['pagination']['total_rows'] : 0;
                                 const page = meta['pagination'] ? meta['pagination']['page'] : 1;
                                 this.totalRows = totalRows;
-                                this.page = page;
-                                this.paginationStore.paginate(totalRows, this.perPage, this.page);
-                                this.totalPages = this.paginationStore.totalPages;
-                                this.shownPages = this.paginationStore.shownPages;
+                                this.currentPage = page;
+                                // this.paginationStore.paginate(totalRows, this.perPage, this.page);
+                                // this.totalPages = this.paginationStore.totalPages;
+                                // this.shownPages = this.paginationStore.shownPages;
                             } else {
                                 this.toastStore.failed('failed to load data');
                             }
