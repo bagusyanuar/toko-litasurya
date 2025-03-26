@@ -2,16 +2,14 @@
     wire:ignore
     class="w-full {{ $parentClassName }}"
 >
-    <label for="{{ $selectID }}" class="text-sm text-neutral-700 {{ $label !== '' ? 'block mb-1' : '' }}">{{ $label }}</label>
+    <label for="{{ $selectID }}"
+           class="text-xs text-neutral-700 {{ $label !== '' ? 'block mb-1' : '' }}">{{ $label }}</label>
     <select
         id="{{ $selectID }}"
-        {{ $attributes->merge(['class' => 'form-control w-full text-[0.825rem] text-neutral-700 border border-neutral-300 rounded-[4px] focus:ring-0 focus:outline-none focus:border-neutral-500 transition duration-300 ease-in-out']) }}
+        {{ $attributes->merge(['class' => 'form-control w-full text-xs text-neutral-700 border border-neutral-300 rounded-[4px] focus:ring-0 focus:outline-none focus:border-neutral-500 transition duration-300 ease-in-out']) }}
         x-bind:class="{{ $validatorKey !== '' ? "{ '!border-danger-500' : '{$validatorField}' in {$validatorKey} }" : "{}" }}"
     >
         <option value="">choose an option</option>
-{{--        <template x-for="(v, index) in data" :key="index">--}}
-{{--            <option :value="v.id" x-text="v.text"></option>--}}
-{{--        </template>--}}
     </select>
     @if($validatorKey !== '')
         <template x-if="'{{ $validatorField }}' in {{ $validatorKey }}">

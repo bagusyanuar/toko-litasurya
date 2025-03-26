@@ -74,8 +74,7 @@
                 component: null,
                 formStore: null,
                 toastStore: null,
-                masterDataStore: null,
-                paginationStore: null,
+                actionLoaderStore: null,
                 actions: [
                     {
                         label: 'Edit',
@@ -99,8 +98,7 @@
                             this.component = component;
                             this.formStore = Alpine.store('categoryFormStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
-                            this.masterDataStore = Alpine.store('masterDataStore');
-                            this.paginationStore = Alpine.store('gxuiPaginationStore');
+                            this.actionLoaderStore = Alpine.store('gxuiActionLoader');
                             this.actions.forEach((action, key) => {
                                 action.dispatch = action.dispatch.bind(this);
                             });
@@ -129,23 +127,23 @@
                 },
                 onDelete(data) {
                     const id = data['id'];
-                    this.masterDataStore.showLoading('Deleting Process...');
+                    this.actionLoaderStore.start('Deleting Process...');
                     this.component.$wire.call('delete', id)
                         .then(response => {
-                            const {success} = response;
+                            const {success, message} = response;
                             if (success) {
-                                this.toastStore.success('success delete category');
+                                this.toastStore.success(message);
                                 this.onFindAll();
                             } else {
-                                this.toastStore.failed('failed to load data');
+                                this.toastStore.failed(message);
                             }
                         }).finally(() => {
-                        this.masterDataStore.closeLoading();
+                        this.actionLoaderStore.end();
                     })
                 },
                 onEdit(data) {
                     const id = data['id'];
-                    this.masterDataStore.showLoading('Finding Item Process...');
+                    this.actionLoaderStore.start('Find Category Process...');
                     this.component.$wire.call('findByID', id)
                         .then(response => {
                             const {success, data, message} = response;
@@ -155,7 +153,7 @@
                                 this.toastStore.failed(message);
                             }
                         }).finally(() => {
-                        this.masterDataStore.closeLoading();
+                        this.actionLoaderStore.end();
                     })
                 }
             };

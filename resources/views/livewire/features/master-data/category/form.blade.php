@@ -4,10 +4,11 @@
 >
     <x-gxui.modal.form
         show="$store.categoryFormStore.showModalForm"
+        width="30rem"
     >
         <div
             class="modal-header flex items-center justify-between px-4 py-3 border-b border-neutral-300 rounded-t">
-            <span class="text-neutral-700 font-semibold">Form New Category</span>
+            <span class="text-neutral-700 text-sm font-semibold">Form New Category</span>
             <button
                 type="button"
                 x-on:click="$store.categoryFormStore.closeModal()"
@@ -23,7 +24,7 @@
                 <span class="sr-only">Close modal</span>
             </button>
         </div>
-        <div class="modal-body p-6">
+        <div class="modal-body px-6 py-4">
             <x-gxui.input.text.text
                 placeholder="Name"
                 label="Name"
@@ -35,20 +36,20 @@
                 class="text-xs"
             ></x-gxui.input.text.text>
             <x-gxui.input.file.file-dropper
-                placeholder="Name"
+                store="categoryFormStore"
+                stateComponent="fileDropper"
                 label="Image"
-                dropperID="imageDropper"
-                dropperLoading="$store.categoryFormStore.loading"
+                class="!h-12"
             ></x-gxui.input.file.file-dropper>
         </div>
         <div class="modal-footer w-full flex items-center justify-end gap-2 px-4 py-3 border-t border-neutral-300">
             <x-gxui.button.button
                 wire:ignore
-                x-on:click="$store.categoryFormStore.setCloseModalForm()"
+                x-on:click="$store.categoryFormStore.closeModal()"
                 x-bind:disabled="$store.categoryFormStore.loading"
                 class="!px-6 bg-white !border-brand-500 !text-brand-500 hover:!text-white disabled:!bg-white disabled:!text-brand-500"
             >
-                <div class="w-full flex justify-center items-center gap-1 text-sm">
+                <div class="w-full flex justify-center items-center gap-1 text-xs">
                     <span>Cancel</span>
                 </div>
             </x-gxui.button.button>
@@ -59,7 +60,7 @@
                 class="!px-6"
             >
                 <template x-if="!$store.categoryFormStore.loading">
-                    <div class="w-full flex justify-center items-center gap-1 text-sm">
+                    <div class="w-full flex justify-center items-center gap-1 text-xs">
                         <span>Submit</span>
                     </div>
                 </template>
@@ -92,8 +93,6 @@
                             this.component = component;
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.tableStore = Alpine.store('categoryTableStore');
-                            const dropperElement = document.getElementById('imageDropper');
-                            this.fileDropper = Alpine.store('gxuiFileDropperStore').initDropper(dropperElement);
                         }
                     });
                 },

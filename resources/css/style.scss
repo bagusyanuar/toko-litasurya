@@ -171,6 +171,24 @@ body {
     }
 }
 
+.select2-selection__arrow {
+    display: none !important;
+}
+
+.select2-container .select2-selection::after {
+    content: "";
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath d='M6 9l6 6 6-6' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center center;
+    background-size: contain;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
 .datepicker-dropdown {
     z-index: 9999;
 

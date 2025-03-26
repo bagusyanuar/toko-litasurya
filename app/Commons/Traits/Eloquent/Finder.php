@@ -52,6 +52,10 @@ trait Finder
             $self->createFilter($config, function ($key, $dispatcher) use ($builder) {
                 $builder->when($key, $dispatcher);
             });
+
+
+            $self->createOrder($config, $builder);
+
             $self->createPagination($config, $builder, function ($pagination) use (&$meta) {
                 $meta['pagination'] = $pagination;
             });
@@ -116,13 +120,14 @@ trait Finder
         ];
     }
 
-    public static function useBasicConfig($templateMessage = 'items', $relations = [], $page = 1, $perPage = 10, $filters = [])
+    public static function useBasicConfig($templateMessage = 'items', $relations = [], $page = 1, $perPage = 10, $filters = [], $order = [])
     {
         return [
             'template_message' => $templateMessage,
             'pagination' => ['page' => $page, 'per_page' => $perPage],
             'filter' => $filters,
-            'relations' => $relations
+            'relations' => $relations,
+            'order' => $order
         ];
     }
 
@@ -144,6 +149,18 @@ trait Finder
                     $dispatcher = $filter['dispatcher'];
                     $callback($key, $dispatcher);
                 }
+            }
+        }
+    }
+
+    private function createOrder($config, Builder $builder)
+    {
+        if (array_key_exists('order', $config)) {
+            $order = $config['order'];
+            if (array_key_exists('key', $order) && array_key_exists('type', $order)) {
+                $sortBy = $config['order']['key'];
+                $sortType = $config['order']['type'];
+                $builder->orderBy($sortBy, $sortType);
             }
         }
     }

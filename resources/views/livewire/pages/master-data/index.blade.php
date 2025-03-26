@@ -40,21 +40,21 @@
     >
         <livewire:features.master-data.item.table/>
         <livewire:features.master-data.item.form/>
-        <livewire:features.master-data.item.price-list/>
+{{--        <livewire:features.master-data.item.price-list/>--}}
     </div>
     <div
         x-show="$store.masterDataStore.selectedTab === 'reward'"
         x-cloak
     >
-        <livewire:features.master-data.reward.table/>
-        <livewire:features.master-data.reward.form/>
+{{--        <livewire:features.master-data.reward.table/>--}}
+{{--        <livewire:features.master-data.reward.form/>--}}
     </div>
     <div
         x-show="$store.masterDataStore.selectedTab === 'route'"
         x-cloak
     >
-        <livewire:features.master-data.route.table/>
-        <livewire:features.master-data.route.form/>
+{{--        <livewire:features.master-data.route.table/>--}}
+{{--        <livewire:features.master-data.route.form/>--}}
     </div>
     <x-gxui.loader.action-loader></x-gxui.loader.action-loader>
 </div>
@@ -63,7 +63,7 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('masterDataStore', {
-                selectedTab: 'category',
+                selectedTab: 'item',
                 processLoading: false,
                 processText: 'Loading...',
                 onChangeTab(selectedTab) {

@@ -8,24 +8,12 @@ use Illuminate\View\Component;
 
 class FileDropper extends Component
 {
-    public $parentClassName;
-    public $label;
-    public $dropperID;
-    public $dropperLoading;
-
     /**
      * Create a new component instance.
-     * @param $dropperID
-     * @param string $parentClassName
-     * @param string $label
-     * @param string $dropperLoading
      */
-    public function __construct($dropperID, $parentClassName = '', $label = '', $dropperLoading = 'false')
+    public function __construct()
     {
-        $this->dropperID = $dropperID;
-        $this->parentClassName = $parentClassName;
-        $this->label = $label;
-        $this->dropperLoading = $dropperLoading;
+
     }
 
     /**

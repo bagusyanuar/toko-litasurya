@@ -1,5 +1,5 @@
 <div {{ $attributes->merge(['class' => 'w-full flex items-center justify-center text-sm']) }}>
-    <svg class="w-4 h-4 animate-spinner me-1 text-inherit" xmlns="http://www.w3.org/2000/svg"
+    <svg class="w-3 h-3 animate-spinner me-1 text-inherit" xmlns="http://www.w3.org/2000/svg"
          viewBox="0 0 24 24">
         <g>
             <circle cx="3" cy="12" r="1.5" class="fill-current"/>
@@ -12,5 +12,5 @@
             <circle cx="18.36" cy="5.64" r="1.5" class="fill-current"/>
         </g>
     </svg>
-    <span class="text-inherit">Loading</span>
+    <span class="text-inherit text-xs">Loading</span>
 </div>

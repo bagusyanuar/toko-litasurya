@@ -1,10 +1,25 @@
+@props([
+'store',
+'stateComponent',
+'stateLoader' => 'loading',
+'parentClassName' => '',
+'label' => '',
+])
+
 <div
     class="{{ $parentClassName }}"
     wire:ignore
 >
-    <label class="text-sm text-neutral-700 {{ $label !== '' ? 'block mb-1' : '' }}">{{ $label }}</label>
-    <div class="relative w-full h-full">
-        <div class="dropzone" id="{{ $dropperID }}">
+    <label class="text-xs text-neutral-700 {{ $label !== '' ? 'block mb-1' : '' }}">{{ $label }}</label>
+    <div
+        class="relative w-full h-full"
+        x-bind="gxuiFileDropper"
+        x-bind:store-name="'{{ $store }}'"
+        x-bind:state-component="'{{ $stateComponent }}'"
+    >
+        <div
+            {{ $attributes->merge(['class' => 'dropzone']) }}
+        >
             <div class="dz-message text-center w-full flex flex-col items-center justify-center" wire:ignore>
                 <i
                     data-lucide="cloud-upload"
@@ -16,7 +31,7 @@
                 <p class="text-xs text-neutral-500">Drag or click to upload</p>
             </div>
         </div>
-        <div x-show="{{ $dropperLoading }}">
+        <div x-show="$store.{{ $store }}.{{ $stateLoader }}">
             <div
                 class="absolute inset-0 z-[20] bg-neutral-200 bg-opacity-70 flex items-center justify-center text-brand-500 text-sm font-semibold"
                 x-cloak

@@ -44,7 +44,18 @@ class CategoryService implements CategoryInterface
         $filters = [
             self::filterQueryLikeBy($filter->getParam(), 'name', "%{$filter->getParam()}%")
         ];
-        $config = self::useBasicConfig('category', [], $filter->getPage(), $filter->getPerPage(), $filters);
+        $order = [
+            'key' => 'name',
+            'type' => 'ASC'
+        ];
+        $config = self::useBasicConfig(
+            'category',
+            [],
+            $filter->getPage(),
+            $filter->getPerPage(),
+            $filters,
+            $order
+        );
         return self::findFrom(
             Category::class,
             $config

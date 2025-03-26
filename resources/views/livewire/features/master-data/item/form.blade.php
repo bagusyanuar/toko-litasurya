@@ -3,12 +3,13 @@
     data-component-id="form-item"
 >
     <x-gxui.modal.form
-        show="$store.itemFormStore.showModalForm"
-        width="40rem"
+{{--        show="$store.itemFormStore.showModalForm"--}}
+        show="true"
+        width="30rem"
     >
         <div
             class="modal-header flex items-center justify-between px-4 py-3 border-b border-neutral-300 rounded-t">
-            <span class="text-neutral-700 font-semibold">Form New Item</span>
+            <span class="text-neutral-700 text-sm font-semibold">Form New Item</span>
             <button
                 type="button"
                 x-on:click="$store.itemFormStore.closeModal()"
@@ -25,18 +26,31 @@
             </button>
         </div>
         <div
-            class="modal-body px-6 pt-6 pb-6 overflow-y-scroll flex-grow-1 h-[40rem]"
+            class="modal-body px-6 py-4 flex-grow-1"
         >
             <div
                 class="w-full"
             >
                 <div class="w-full flex items-start gap-3">
+{{--                    <x-gxui.input.select.select2--}}
+{{--                        store="itemFormStore"--}}
+{{--                        options="categoryOptions"--}}
+{{--                        label="Category"--}}
+{{--                        parentClassName="mb-3 flex-1"--}}
+{{--                        selectID="categorySelect"--}}
+{{--                        validatorKey="$store.itemFormStore.formValidator"--}}
+{{--                        validatorField="category_id"--}}
+{{--                    ></x-gxui.input.select.select2>--}}
                     <x-gxui.input.select.select2
                         store="itemFormStore"
                         options="categoryOptions"
                         label="Category"
                         parentClassName="mb-3 flex-1"
-                        selectID="categorySelect"
+                        selectID="storeSelect"
+                        x-init="initSelect2({placeholder: 'choose a category'})"
+                        x-bind="gxuiSelect2Bind"
+                        x-bind:store-name="'$store.itemFormStore.categoryOptions'"
+                        x-model="$store.itemFormStore.form.category"
                         validatorKey="$store.itemFormStore.formValidator"
                         validatorField="category_id"
                     ></x-gxui.input.select.select2>
@@ -72,10 +86,10 @@
                     ></x-gxui.input.text.text>
                 </div>
                 <x-gxui.input.file.file-dropper
-                    placeholder="Name"
+                    store="itemFormStore"
+                    stateComponent="fileDropper"
                     label="Image"
-                    dropperID="itemImageDropper"
-                    dropperLoading="$store.itemFormStore.loading"
+                    class="!h-12"
                     parentClassName="mb-3"
                 ></x-gxui.input.file.file-dropper>
                 <x-gxui.input.text.text
@@ -94,11 +108,11 @@
         >
             <x-gxui.button.button
                 wire:ignore
-                x-on:click="$store.itemFormStore.setCloseModalForm()"
+                x-on:click="$store.itemFormStore.closeModal()"
                 x-bind:disabled="$store.itemFormStore.loading"
                 class="!px-6 bg-white !border-brand-500 !text-brand-500 hover:!text-white disabled:!bg-white disabled:!text-brand-500"
             >
-                <div class="w-full flex justify-center items-center gap-1 text-sm">
+                <div class="w-full flex justify-center items-center gap-1 text-xs">
                     <span>Cancel</span>
                 </div>
             </x-gxui.button.button>
@@ -109,7 +123,7 @@
                 x-bind:disabled="$store.itemFormStore.loading"
             >
                 <template x-if="!$store.itemFormStore.loading">
-                    <div class="w-full flex justify-center items-center gap-1 text-sm">
+                    <div class="w-full flex justify-center items-center gap-1 text-xs">
                         <span>Submit</span>
                     </div>
                 </template>
@@ -154,15 +168,6 @@
                             this.component = component;
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.tableStore = Alpine.store('itemTableStore');
-                            const dropperElement = document.getElementById('itemImageDropper');
-                            this.fileDropper = Alpine.store('gxuiFileDropperStore').initDropper(dropperElement);
-                            let selectElement = document.getElementById("categorySelect");
-                            this.select2Store = Alpine.store('gxuiSelectStore')
-                                .initSelect2(
-                                    selectElement,
-                                    this.onChangeCategory.bind(this),
-                                    {placeholder: 'choose a category'}
-                                );
                             this.component.$wire.call('categories').then(response => {
                                 const {success, data} = response;
                                 if (success) {
