@@ -8,7 +8,7 @@
     >
         <div
             class="modal-header flex items-center justify-between px-4 py-3 border-b border-neutral-300 rounded-t">
-            <span class="text-neutral-700 font-semibold">Form New Store</span>
+            <span class="text-neutral-700 text-sm font-semibold">Form New Store</span>
             <button
                 type="button"
                 x-on:click="$store.customerStoreFormStore.closeModal()"
@@ -60,7 +60,7 @@
                 x-bind:disabled="$store.customerStoreFormStore.loading"
                 class="!px-6 bg-white !border-brand-500 !text-brand-500 hover:!text-white disabled:!bg-white disabled:!text-brand-500"
             >
-                <div class="w-full flex justify-center items-center gap-1 text-sm">
+                <div class="w-full flex justify-center items-center gap-1 text-xs">
                     <span>Cancel</span>
                 </div>
             </x-gxui.button.button>
@@ -71,7 +71,7 @@
                 class="!px-6"
             >
                 <template x-if="!$store.customerStoreFormStore.loading">
-                    <div class="w-full flex justify-center items-center gap-1 text-sm">
+                    <div class="w-full flex justify-center items-center gap-1 text-xs">
                         <span>Submit</span>
                     </div>
                 </template>

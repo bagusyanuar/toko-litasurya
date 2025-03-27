@@ -4,10 +4,11 @@
 >
     <x-gxui.modal.form
         show="$store.adminFormStore.showModalForm"
+        width="25rem"
     >
         <div
             class="modal-header flex items-center justify-between px-4 py-3 border-b border-neutral-300 rounded-t">
-            <span class="text-neutral-700 font-semibold">Form New Admin</span>
+            <span class="text-neutral-700 text-sm font-semibold">Form New Admin</span>
             <button
                 type="button"
                 x-on:click="$store.adminFormStore.closeModal()"
@@ -51,7 +52,7 @@
                 x-bind:disabled="$store.adminFormStore.loading"
                 class="!px-6 bg-white !border-brand-500 !text-brand-500 hover:!text-white disabled:!bg-white disabled:!text-brand-500"
             >
-                <div class="w-full flex justify-center items-center gap-1 text-sm">
+                <div class="w-full flex justify-center items-center gap-1 text-xs">
                     <span>Cancel</span>
                 </div>
             </x-gxui.button.button>
@@ -62,7 +63,7 @@
                 class="!px-6"
             >
                 <template x-if="!$store.adminFormStore.loading">
-                    <div class="w-full flex justify-center items-center gap-1 text-sm">
+                    <div class="w-full flex justify-center items-center gap-1 text-xs">
                         <span>Submit</span>
                     </div>
                 </template>

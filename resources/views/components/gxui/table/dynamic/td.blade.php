@@ -5,7 +5,7 @@
 <div
     {{ $attributes->merge(["class" => "py-3 px-2.5"]) }}
 >
-    <div {{ $contentClassAttributes->merge(["class" => "w-full flex item-center text-neutral-700"]) }}>
+    <div {{ $contentClassAttributes->merge(["class" => "w-full flex item-center text-neutral-700 break-words"]) }}>
         {{ $slot }}
     </div>
 </div>
