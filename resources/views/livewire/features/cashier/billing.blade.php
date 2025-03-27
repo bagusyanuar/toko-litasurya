@@ -2,21 +2,37 @@
     id="section-cashier-billing"
     data-component-id="cashier-billing"
 >
-    <div class="w-72 bg-white p-6 rounded-md shadow-md">
-        <p class="font-bold text-neutral-700 mb-3">Billing</p>
+    <div class="w-72 bg-white px-6 py-4 rounded-md shadow-md">
+        <p class="font-bold text-sm text-neutral-700 mb-3">Billing</p>
         <hr class="mb-3"/>
         <x-gxui.input.select.select2
-            store="billingStore"
-            options="customerOptions"
             label="Customer"
-            parentClassName="mb-3"
-            selectID="customerSelect"
+            parentClassName="mb-3 flex-1"
+            selectID="billingCustomerSelect"
+            x-init="initSelect2({placeholder: 'choose a customer'})"
+            x-bind="gxuiSelect2Bind"
+            x-bind:store-name="'$store.billingStore.customerOptions'"
+            x-model="$store.billingStore.customerValue"
         ></x-gxui.input.select.select2>
+
         <hr class="mb-3"/>
-        <div class="w-full mb-5 flex items-center justify-between text-neutral-700 text-lg">
+        <div class="w-full mb-3 flex items-center justify-between text-neutral-700">
             <span class="">Total</span>
             <span class="font-bold">: <span
                     x-text="'Rp. '+$store.billingStore.total.toLocaleString('id-ID')"></span></span>
+        </div>
+
+        <hr class="mb-3"/>
+        <div class="flex items-center justify-end w-full mb-3">
+            <input
+                id="print-option"
+                type="checkbox"
+                class="w-4 h-4 text-brand-500 bg-gray-100 border-brand-500 rounded-sm !focus:ring-0 !focus:outline-none"
+                style="box-shadow: none"
+                x-on:change="$store.billingStore.usePrint = $event.target.checked"
+                :checked="$store.billingStore.usePrint"
+            >
+            <label for="cashier-type" class="ms-2 text-xs font-medium text-neutral-700">Print</label>
         </div>
         <x-gxui.button.button
             wire:ignore
@@ -39,10 +55,12 @@
                 customerSelectStore: null,
                 customerOptions: [],
                 toastStore: null,
+                actionLoaderStore: null,
                 transactionStore: null,
                 cartStore: null,
                 total: 0,
                 customerValue: '',
+                usePrint: true,
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
                         const componentID = document.querySelector('[data-component-id="cashier-billing"]')?.getAttribute('wire:id');
@@ -51,13 +69,7 @@
                             this.transactionStore = Alpine.store('transactionStore');
                             this.cartStore = Alpine.store('cartStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
-                            let selectElement = document.getElementById("customerSelect");
-                            this.customerSelectStore = Alpine.store('gxuiSelectStore')
-                                .initSelect2(
-                                    selectElement,
-                                    this.onChangeCustomer.bind(this),
-                                    {placeholder: 'choose a customer'}
-                                );
+                            this.actionLoaderStore = Alpine.store('gxuiActionLoader');
                             this.component.$wire.call('customer').then(response => {
                                 const {success, data} = response;
                                 if (success) {
@@ -78,16 +90,17 @@
                     this.total = total;
                 },
                 submitOrder() {
-                    this.transactionStore.showLoading('placing order...');
+                    this.actionLoaderStore.start('placing order...');
                     const form = {
                         'customer_id': this.customerValue,
-                        'carts': this.cartStore.data
+                        'carts': this.cartStore.data,
+                        'print': this.usePrint
                     };
                     this.component.$wire.call('submitOrder', form)
                         .then(response => {
                             const {success, message, data} = response;
                             if (success) {
-                                this.transactionStore.closeLoading();
+                                this.actionLoaderStore.end();
                                 this.customerValue = '';
                                 $('#customerSelect').val(null).trigger('change');
                                 this.toastStore.success(message);
@@ -97,7 +110,7 @@
                                     this.transactionStore.showPoint(point);
                                 }
                             } else {
-                                this.transactionStore.closeLoading();
+                                this.actionLoaderStore.end();
                                 this.toastStore.failed(message);
                             }
                         })

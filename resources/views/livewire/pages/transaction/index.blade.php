@@ -29,38 +29,17 @@
     <div x-show="$store.transactionStore.selectedTab === 'cashier'">
         <livewire:pages.cashier.index/>
     </div>
-    <div x-show="$store.transactionStore.selectedTab === 'purchasing'">
+    <div x-cloak x-show="$store.transactionStore.selectedTab === 'purchasing'">
         <livewire:features.purchasing.table/>
         <livewire:features.purchasing.filter/>
         <livewire:features.purchasing.process/>
     </div>
-    <div x-show="$store.transactionStore.selectedTab === 'selling-report'">
+    <div x-cloak x-show="$store.transactionStore.selectedTab === 'selling-report'">
         <livewire:features.selling-report.table/>
         <livewire:features.selling-report.filter/>
         {{--        <livewire:features.purchasing.process/>--}}
     </div>
-    <x-gxui.loader.action-loader
-        show="$store.transactionStore.processLoading"
-        x-cloak
-    >
-        <div class="h-24 w-full flex flex-col gap-1 items-center justify-center">
-            <svg class="w-6 h-6 animate-spinner me-1 text-brand-500" xmlns="http://www.w3.org/2000/svg"
-                 viewBox="0 0 24 24">
-                <g>
-                    <circle cx="3" cy="12" r="1.5" class="fill-current"/>
-                    <circle cx="21" cy="12" r="1.5" class="fill-current"/>
-                    <circle cx="12" cy="21" r="1.5" class="fill-current"/>
-                    <circle cx="12" cy="3" r="1.5" class="fill-current"/>
-                    <circle cx="5.64" cy="5.64" r="1.5" class="fill-current"/>
-                    <circle cx="18.36" cy="18.36" r="1.5" class="fill-current"/>
-                    <circle cx="5.64" cy="18.36" r="1.5" class="fill-current"/>
-                    <circle cx="18.36" cy="5.64" r="1.5" class="fill-current"/>
-                </g>
-            </svg>
-            <p class="text-sm text-brand-500" x-text="$store.transactionStore.processText"></p>
-        </div>
-    </x-gxui.loader.action-loader>
-
+    <x-gxui.loader.action-loader ></x-gxui.loader.action-loader>
     <div>
         <div
             class="fixed inset-0 bg-gray-500 bg-opacity-50 z-[300]"
@@ -96,21 +75,11 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('transactionStore', {
-                selectedTab: 'selling-report',
+                selectedTab: 'cashier',
                 gift: false,
                 point: 0,
-                processLoading: false,
-                processText: 'Loading...',
                 onChangeTab(selectedTab) {
                     this.selectedTab = selectedTab;
-                },
-                showLoading(text = 'Loading process...') {
-                    this.processText = text;
-                    this.processLoading = true;
-                },
-                closeLoading() {
-                    this.processLoading = false;
-                    this.processText = 'Loading...';
                 },
                 showPoint(point = 0) {
                     this.point = point;

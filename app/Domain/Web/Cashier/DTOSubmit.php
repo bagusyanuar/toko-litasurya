@@ -13,10 +13,14 @@ class DTOSubmit extends DTORequest
     /** @var DTOCart[] $carts */
     private $carts;
 
+    /** @var boolean $usePrint */
+    private $usePrint;
+
     public function hydrate()
     {
 
         $customerID = $this->dtoForm['customer_id'] !== '' ? $this->dtoForm['customer_id'] : null;
+        $usePrint = $this->dtoForm['print'] ?? false;
         /** @var DTOCart[] $arrCart */
         $arrCart = [];
         if (is_array($this->dtoForm['carts'])) {
@@ -36,6 +40,7 @@ class DTOSubmit extends DTORequest
             }
         }
         $this->setCustomerID($customerID)
+            ->setUsePrint($usePrint)
             ->setCarts($arrCart);
     }
 
@@ -72,6 +77,24 @@ class DTOSubmit extends DTORequest
     public function setCarts($carts)
     {
         $this->carts = $carts;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUsePrint()
+    {
+        return $this->usePrint;
+    }
+
+    /**
+     * @param bool $usePrint
+     * @return DTOSubmit
+     */
+    public function setUsePrint($usePrint)
+    {
+        $this->usePrint = $usePrint;
         return $this;
     }
 }

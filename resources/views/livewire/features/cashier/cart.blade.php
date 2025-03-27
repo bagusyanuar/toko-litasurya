@@ -13,7 +13,7 @@
                 <input
                     x-model="$store.cartStore.plu"
                     placeholder="scan barcode"
-                    class="w-full text-sm ps-[2.05rem] pe-[0.825rem] py-[0.5rem] rounded text-neutral-700 border border-neutral-300 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500 transition duration-300 ease-in"
+                    class="w-full text-xs ps-[2.05rem] pe-[0.825rem] py-[0.525rem] rounded text-neutral-700 border border-neutral-300 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500 transition duration-300 ease-in"
                     x-on:keydown.enter="$store.cartStore.findByPLU()"
                 />
             </div>
@@ -25,56 +25,75 @@
             >
                 <div wire:ignore>
                     <i data-lucide="box"
-                       class="text-white h-4 aspect-[1/1]"></i>
+                       class="text-white h-3 aspect-[1/1]"></i>
                 </div>
             </x-gxui.button.button>
         </div>
     </div>
-    <x-gxui.table.table
-        class="mb-1"
+    <x-gxui.table.dynamic.table
         store="cartStore"
+        dispatcher="getCart"
+        stateLoader="loading"
     >
         <x-slot name="header">
-            <x-gxui.table.th
-                title="Product"
-                align="left"
-                className="min-w-[150px] !text-sm"
-            ></x-gxui.table.th>
-            <x-gxui.table.th
-                title="Unit"
-                className="w-[80px]"
-            ></x-gxui.table.th>
-            <x-gxui.table.th
-                title="Price (Rp.)"
-                className="!w-[80px]"
-                align="right"
-            ></x-gxui.table.th>
-            <x-gxui.table.th
-                title="Qty"
-                className="!w-[80px]"
-            ></x-gxui.table.th>
-            <x-gxui.table.th
-                title="Total (Rp.)"
-                className="!w-[80px]"
-                align="right"
-            ></x-gxui.table.th>
-            <x-gxui.table.th
-                title=""
-                className="w-[40px]"
-            ></x-gxui.table.th>
+            <x-gxui.table.dynamic.th
+                class="flex-1 min-w-[150px]"
+            >
+                <span>Product</span>
+            </x-gxui.table.dynamic.th>
+            <x-gxui.table.dynamic.th
+                contentClass="justify-center"
+                class="w-[80px]"
+            >
+                <span>Unit</span>
+            </x-gxui.table.dynamic.th>
+            <x-gxui.table.dynamic.th
+                contentClass="justify-end"
+                class="w-[100px]"
+            >
+                <span>Price (Rp.)</span>
+            </x-gxui.table.dynamic.th>
+            <x-gxui.table.dynamic.th
+                contentClass="justify-center"
+                class="w-[80px]"
+            >
+                <span>Qty</span>
+            </x-gxui.table.dynamic.th>
+            <x-gxui.table.dynamic.th
+                contentClass="justify-end"
+                class="w-[100px]"
+            >
+                <span>Total (Rp)</span>
+            </x-gxui.table.dynamic.th>
+            <x-gxui.table.dynamic.th
+                contentClass="justify-center"
+                class="w-[40px]"
+            >
+            </x-gxui.table.dynamic.th>
         </x-slot>
         <x-slot name="rows">
-            <tr class="border-b border-neutral-300">
-                <x-gxui.table.td className="min-w-[200px]">
-                    <span class="text-sm font-bold text-neutral-900" x-text="data.name"></span>
-                </x-gxui.table.td>
-                <x-gxui.table.td className="flex justify-center">
+            <x-gxui.table.dynamic.row>
+                <x-gxui.table.dynamic.td
+                    class="flex-1 min-w-[150px]"
+                >
+                    <span x-text="data.name"></span>
+                </x-gxui.table.dynamic.td>
+                <x-gxui.table.dynamic.td
+                    contentClass="justify-center"
+                    class="w-[80px]"
+                >
                     <span x-text="data.unit"></span>
-                </x-gxui.table.td>
-                <x-gxui.table.td className="flex justify-end">
-                    <span x-text="data.price.toLocaleString('id-ID') ?? '-'"></span>
-                </x-gxui.table.td>
-                <x-gxui.table.td className="flex justify-center">
+                </x-gxui.table.dynamic.td>
+                <x-gxui.table.dynamic.td
+                    contentClass="justify-end"
+                    class="w-[100px]"
+                >
+                    <span x-text="data.price.toLocaleString('id-ID') ?? 0"></span>
+                </x-gxui.table.dynamic.td>
+                <x-gxui.table.dynamic.td
+                    contentClass="justify-center"
+                    class="w-[80px]"
+                >
                     <div x-data="{error: false}">
                         <input
                             class="w-10 px-1 py-1 text-xs text-center rounded text-neutral-700 border border-neutral-300 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500 transition duration-300 ease-in"
@@ -86,15 +105,21 @@
                             :class="error ? 'border-red-500 focus:border-red-500' : 'border-neutral-300 focus:border-neutral-500'"
                         />
                     </div>
-                </x-gxui.table.td>
-                <x-gxui.table.td className="flex justify-end">
-                    <span x-text="data.total.toLocaleString('id-ID') ?? '-'"></span>
-                </x-gxui.table.td>
-                <x-gxui.table.td className="flex justify-center relative">
-                </x-gxui.table.td>
-            </tr>
+                </x-gxui.table.dynamic.td>
+                <x-gxui.table.dynamic.td
+                    contentClass="justify-end"
+                    class="w-[100px]"
+                >
+                    <span x-text="data.total.toLocaleString('id-ID') ?? 0"></span>
+                </x-gxui.table.dynamic.td>
+                <x-gxui.table.dynamic.td
+                    contentClass="justify-center"
+                    class="w-[40px]"
+                >
+                </x-gxui.table.dynamic.td>
+            </x-gxui.table.dynamic.row>
         </x-slot>
-    </x-gxui.table.table>
+    </x-gxui.table.dynamic.table>
 </section>
 
 @push('scripts')
@@ -107,6 +132,7 @@
                 toastStore: null,
                 searchStore: null,
                 plu: '',
+                loading: true,
                 data: [],
                 init: function () {
                     const componentID = document.querySelector('[data-component-id="cashier-cart"]')?.getAttribute('wire:id');
@@ -117,7 +143,6 @@
                             this.transactionStore = Alpine.store('transactionStore');
                             this.searchStore = Alpine.store('cartSearchStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
-                            this.getCart();
                         }
                     })
                 },
@@ -127,6 +152,7 @@
                         selectedItem.qty = parseInt(selectedItem.qty) + 1;
                         selectedItem.total = selectedItem.qty * selectedItem.price;
                         this._setTotal();
+                        this._updateStorageCart();
                     } else {
                         this.transactionStore.showLoading('find product...');
                         this.component.$wire.call('getProductByPLU', this.plu)
@@ -177,6 +203,7 @@
                     this._updateStorageCart();
                 },
                 getCart() {
+                    this.loading = false;
                     this.data = this._getStorageCart();
                     this._setTotal();
                 },

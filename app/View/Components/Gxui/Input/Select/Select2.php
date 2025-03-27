@@ -11,34 +11,26 @@ class Select2 extends Component
     public $parentClassName;
     public $selectID;
     public $label;
-    public $store;
-    public $options;
     public $validatorKey;
     public $validatorField;
 
     /**
      * Create a new component instance.
-     * @param $store
      * @param $selectID
-     * @param $options
      * @param string $label
      * @param string $parentClassName
      * @param string $validatorKey
      * @param string $validatorField
      */
     public function __construct(
-        $store,
         $selectID,
-        $options,
         $label = '',
         $parentClassName = '',
         $validatorKey = '',
         $validatorField = ''
     )
     {
-        $this->store = $store;
         $this->selectID = $selectID;
-        $this->options = $options;
         $this->label = $label;
         $this->parentClassName = $parentClassName;
         $this->validatorField = $validatorField;
