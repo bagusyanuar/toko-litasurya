@@ -9,6 +9,7 @@ use App\Domain\Web\Item\DTOFilterItem;
 use App\Domain\Web\Item\DTOFilterItemPrice;
 use App\Domain\Web\Item\DTOMutateItem;
 use App\Domain\Web\Item\DTOMutatePriceList;
+use App\Domain\Web\Item\DTOMutatePrices;
 
 interface ItemInterface
 {
@@ -53,4 +54,5 @@ interface ItemInterface
 
     public function findByPriceListUnit($plu): ServiceResponse;
 
+    public function updatePriceList(DTOMutatePrices $dto): ServiceResponse;
 }

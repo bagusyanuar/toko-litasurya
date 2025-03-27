@@ -110,12 +110,15 @@
                                                     placeholder="PLU"
                                                     parentClassName="w-full"
                                                     x-model="$store.itemTableStore.prices[index].prices[idx].plu"
+                                                    x-bind:disabled="$store.itemTableStore.loadingPrice"
                                                 ></x-gxui.input.text.text>
                                                 <x-gxui.input.text.text
                                                     placeholder="Price"
                                                     parentClassName="w-full"
                                                     x-model="$store.itemTableStore.prices[index].prices[idx].price"
-                                                    x-mask:dynamic="$money($input, ',')"
+                                                    x-mask:dynamic="$money($input, ',' ,'.', 0)"
+                                                    x-bind:disabled="$store.itemTableStore.loadingPrice"
+                                                    x-on:input="$store.itemTableStore.prices[index].prices[idx].price = $store.itemTableStore.formatCurrency($store.itemTableStore.prices[index].prices[idx].price)"
                                                 ></x-gxui.input.text.text>
                                             </div>
                                         </div>
@@ -125,15 +128,15 @@
                                             wire:ignore
                                             x-on:click="$store.itemTableStore.updatePrice(data.id)"
                                             class="!px-6"
-                                            x-bind:disabled="$store.itemTableStore.loading"
+                                            x-bind:disabled="$store.itemTableStore.loadingPrice"
                                         >
-                                            <template x-if="!$store.itemTableStore.loading">
+                                            <template x-if="!$store.itemTableStore.loadingPrice">
                                                 <div
                                                     class="w-full flex justify-center items-center gap-1 text-xs">
                                                     <span>Submit</span>
                                                 </div>
                                             </template>
-                                            <template x-if="$store.itemTableStore.loading">
+                                            <template x-if="$store.itemTableStore.loadingPrice">
                                                 <x-gxui.loader.button-loader></x-gxui.loader.button-loader>
                                             </template>
                                         </x-gxui.button.button>
@@ -165,6 +168,7 @@
                 actionLoaderStore: null,
                 units: [...AVAILABLE_UNITS],
                 prices: [],
+                loadingPrice: false,
                 actions: [
                     {
                         label: 'Edit',
@@ -252,21 +256,25 @@
                 updatePrice(itemID) {
                     const selectedPrice = this.prices.find((p) => p.item_id === itemID);
                     if (selectedPrice) {
+                        this.loadingPrice = true;
                         this.component.$wire.call('updatePrice', selectedPrice)
                             .then(response => {
                                 const {success, message} = response;
-                                console.log(response);
-                                // if (success) {
-                                //     this.toastStore.success(message);
-                                //     this.onFindAll();
-                                // } else {
-                                //     this.toastStore.failed(message);
-                                // }
+                                if (success) {
+                                    this.toastStore.success(message);
+                                    this.onFindAll();
+                                } else {
+                                    this.toastStore.failed(message);
+                                }
                             }).finally(() => {
-                            this.actionLoaderStore.end();
+                            this.loadingPrice = false;
                         })
                     }
                     console.log(selectedPrice);
+                },
+                formatCurrency(value) {
+                    let numericValue = value.replace(/\D/g, '');
+                    return new Intl.NumberFormat('id-ID').format(numericValue);
                 },
                 onDelete(data) {
                     const id = data['id'];

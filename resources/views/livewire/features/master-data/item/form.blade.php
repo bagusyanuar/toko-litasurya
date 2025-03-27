@@ -69,8 +69,9 @@
                         label="Price (Retail)"
                         parentClassName="mb-3 flex-1"
                         x-model="$store.itemFormStore.form.price.price"
-                        x-mask:dynamic="$money($input, ',')"
+                        x-mask:dynamic="$money($input, ',' ,'.', 0)"
                         x-bind:disabled="$store.itemFormStore.loading"
+                        x-on:input="$store.itemFormStore.form.price.price = $store.itemFormStore.formatCurrency($store.itemFormStore.form.price.price)"
                         validatorKey="$store.itemFormStore.formValidator"
                         validatorField="price.price"
                     ></x-gxui.input.text.text>
@@ -230,6 +231,10 @@
                     }
                     this.fileDropper.enable();
                     this.loading = false;
+                },
+                formatCurrency(value) {
+                    let numericValue = value.replace(/\D/g, '');
+                    return new Intl.NumberFormat('id-ID').format(numericValue);
                 },
                 hydrateForm(data) {
                     let categoryID = data['category_id'];

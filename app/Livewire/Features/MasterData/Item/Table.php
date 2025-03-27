@@ -4,6 +4,7 @@ namespace App\Livewire\Features\MasterData\Item;
 
 use App\Domain\Web\Category\DTOCategoryFilter;
 use App\Domain\Web\Item\DTOFilterItem;
+use App\Domain\Web\Item\DTOMutatePrices;
 use App\Helpers\Alpine\AlpineResponse;
 use App\Services\Web\ItemService;
 use Livewire\Component;
@@ -13,9 +14,13 @@ class Table extends Component
     /** @var ItemService */
     private $service;
 
+    /** @var DTOMutatePrices $dtoUpdatePrice */
+    private $dtoUpdatePrice;
+
     public function boot(ItemService $service)
     {
         $this->service = $service;
+        $this->dtoUpdatePrice = new DTOMutatePrices();
     }
 
     public function findAll($param, $page, $perPage)
@@ -39,7 +44,9 @@ class Table extends Component
 
     public function updatePrice($formData)
     {
-        dd($formData);
+        $this->dtoUpdatePrice->hydrateForm($formData);
+        $response = $this->service->updatePriceList($this->dtoUpdatePrice);
+        return AlpineResponse::toJSON($response);
     }
 
     public function render()

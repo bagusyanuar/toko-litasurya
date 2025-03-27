@@ -13,12 +13,14 @@ use App\Domain\Web\Item\DTOFilterItem;
 use App\Domain\Web\Item\DTOFilterItemPrice;
 use App\Domain\Web\Item\DTOMutateItem;
 use App\Domain\Web\Item\DTOMutatePriceList;
+use App\Domain\Web\Item\DTOMutatePrices;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\ItemPrice;
 use App\Services\CustomService;
 use App\Usecase\Web\ItemInterface;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\DB;
 
 class ItemService extends CustomService implements ItemInterface
 {
@@ -150,7 +152,7 @@ class ItemService extends CustomService implements ItemInterface
             $page = $filter->getPage();
             $perPage = $filter->getPerPage();
             $query = ItemPrice::with(['item'])
-                ->whereHas('item', function ($q) use ($filter){
+                ->whereHas('item', function ($q) use ($filter) {
                     /** @var Builder $q */
                     return $q->where('name', 'LIKE', "%{$filter->getParam()}%");
                 });
@@ -169,6 +171,38 @@ class ItemService extends CustomService implements ItemInterface
                 $meta
             );
         } catch (\Exception $e) {
+            return ServiceResponse::internalServerError($e->getMessage());
+        }
+    }
+
+    public function updatePriceList(DTOMutatePrices $dto): ServiceResponse
+    {
+        DB::beginTransaction();
+        try {
+            $dto->hydrate();
+            $prices = $dto->getPrices();
+            foreach ($prices as $price) {
+                $dataPrice = [
+                    'item_id' => $dto->getItemID(),
+                    'price_list_unit' => $price['plu'],
+                    'price' => $price['price'],
+                    'unit' => $price['unit'],
+                    'description' => '-'
+                ];
+                if ($price['id']) {
+                    ItemPrice::updateOrCreate([
+                        'id' => $price['id']
+                    ], $dataPrice);
+                } else {
+                    if ($price['price'] > 0) {
+                        ItemPrice::create($dataPrice);
+                    }
+                }
+            }
+            DB::commit();
+            return ServiceResponse::statusOK('successfully update price list', $prices);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return ServiceResponse::internalServerError($e->getMessage());
         }
     }
