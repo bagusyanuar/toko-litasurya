@@ -35,11 +35,13 @@
                 validatorField="name"
             ></x-gxui.input.text.text>
             <x-gxui.input.select.select2-multiple
-                store="routeFormStore"
-                options="storeOptions"
                 label="Store"
-                parentClassName="mb-3 flex-1"
+                parentClassName="mb-3"
                 selectID="storeSelect"
+                x-init="initSelect2({placeholder: 'choose a store'})"
+                x-bind="gxuiSelect2MultipleBind"
+                x-bind:store-name="'$store.routeFormStore.storeOptions'"
+                x-model="$store.routeFormStore.storeValues"
                 validatorKey="$store.routeFormStore.formValidator"
                 validatorField="stores"
             ></x-gxui.input.select.select2-multiple>
@@ -51,7 +53,7 @@
                 x-bind:disabled="$store.routeFormStore.loading"
                 class="!px-6 bg-white !border-brand-500 !text-brand-500 hover:!text-white disabled:!bg-white disabled:!text-brand-500"
             >
-                <div class="w-full flex justify-center items-center gap-1 text-sm">
+                <div class="w-full flex justify-center items-center gap-1 text-xs">
                     <span>Cancel</span>
                 </div>
             </x-gxui.button.button>
@@ -62,7 +64,7 @@
                 class="!px-6"
             >
                 <template x-if="!$store.routeFormStore.loading">
-                    <div class="w-full flex justify-center items-center gap-1 text-sm">
+                    <div class="w-full flex justify-center items-center gap-1 text-xs">
                         <span>Submit</span>
                     </div>
                 </template>
@@ -97,13 +99,6 @@
                             this.component = component;
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.tableStore = Alpine.store('routeTableStore');
-                            let selectElement = document.getElementById("storeSelect");
-                            this.select2Store = Alpine.store('gxuiSelectStore')
-                                .initSelect2Multiple(
-                                    selectElement,
-                                    this.onChangeCategory.bind(this),
-                                    {placeholder: 'choose a store'}
-                                );
                             this.component.$wire.call('stores').then(response => {
                                 const {success, data} = response;
                                 if (success) {
@@ -176,7 +171,6 @@
                     this.storeValues = data['details'].map((v, k) => {
                         return v['customer_id'];
                     });
-                    $('#storeSelect').val(this.storeValues).trigger('change');
                     this.showModalForm = true;
                 }
             };

@@ -4,6 +4,7 @@
 >
     <x-gxui.modal.form
         show="$store.rewardFormStore.showModalForm"
+        width="30rem"
     >
         <div
             class="modal-header flex items-center justify-between px-4 py-3 border-b border-neutral-300 rounded-t">
@@ -34,10 +35,11 @@
                 validatorField="name"
             ></x-gxui.input.text.text>
             <x-gxui.input.file.file-dropper
-                placeholder="Name"
+                store="rewardFormStore"
+                stateComponent="fileDropper"
                 label="Image"
-                dropperID="imageRewardDropper"
-                dropperLoading="$store.rewardFormStore.loading"
+                class="!h-12"
+                parentClassName="mb-3"
             ></x-gxui.input.file.file-dropper>
             <x-gxui.input.text.text
                 placeholder="0"
@@ -47,17 +49,18 @@
                 x-bind:disabled="$store.rewardFormStore.loading"
                 validatorKey="$store.rewardFormStore.formValidator"
                 validatorField="point"
-                x-mask:dynamic="$money($input, ',')"
+                x-mask:dynamic="$money($input, ',' ,'.', 0)"
+                x-on:input="$store.rewardFormStore.form.point = $store.rewardFormStore.formatCurrency($store.rewardFormStore.form.point)"
             ></x-gxui.input.text.text>
         </div>
         <div class="modal-footer w-full flex items-center justify-end gap-2 px-4 py-3 border-t border-neutral-300">
             <x-gxui.button.button
                 wire:ignore
-                x-on:click="$store.rewardFormStore.setCloseModalForm()"
+                x-on:click="$store.rewardFormStore.closeModal()"
                 x-bind:disabled="$store.rewardFormStore.loading"
                 class="!px-6 bg-white !border-brand-500 !text-brand-500 hover:!text-white disabled:!bg-white disabled:!text-brand-500"
             >
-                <div class="w-full flex justify-center items-center gap-1 text-sm">
+                <div class="w-full flex justify-center items-center gap-1 text-xs">
                     <span>Cancel</span>
                 </div>
             </x-gxui.button.button>
@@ -68,7 +71,7 @@
                 class="!px-6"
             >
                 <template x-if="!$store.rewardFormStore.loading">
-                    <div class="w-full flex justify-center items-center gap-1 text-sm">
+                    <div class="w-full flex justify-center items-center gap-1 text-xs">
                         <span>Submit</span>
                     </div>
                 </template>
@@ -101,8 +104,6 @@
                             this.component = component;
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.tableStore = Alpine.store('rewardTableStore');
-                            const dropperElement = document.getElementById('imageRewardDropper');
-                            this.fileDropper = Alpine.store('gxuiFileDropperStore').initDropper(dropperElement);
                         }
                     });
                 },
@@ -112,6 +113,10 @@
                     this.formType = 'create';
                     this.formValidator = {};
                     this.fileDropper.removeAllFiles();
+                },
+                formatCurrency(value) {
+                    let numericValue = value.replace(/\D/g, '');
+                    return new Intl.NumberFormat('id-ID').format(numericValue);
                 },
                 showModal(formType = 'create') {
                     this.showModalForm = true;

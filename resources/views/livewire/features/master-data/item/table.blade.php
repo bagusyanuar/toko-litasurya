@@ -184,13 +184,13 @@
                             this.onDelete(data)
                         }
                     },
-                    {
-                        label: 'Pricing',
-                        icon: 'circle-dollar-sign',
-                        dispatch: function (data) {
-                            this.onPriceList(data);
-                        }
-                    },
+                    // {
+                    //     label: 'Pricing',
+                    //     icon: 'circle-dollar-sign',
+                    //     dispatch: function (data) {
+                    //         this.onPriceList(data);
+                    //     }
+                    // },
                 ],
                 init: function () {
                     const componentID = document.querySelector('[data-component-id="table-item"]')?.getAttribute('wire:id');
@@ -212,7 +212,6 @@
                     this.component.$wire.call('findAll', this.param, this.page, this.perPage)
                         .then(response => {
                             const {success, data, meta} = response;
-                            console.log(data);
                             if (success) {
                                 this.data = data;
                                 const totalRows = meta['pagination'] ? meta['pagination']['total_rows'] : 0;
@@ -270,7 +269,6 @@
                             this.loadingPrice = false;
                         })
                     }
-                    console.log(selectedPrice);
                 },
                 formatCurrency(value) {
                     let numericValue = value.replace(/\D/g, '');

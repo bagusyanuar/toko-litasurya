@@ -114,6 +114,7 @@ document.addEventListener('alpine:init', () => {
         'x-data': () => ({
             element: null,
             storeName: '',
+            selectedValues: [],
             data: [],
             initSelect2(config = {}) {
                 const baseConfig = {width: "100%", multiple: true, placeholder: "Choose an option"};
@@ -146,8 +147,15 @@ document.addEventListener('alpine:init', () => {
                         });
                     }
 
+                    this.$watch(() => {
+                        return this.$el._x_model.get();
+                    }, (val) => {
+                        this.$el._x_model.set(val);
+                    });
+
                     this.element.on('change', () => {
-                        this.$el._x_model.set(this.element.val());
+                        this.selectedValues = this.element.val();
+                        this.$el._x_model.set(this.selectedValues);
                     });
                 });
             },
