@@ -145,7 +145,7 @@ document.addEventListener('alpine:init', () => {
     Alpine.bind('gxuiCollapsibleRow', () => ({
         'x-data': () => ({
             isOpen: false,
-            toggleIcon() {
+            toggleOpen() {
                 this.isOpen = !this.isOpen;
                 this.initIcons();
             },

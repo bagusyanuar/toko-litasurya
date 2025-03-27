@@ -28,7 +28,7 @@
         >
             <x-slot name="header">
                 <x-gxui.table.dynamic.th
-                    class="w-[120px]"
+                    class="w-[140px]"
                     contentClass="justify-center"
                 >
                     <span>Category</span>
@@ -52,9 +52,9 @@
                 </x-gxui.table.dynamic.th>
             </x-slot>
             <x-slot name="rows">
-                <x-gxui.table.dynamic.row>
+                <x-gxui.table.dynamic.collapsible-row>
                     <x-gxui.table.dynamic.td
-                        class="w-[120px]"
+                        class="w-[140px]"
                         contentClass="justify-center"
                     >
                         <span x-text="data.category.name"></span>
@@ -76,7 +76,11 @@
                         contentClass="justify-end"
                         class="w-[100px]"
                     >
-                        <span x-text="data.retail_price?.price.toLocaleString('id-ID') ?? '-'"></span>
+                        <span
+                            x-text="data.retail_price?.price.toLocaleString('id-ID') ?? '-'"
+                            class="cursor-pointer transition-all ease-in duration-300 hover:underline"
+                            x-on:click="toggleOpen()"
+                        ></span>
                     </x-gxui.table.dynamic.td>
                     <x-gxui.table.dynamic.td
                         contentClass="justify-center"
@@ -84,7 +88,61 @@
                     >
                         <x-gxui.table.dynamic.action store="itemTableStore"></x-gxui.table.dynamic.action>
                     </x-gxui.table.dynamic.td>
-                </x-gxui.table.dynamic.row>
+                    <x-slot name="collapsible">
+                        <div class="w-full flex items-start border-b">
+                            <x-gxui.table.dynamic.td
+                                contentClass="justify-center"
+                                class="w-[140px]"
+                            ></x-gxui.table.dynamic.td>
+                            <x-gxui.table.dynamic.td
+                                class="flex-1 min-w-[120px]"
+                            >
+                                <div class="w-full">
+                                    <template x-for="(unit, idx) in $store.itemTableStore.units" :key="idx">
+                                        <div
+                                            class="w-full flex items-center gap-3 py-1.5 border-b last:border-b-0 text-neutral-700">
+                                            <div class="w-[80px] flex items-center justify-between text-xs">
+                                                <span x-text="unit.label"></span>
+                                                <span>:</span>
+                                            </div>
+                                            <div class="flex-1 flex items-center gap-2">
+                                                <x-gxui.input.text.text
+                                                    placeholder="PLU"
+                                                    parentClassName="w-full"
+                                                    x-model="$store.itemTableStore.prices[index].prices[idx].plu"
+                                                ></x-gxui.input.text.text>
+                                                <x-gxui.input.text.text
+                                                    placeholder="Price"
+                                                    parentClassName="w-full"
+                                                    x-model="$store.itemTableStore.prices[index].prices[idx].price"
+                                                    x-mask:dynamic="$money($input, ',')"
+                                                ></x-gxui.input.text.text>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <div class="w-full flex justify-end mt-1">
+                                        <x-gxui.button.button
+                                            wire:ignore
+                                            x-on:click="$store.itemTableStore.updatePrice(data.id)"
+                                            class="!px-6"
+                                            x-bind:disabled="$store.itemTableStore.loading"
+                                        >
+                                            <template x-if="!$store.itemTableStore.loading">
+                                                <div
+                                                    class="w-full flex justify-center items-center gap-1 text-xs">
+                                                    <span>Submit</span>
+                                                </div>
+                                            </template>
+                                            <template x-if="$store.itemTableStore.loading">
+                                                <x-gxui.loader.button-loader></x-gxui.loader.button-loader>
+                                            </template>
+                                        </x-gxui.button.button>
+                                    </div>
+                                </div>
+                            </x-gxui.table.dynamic.td>
+                        </div>
+                    </x-slot>
+                </x-gxui.table.dynamic.collapsible-row>
             </x-slot>
         </x-gxui.table.dynamic.table>
     </div>
@@ -93,12 +151,20 @@
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
+            const AVAILABLE_UNITS = [
+                {key: 'retail', label: 'Retail'},
+                {key: 'dozen', label: 'Dozen'},
+                {key: 'carton', label: 'Carton'},
+                {key: 'trader', label: 'Trader'}
+            ];
             const COMPONENT_PROPS = {
                 component: null,
                 formStore: null,
                 priceListStore: null,
                 toastStore: null,
                 actionLoaderStore: null,
+                units: [...AVAILABLE_UNITS],
+                prices: [],
                 actions: [
                     {
                         label: 'Edit',
@@ -142,18 +208,65 @@
                     this.component.$wire.call('findAll', this.param, this.page, this.perPage)
                         .then(response => {
                             const {success, data, meta} = response;
+                            console.log(data);
                             if (success) {
                                 this.data = data;
                                 const totalRows = meta['pagination'] ? meta['pagination']['total_rows'] : 0;
                                 const page = meta['pagination'] ? meta['pagination']['page'] : 1;
                                 this.totalRows = totalRows;
                                 this.page = page;
+                                this._generatePrices();
                             } else {
                                 this.toastStore.failed('failed to load item data');
                             }
                         }).finally(() => {
                         this.loading = false;
                     })
+                },
+                _generatePrices() {
+                    this.data.forEach((item, key) => {
+                        const prices = item['prices'];
+                        const itemID = item['id'];
+                        let arrPrices = [];
+                        this.units.forEach((unit, kUnit) => {
+                            let tmpPrice = {
+                                item_price_id: '',
+                                unit: unit.key,
+                                plu: '',
+                                price: 0
+                            };
+                            const singlePrice = prices.find((p) => p.unit === unit.key);
+                            if (singlePrice) {
+                                tmpPrice.item_price_id = singlePrice['id'];
+                                tmpPrice.plu = singlePrice['price_list_unit'];
+                                tmpPrice.price = singlePrice['price']
+                            }
+                            arrPrices.push(tmpPrice);
+                        });
+                        this.prices.push({
+                            item_id: itemID,
+                            prices: arrPrices
+                        });
+                    });
+                },
+                updatePrice(itemID) {
+                    const selectedPrice = this.prices.find((p) => p.item_id === itemID);
+                    if (selectedPrice) {
+                        this.component.$wire.call('updatePrice', selectedPrice)
+                            .then(response => {
+                                const {success, message} = response;
+                                console.log(response);
+                                // if (success) {
+                                //     this.toastStore.success(message);
+                                //     this.onFindAll();
+                                // } else {
+                                //     this.toastStore.failed(message);
+                                // }
+                            }).finally(() => {
+                            this.actionLoaderStore.end();
+                        })
+                    }
+                    console.log(selectedPrice);
                 },
                 onDelete(data) {
                     const id = data['id'];

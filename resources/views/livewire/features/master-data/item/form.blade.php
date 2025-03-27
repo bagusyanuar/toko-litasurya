@@ -3,8 +3,7 @@
     data-component-id="form-item"
 >
     <x-gxui.modal.form
-{{--        show="$store.itemFormStore.showModalForm"--}}
-        show="true"
+        show="$store.itemFormStore.showModalForm"
         width="30rem"
     >
         <div
@@ -32,15 +31,6 @@
                 class="w-full"
             >
                 <div class="w-full flex items-start gap-3">
-{{--                    <x-gxui.input.select.select2--}}
-{{--                        store="itemFormStore"--}}
-{{--                        options="categoryOptions"--}}
-{{--                        label="Category"--}}
-{{--                        parentClassName="mb-3 flex-1"--}}
-{{--                        selectID="categorySelect"--}}
-{{--                        validatorKey="$store.itemFormStore.formValidator"--}}
-{{--                        validatorField="category_id"--}}
-{{--                    ></x-gxui.input.select.select2>--}}
                     <x-gxui.input.select.select2
                         store="itemFormStore"
                         options="categoryOptions"
@@ -181,8 +171,6 @@
                                     this.toastStore.failed('failed to load item data');
                                 }
                             });
-
-
                         }
                     });
                 },

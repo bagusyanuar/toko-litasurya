@@ -8,7 +8,7 @@
     >
         <div
             class="modal-header flex items-center justify-between px-4 py-3 border-b border-neutral-300 rounded-t">
-            <span class="text-neutral-700 font-semibold">Product Price List</span>
+            <span class="text-neutral-700 font-semibold text-sm">Product Price List</span>
             <button
                 type="button"
                 x-on:click="$store.priceListStore.closeModal()"

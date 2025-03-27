@@ -37,6 +37,11 @@ class Table extends Component
         return AlpineResponse::toJSON($response);
     }
 
+    public function updatePrice($formData)
+    {
+        dd($formData);
+    }
+
     public function render()
     {
         return view('livewire.features.master-data.item.table');

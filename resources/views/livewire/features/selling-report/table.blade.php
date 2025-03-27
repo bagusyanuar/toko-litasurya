@@ -115,7 +115,7 @@
                 >
                     <div
                         wire:ignore
-                        @click="toggleIcon"
+                        @click="toggleOpen"
                         class="flex items-center justify-center p-1 cursor-pointer hover:bg-neutral-100 transition-all ease-in duration-200"
                     >
                         <i x-bind:data-lucide="isOpen ? 'chevron-up' : 'chevron-down'"
@@ -159,7 +159,7 @@
                 </x-gxui.table.dynamic.td>
                 <!-- data cart -->
                 <x-slot name="collapsible">
-                    <div class="w-full flex items-start border-b" x-show="isOpen" x-collapse>
+                    <div class="w-full flex items-start border-b">
                         <x-gxui.table.dynamic.td
                             contentClass="justify-center"
                             class="w-[40px]"

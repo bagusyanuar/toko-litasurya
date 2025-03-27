@@ -40,7 +40,7 @@
     >
         <livewire:features.master-data.item.table/>
         <livewire:features.master-data.item.form/>
-{{--        <livewire:features.master-data.item.price-list/>--}}
+        <livewire:features.master-data.item.price-list/>
     </div>
     <div
         x-show="$store.masterDataStore.selectedTab === 'reward'"

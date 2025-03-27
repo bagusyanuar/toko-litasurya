@@ -8,6 +8,8 @@
         {{ $slot }}
     </div>
     @if(isset($collapsible))
-        {{ $collapsible }}
+        <div class="w-full" x-show="isOpen" x-collapse>
+            {{ $collapsible }}
+        </div>
     @endif
 </div>
