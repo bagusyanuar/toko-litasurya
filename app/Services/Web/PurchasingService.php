@@ -26,7 +26,7 @@ class PurchasingService implements PurchasingUseCase
     {
         try {
             $filter->hydrateQuery();
-            $query = Transaction::with(['user.sales', 'customer'])
+            $query = Transaction::with(['user.sales', 'customer', 'carts.item'])
                 ->where('type', '=', 'sales')
                 ->where('status', '=', 'pending')
                 ->when($filter->getStore(), function ($q) use ($filter) {
