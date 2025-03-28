@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', App\Livewire\Pages\Auth\Login::class)->name('login')->middleware('guest');
-Route::middleware(['auth'])->group(function (){
+
+Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', App\Livewire\Pages\Dashboard\Index::class)->name('dashboard');
     Route::get('/transaction', App\Livewire\Pages\Transaction\Index::class)->name('transaction');
     Route::get('/master-data', App\Livewire\Pages\MasterData\Index::class)->name('master-data');

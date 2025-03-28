@@ -67,7 +67,7 @@
             </x-gxui.table.dynamic.th>
             <x-gxui.table.dynamic.th
                 contentClass="justify-center"
-                class="w-[40px]"
+                class="w-[50px]"
             >
             </x-gxui.table.dynamic.th>
         </x-slot>
@@ -114,12 +114,33 @@
                 </x-gxui.table.dynamic.td>
                 <x-gxui.table.dynamic.td
                     contentClass="justify-center"
-                    class="w-[40px]"
+                    class="w-[50px]"
+                    x-data="{
+                        initIcons() {
+                           setTimeout(() => { lucide.createIcons(); }, 0);
+                        }
+                    }"
+                    x-init="initIcons()"
+                    x-effect="initIcons()"
                 >
+                        <div
+                            class="cursor-pointer w-fit"
+                            wire:ignore
+                            x-on:click="$store.cartStore.confirmDelete(index)"
+                        >
+                            <i data-lucide="trash"
+                               class="text-red-500 group-focus-within:text-neutral-900 h-3 aspect-[1/1]">
+                            </i>
+                        </div>
                 </x-gxui.table.dynamic.td>
             </x-gxui.table.dynamic.row>
         </x-slot>
     </x-gxui.table.dynamic.table>
+    <x-gxui.modal.confirmation
+        store="cartStore"
+        dispatcher="$store.cartStore.deleteItem()"
+        onCloseDispatcher="$store.cartStore.closeDelete()"
+    ></x-gxui.modal.confirmation>
 </section>
 
 @push('scripts')
@@ -131,9 +152,11 @@
                 billingStore: null,
                 toastStore: null,
                 searchStore: null,
+                modalConfirmationStore: null,
                 plu: '',
                 loading: true,
                 data: [],
+                deleteIndex: 0,
                 init: function () {
                     const componentID = document.querySelector('[data-component-id="cashier-cart"]')?.getAttribute('wire:id');
                     Livewire.hook('component.init', ({component}) => {
@@ -143,6 +166,7 @@
                             this.transactionStore = Alpine.store('transactionStore');
                             this.searchStore = Alpine.store('cartSearchStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
+                            this.modalConfirmationStore = Alpine.store('gxuiModalConfirmationStore');
                         }
                     })
                 },
@@ -235,6 +259,19 @@
                     this._setTotal();
                     localStorage.removeItem('cart');
                 },
+                confirmDelete(index) {
+                    this.deleteIndex = index;
+                    this.modalConfirmationStore.showConfirmation();
+                },
+                closeDelete() {
+                    this.deleteIndex = 0;
+                    this.modalConfirmationStore.closeConfirmation()
+                },
+                deleteItem() {
+                    this.data.splice(this.deleteIndex, 1);
+                    this._updateStorageCart();
+                    this.modalConfirmationStore.closeConfirmation()
+                }
             });
         });
     </script>
