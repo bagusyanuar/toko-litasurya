@@ -4,7 +4,28 @@
 >
     <div class="w-full flex items-center justify-between mb-3">
         <p class="text-neutral-700 font-semibold">Purchasing Data</p>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1">
+            <div class="flex items-center justify-between gap-1">
+                <x-gxui.input.date.datepicker
+                    id="filterPurchasingDateStart"
+                    store="purchasingTableStore"
+                    placeholder="dd/mm/yyyy"
+                    class="!w-[120px]"
+                    x-model="$store.purchasingTableStore.dateStart"
+                    x-init="initDatepicker({format: 'dd/mm/yyyy'})"
+                    dispatcher="onDateChange"
+                ></x-gxui.input.date.datepicker>
+                <span class="text-sm text-neutral-700">-</span>
+                <x-gxui.input.date.datepicker
+                    id="filterPurchasingDateEnd"
+                    store="purchasingTableStore"
+                    placeholder="dd/mm/yyyy"
+                    class="!w-[120px]"
+                    x-model="$store.purchasingTableStore.dateEnd"
+                    x-init="initDatepicker({format: 'dd/mm/yyyy'})"
+                    dispatcher="onDateChange"
+                ></x-gxui.input.date.datepicker>
+            </div>
             <x-gxui.button.button
                 wire:ignore
                 x-on:click="$store.filterPurchasingStore.show()"
@@ -15,6 +36,65 @@
                        class="text-white h-3 aspect-[1/1]"></i>
                 </div>
             </x-gxui.button.button>
+            <div x-data="{ open: false }" class="relative">
+                <x-gxui.button.button
+                    wire:ignore
+                    x-on:click="open = true"
+                    class="!rounded !px-1.5 bg-white !border-brand-500 !text-brand-500 hover:!bg-white"
+                >
+                    <div wire:ignore>
+                        <i data-lucide="settings"
+                           class="text-brand-500 h-3 aspect-[1/1]"></i>
+                    </div>
+                </x-gxui.button.button>
+                <div
+                    x-show="open"
+                    class="absolute right-0 bottom-[-6.5rem] transform"
+                    x-on:click.away="open = false;"
+                    x-cloak
+                    x-transition:enter="transition ease-out duration-300 transform"
+                    x-transition:enter-start="translate-y-[-100%] opacity-0"
+                    x-transition:enter-end="translate-y-0 opacity-100"
+                    x-transition:leave="transition ease-in duration-200 transform"
+                    x-transition:leave-start="translate-y-0 opacity-100"
+                    x-transition:leave-end="translate-y-[-100%] opacity-0"
+                >
+                    <div
+                        class="w-44 px-1 py-1 bg-white rounded shadow-md text-sm text-neutral-700"
+                    >
+                        <div
+                            class="rounded px-3 py-1.5 flex items-center gap-1 cursor-pointer hover:bg-neutral-100 transition-all ease-in duration-200"
+                            x-on:click="open = false; $store.purchasingTableStore.onFindAll()"
+                        >
+                            <div wire:ignore>
+                                <i data-lucide="refresh-cw"
+                                   class="text-neutral-700 h-4 aspect-[1/1]"></i>
+                            </div>
+                            <span class="text-xs text-neutral-700">Refresh</span>
+                        </div>
+                        <div
+                            class="rounded px-3 py-1.5 flex items-center gap-1 cursor-pointer hover:bg-neutral-100 transition-all ease-in duration-200"
+                            x-on:click=""
+                        >
+                            <div wire:ignore>
+                                <i data-lucide="file"
+                                   class="text-neutral-700 h-4 aspect-[1/1]"></i>
+                            </div>
+                            <span class="text-xs text-neutral-700">Export as PDF</span>
+                        </div>
+                        <div
+                            class="rounded px-3 py-1.5 flex items-center gap-1 cursor-pointer hover:bg-neutral-100 transition-all ease-in duration-200"
+                            x-on:click=""
+                        >
+                            <div wire:ignore>
+                                <i data-lucide="file-spreadsheet"
+                                   class="text-neutral-700 h-4 aspect-[1/1]"></i>
+                            </div>
+                            <span class="text-xs text-neutral-700">Export as Excel</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <x-gxui.table.dynamic.table
@@ -231,6 +311,11 @@
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
+            const today = new Date().toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
             const componentProps = {
                 component: null,
                 filterStore: null,
@@ -238,8 +323,8 @@
                 transactionStore: null,
                 store: '',
                 sales: '',
-                dateStart: '',
-                dateEnd: '',
+                dateStart: today,
+                dateEnd: today,
                 loadingSubmit: false,
                 actions: [
                     {
@@ -302,8 +387,6 @@
                 hydrateQuery(q) {
                     this.store = q['store'];
                     this.sales = q['sales'];
-                    this.dateStart = q['dateStart'];
-                    this.dateEnd = q['dateEnd'];
                     this.onFindAll();
                 },
                 updateCart(id, cartID, qty) {
@@ -319,6 +402,9 @@
                         }
                     }
                 },
+                onDateChange() {
+                    this.onFindAll();
+                },
                 onSubmitPurchase(data, index) {
                     const id = data['id'];
                     this.loadingSubmit = true;
@@ -330,7 +416,6 @@
                     this.component.$wire.call('submitPurchase', form)
                         .then(response => {
                             const {success, data, message} = response;
-                            console.log(response);
                             if (success) {
                                 this.onFindAll();
                             } else {

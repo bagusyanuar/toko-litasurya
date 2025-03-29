@@ -2,7 +2,7 @@
     id="section-cashier-billing"
     data-component-id="cashier-billing"
 >
-    <div class="w-72 bg-white px-6 py-4 rounded-md shadow-md">
+    <div class="w-64 bg-white px-6 py-4 rounded-md shadow-md">
         <p class="font-bold text-sm text-neutral-700 mb-3">Billing</p>
         <hr class="mb-3"/>
         <x-gxui.input.select.select2

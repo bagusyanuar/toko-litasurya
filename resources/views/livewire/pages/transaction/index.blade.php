@@ -75,7 +75,7 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('transactionStore', {
-                selectedTab: 'selling-report',
+                selectedTab: 'cashier',
                 gift: false,
                 point: 0,
                 onChangeTab(selectedTab) {

@@ -270,6 +270,7 @@
                 deleteItem() {
                     this.data.splice(this.deleteIndex, 1);
                     this._updateStorageCart();
+                    this._setTotal();
                     this.modalConfirmationStore.closeConfirmation()
                 }
             });

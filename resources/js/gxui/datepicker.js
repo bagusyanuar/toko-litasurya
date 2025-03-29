@@ -4,6 +4,7 @@ document.addEventListener('alpine:init', () => {
             dateValue: '',
             datepicker: null,
             dispatcher: '',
+            storeName: '',
             initDatepicker(config = {}) {
                 const baseConfig = {
                     format: 'yyyy-mm-dd',
@@ -12,8 +13,9 @@ document.addEventListener('alpine:init', () => {
                 };
                 const cfg = Object.assign({}, baseConfig, config);
                 this.$nextTick(() => {
-                    this.datepicker = new Datepicker(this.$el, cfg);
+                    this.storeName = this.$el.getAttribute("store-name") || '';
                     this.dispatcher = this.$el.getAttribute("dispatcher") || '';
+                    this.datepicker = new Datepicker(this.$el, cfg);
                     const modelValue = this.$el._x_model?.get();
                     if (modelValue) {
                         this.$el.value = modelValue; // Set sebagai default value
@@ -21,7 +23,10 @@ document.addEventListener('alpine:init', () => {
                     this.$el.addEventListener('changeDate', (event) => {
                         this.dateValue = event.target.value;
                         this.$el._x_model.set(event.target.value);
-                        console.log('dispatch');
+                        let store = Alpine.store(this.storeName);
+                        if (store && typeof store[this.dispatcher] === "function") {
+                            store[this.dispatcher]();
+                        }
                     });
 
                     this.$watch(() => {

@@ -9,19 +9,22 @@
                 <div class="flex items-center justify-between gap-1">
                     <x-gxui.input.date.datepicker
                         id="filterSellingDateStart"
-                        label=""
+                        store="sellingReportTableStore"
                         placeholder="dd/mm/yyyy"
-                        x-model="$store.filterSellingReportStore.dateStartValue"
+                        class="!w-[120px]"
+                        x-model="$store.sellingReportTableStore.dateStart"
                         x-init="initDatepicker({format: 'dd/mm/yyyy'})"
-                        dispatcher=""
+                        dispatcher="onDateChange"
                     ></x-gxui.input.date.datepicker>
                     <span class="text-sm text-neutral-700">-</span>
                     <x-gxui.input.date.datepicker
                         id="filterSellingDateEnd"
-                        label=""
+                        store="sellingReportTableStore"
                         placeholder="dd/mm/yyyy"
-                        x-model="$store.filterSellingReportStore.dateEndValue"
+                        class="!w-[120px]"
+                        x-model="$store.sellingReportTableStore.dateEnd"
                         x-init="initDatepicker({format: 'dd/mm/yyyy'})"
+                        dispatcher="onDateChange"
                     ></x-gxui.input.date.datepicker>
                 </div>
             </div>
@@ -42,13 +45,13 @@
                     class="!rounded !px-1.5 bg-white !border-brand-500 !text-brand-500 hover:!bg-white"
                 >
                     <div wire:ignore>
-                        <i data-lucide="download"
+                        <i data-lucide="settings"
                            class="text-brand-500 h-3 aspect-[1/1]"></i>
                     </div>
                 </x-gxui.button.button>
                 <div
                     x-show="open"
-                    class="absolute right-0 bottom-[-4.5rem] transform"
+                    class="absolute right-0 bottom-[-6.5rem] transform"
                     x-on:click.away="open = false;"
                     x-cloak
                     x-transition:enter="transition ease-out duration-300 transform"
@@ -61,6 +64,16 @@
                     <div
                         class="w-44 px-1 py-1 bg-white rounded shadow-md text-sm text-neutral-700"
                     >
+                        <div
+                            class="rounded px-3 py-1.5 flex items-center gap-1 cursor-pointer hover:bg-neutral-100 transition-all ease-in duration-200"
+                            x-on:click="open = false; $store.sellingReportTableStore.onFindAll()"
+                        >
+                            <div wire:ignore>
+                                <i data-lucide="refresh-cw"
+                                   class="text-neutral-700 h-4 aspect-[1/1]"></i>
+                            </div>
+                            <span class="text-xs text-neutral-700">Refresh</span>
+                        </div>
                         <div
                             class="rounded px-3 py-1.5 flex items-center gap-1 cursor-pointer hover:bg-neutral-100 transition-all ease-in duration-200"
                             x-on:click=""
@@ -330,8 +343,6 @@
                 },
                 hydrateQuery(q) {
                     this.types = q['types'];
-                    this.dateStart = q['dateStart'];
-                    this.dateEnd = q['dateEnd'];
                     this.invoiceID = q['invoiceID'];
                     this.customers = q['customers'];
                     this.onFindAll();
@@ -350,7 +361,6 @@
                     this.component.$wire.call('findAll', query)
                         .then(response => {
                             const {success, data, meta} = response;
-                            console.log(data);
                             if (success) {
                                 this.data = data['data'];
                                 this.total = data['total'];
@@ -364,6 +374,9 @@
                         }).finally(() => {
                         this.loading = false;
                     })
+                },
+                onDateChange() {
+                    this.onFindAll();
                 },
                 onProcess(id) {
                     this.transactionStore.showLoading('processing purchase...');

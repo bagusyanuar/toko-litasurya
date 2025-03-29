@@ -4,7 +4,6 @@
 >
     <x-gxui.modal.form
         show="$store.filterPurchasingStore.showModal"
-        {{--        show="true"--}}
         width="24rem"
     >
         <div
@@ -25,7 +24,7 @@
                 <span class="sr-only">Close modal</span>
             </button>
         </div>
-        <div class="modal-body p-6">
+        <div class="modal-body px-6 py-4">
             <x-gxui.input.select.select2
                 store="filterPurchasingStore"
                 options="storeOptions"
@@ -48,22 +47,6 @@
                 x-bind:store-name="'$store.filterPurchasingStore.salesOptions'"
                 x-model="$store.filterPurchasingStore.salesValue"
             ></x-gxui.input.select.select2>
-            <x-gxui.input.date.datepicker
-                id="dateStart"
-                label="Date Start"
-                placeholder="dd/mm/yyyy"
-                parentClassName="mb-3"
-                x-model="$store.filterPurchasingStore.dateStartValue"
-                x-init="initDatepicker({format: 'dd/mm/yyyy'})"
-            ></x-gxui.input.date.datepicker>
-            <x-gxui.input.date.datepicker
-                id="dateEnd"
-                label="Date End"
-                placeholder="dd/mm/yyyy"
-                parentClassName="mb-3"
-                x-model="$store.filterPurchasingStore.dateEndValue"
-                x-init="initDatepicker({format: 'dd/mm/yyyy'})"
-            ></x-gxui.input.date.datepicker>
         </div>
         <div class="modal-footer w-full flex items-center justify-end gap-2 px-4 py-3 border-t border-neutral-300">
             <x-gxui.button.button
@@ -100,8 +83,6 @@
                 salesOptions: [],
                 storeValue: '',
                 salesValue: '',
-                dateStartValue: '',
-                dateEndValue: '',
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
                         const componentID = document.querySelector('[data-component-id="filter-purchasing"]')?.getAttribute('wire:id');
@@ -118,8 +99,6 @@
                     const query = {
                         store: this.storeValue,
                         sales: this.salesValue,
-                        dateStart: this.dateStartValue,
-                        dateEnd: this.dateEndValue,
                     };
                     this.showModal = false;
                     this.tableStore.hydrateQuery(query);
@@ -127,8 +106,7 @@
                 reset() {
                     this.storeValue = '';
                     this.salesValue = '';
-                    this.dateStartValue = '';
-                    this.dateEndValue = '';
+                    this.filter();
                 },
                 show() {
                     this.showModal = true;

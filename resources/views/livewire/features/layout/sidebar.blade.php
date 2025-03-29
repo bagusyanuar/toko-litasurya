@@ -17,31 +17,37 @@
             icon="shopping-bag"
             to="/transaction"
             title="Transaction"
-            active="{{ \Illuminate\Support\Facades\Route::is('transaction/*') }}"
+            active="{{ \Illuminate\Support\Facades\Route::is('transaction*') }}"
         ></x-gxui.sidebar.item>
         <x-gxui.sidebar.item
             icon="archive"
             to="/master-data"
             title="Master Data"
-            active="{{ \Illuminate\Support\Facades\Route::is('master-data/*') }}"
+            active="{{ \Illuminate\Support\Facades\Route::is('master-data*') }}"
         ></x-gxui.sidebar.item>
         <x-gxui.sidebar.item
             icon="square-user"
             to="/customer"
             title="Customer"
-            active="{{ \Illuminate\Support\Facades\Route::is('customer/*') }}"
+            active="{{ \Illuminate\Support\Facades\Route::is('customer*') }}"
+        ></x-gxui.sidebar.item>
+        <x-gxui.sidebar.item
+            icon="bike"
+            to="/sales-team"
+            title="Sales Team"
+            active="{{ \Illuminate\Support\Facades\Route::is('sales-team*') }}"
         ></x-gxui.sidebar.item>
         <x-gxui.sidebar.item
             icon="users"
             to="/users"
             title="User Account"
-            active="{{ \Illuminate\Support\Facades\Route::is('users/*') }}"
+            active="{{ \Illuminate\Support\Facades\Route::is('users*') }}"
         ></x-gxui.sidebar.item>
         <x-gxui.sidebar.item
             icon="settings"
             to="/setting"
             title="Setting"
-            active="{{ \Illuminate\Support\Facades\Route::is('setting/*') }}"
+            active="{{ \Illuminate\Support\Facades\Route::is('setting*') }}"
         ></x-gxui.sidebar.item>
     </div>
 </div>

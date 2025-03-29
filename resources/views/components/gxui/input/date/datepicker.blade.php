@@ -1,6 +1,11 @@
 @props([
+'id',
 'store',
 'dispatcher' => '',
+'parentClassName' => '',
+'label' => '',
+'validatorKey' => '',
+'validatorField' => ''
 ])
 
 <div class="{{ $parentClassName }}">
@@ -11,8 +16,9 @@
         </div>
         <input
             id="{{ $id }}"
-            {{ $attributes->merge(['class' => $baseClass]) }}
+            {{ $attributes->merge(['class' => 'w-full text-xs ps-[2.05rem] pe-[0.825rem] py-[0.5rem] rounded-[4px] rounded-[4px] text-neutral-700 border border-neutral-300 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500 transition duration-300 ease-in-out']) }}
             x-bind:class="{{ $validatorKey !== '' ? "{ '!border-danger-500' : '{$validatorField}' in {$validatorKey} }" : "{}" }}"
+            x-bind:store-name="'{{ $store }}'"
             x-bind:dispatcher="'{{ $dispatcher }}'"
             x-bind="gxuiDatepickerBind"
             x-init="initDatepicker()"

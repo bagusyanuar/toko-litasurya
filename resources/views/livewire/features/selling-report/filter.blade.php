@@ -25,26 +25,6 @@
             </button>
         </div>
         <div class="modal-body p-4">
-{{--            <div class="w-full mb-3">--}}
-{{--                <label class="text-xs text-neutral-700 block mb-1">Date</label>--}}
-{{--                <div class="flex items-center justify-between gap-1">--}}
-{{--                    <x-gxui.input.date.datepicker--}}
-{{--                        id="filterSellingDateStart"--}}
-{{--                        label=""--}}
-{{--                        placeholder="dd/mm/yyyy"--}}
-{{--                        x-model="$store.filterSellingReportStore.dateStartValue"--}}
-{{--                        x-init="initDatepicker({format: 'dd/mm/yyyy'})"--}}
-{{--                    ></x-gxui.input.date.datepicker>--}}
-{{--                    <span class="text-sm text-neutral-700">-</span>--}}
-{{--                    <x-gxui.input.date.datepicker--}}
-{{--                        id="filterSellingDateEnd"--}}
-{{--                        label=""--}}
-{{--                        placeholder="dd/mm/yyyy"--}}
-{{--                        x-model="$store.filterSellingReportStore.dateEndValue"--}}
-{{--                        x-init="initDatepicker({format: 'dd/mm/yyyy'})"--}}
-{{--                    ></x-gxui.input.date.datepicker>--}}
-{{--                </div>--}}
-{{--            </div>--}}
             <x-gxui.input.text.text
                 placeholder="Name"
                 label="Invoice ID"
@@ -116,19 +96,12 @@
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
-            const today = new Date().toLocaleDateString('id-ID', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
             const STORE_PROPS = {
                 component: null,
                 toastStore: null,
                 tableStore: null,
                 showModal: false,
                 invoiceID: '',
-                dateStartValue: today,
-                dateEndValue: today,
                 customerOptions: [],
                 customerValues: [],
                 sellingTypes: [
@@ -165,14 +138,11 @@
                     this.sellingTypes = ['cashier', 'sales'];
                     this.customerValues = [];
                     this.invoiceID = '';
-                    this.dateStartValue = '';
-                    this.dateEndValue = '';
+                    this.filter();
                 },
                 filter() {
                     const query = {
                         types: this.sellingTypes,
-                        dateStart: this.dateStartValue,
-                        dateEnd: this.dateEndValue,
                         customers: this.customerValues,
                         invoiceID: this.invoiceID
                     };

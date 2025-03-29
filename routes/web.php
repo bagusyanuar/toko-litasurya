@@ -20,6 +20,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transaction', App\Livewire\Pages\Transaction\Index::class)->name('transaction');
     Route::get('/master-data', App\Livewire\Pages\MasterData\Index::class)->name('master-data');
     Route::get('/customer', App\Livewire\Pages\Customer\Index::class)->name('customer');
+    Route::get('/sales-team', App\Livewire\Pages\SalesTeam\Index::class)->name('sales-team');
     Route::get('/users', App\Livewire\Pages\User\Index::class)->name('users');
     Route::get('/setting', App\Livewire\Pages\Setting\Index::class)->name('setting');
     Route::get('/category', App\Livewire\Pages\Category\Index::class)->name('category.list');
