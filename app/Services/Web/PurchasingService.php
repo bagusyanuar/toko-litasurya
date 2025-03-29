@@ -10,6 +10,7 @@ use App\Commons\Traits\Eloquent\Finder;
 use App\Domain\Web\Cashier\DTOCart;
 use App\Domain\Web\Purchasing\DTOFilter;
 use App\Domain\Web\Purchasing\DTOOrder;
+use App\Domain\Web\Purchasing\DTOPurchase;
 use App\Models\Cart;
 use App\Models\Customer;
 use App\Models\PointSetting;
@@ -120,6 +121,39 @@ class PurchasingService implements PurchasingUseCase
             }
             DB::commit();;
             return ServiceResponse::statusOK('successfully place order');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ServiceResponse::internalServerError($e->getMessage());
+        }
+    }
+
+    public function submitPurchase(DTOPurchase $dto): ServiceResponse
+    {
+        DB::beginTransaction();
+        try {
+            $dto->hydrate();
+            $purchase = Transaction::with([])
+                ->where('id', '=', $dto->getId())
+                ->first();
+            if (!$purchase) {
+                return ServiceResponse::notFound('transaction not found');
+            }
+            foreach ($dto->getCarts() as $cart) {
+                Cart::with([])
+                    ->where('id', '=', $cart['id'])
+                    ->update([
+                        'qty' => $cart['qty'],
+                        'total' => $cart['total'],
+                        'status' => 'finish'
+                    ]);
+            }
+            $totalSum = collect($dto->getCarts())->sum('total');
+            $purchase->update([
+                'total' => $totalSum,
+                'status' => 'finish'
+            ]);
+            DB::commit();
+            return ServiceResponse::statusOK('successfully submit purchase');
         } catch (\Exception $e) {
             DB::rollBack();
             return ServiceResponse::internalServerError($e->getMessage());

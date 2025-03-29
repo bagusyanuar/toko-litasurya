@@ -125,7 +125,7 @@
                                     >Team Sales</span>
                                 </div>
                             </div>
-                            <div class="w-full rounded-lg border border-neutral-300 overflow-x-auto">
+                            <div class="w-full rounded-lg border border-neutral-300 overflow-x-auto mb-3">
                                 <div class="flex items-center bg-brand-50 w-full text-xs">
                                     <x-gxui.table.dynamic.th
                                         class="flex-1 min-w-[150px]"
@@ -157,7 +157,7 @@
                                         <span>Total (Rp)</span>
                                     </x-gxui.table.dynamic.th>
                                 </div>
-                                <template x-for="(cart, index) in data.carts" :key="index">
+                                <template x-for="(cart, idxCart) in data.carts" :key="idxCart">
                                     <div
                                         class="w-full flex items-center text-xs text-neutral-700 border-b last:border-b-0"
                                     >
@@ -170,7 +170,16 @@
                                             contentClass="justify-center"
                                             class="w-[80px]"
                                         >
-                                            <span x-text="cart.qty.toLocaleString('id-ID')"></span>
+                                            <div x-data="{error: false}">
+                                                <input
+                                                    class="w-10 px-1 py-1 text-xs text-center rounded text-neutral-700 border border-neutral-300 outline-none focus:outline-none focus:ring-0 focus:border-neutral-500 transition duration-300 ease-in"
+                                                    x-model="cart.qty"
+                                                    x-on:input="
+                                                    $store.purchasingTableStore.updateCart(data.id, cart.id, $event.target.value);
+                                                    error = $event.target.value.trim() === '';"
+                                                    :class="error ? 'border-red-500 focus:border-red-500' : 'border-neutral-300 focus:border-neutral-500'"
+                                                />
+                                            </div>
                                         </x-gxui.table.dynamic.td>
                                         <x-gxui.table.dynamic.td
                                             contentClass="justify-center"
@@ -193,68 +202,30 @@
                                     </div>
                                 </template>
                             </div>
-
+                            <div class="w-full flex justify-end">
+                                <x-gxui.button.button
+                                    wire:ignore
+                                    x-on:click="$store.purchasingTableStore.onSubmitPurchase(data, index)"
+                                    x-bind:disabled="$store.purchasingTableStore.loadingSubmit"
+                                    class="!px-6"
+                                >
+                                    <template x-if="!$store.purchasingTableStore.loadingSubmit">
+                                        <div class="w-full flex justify-center items-center gap-1 text-xs">
+                                            <span>Submit</span>
+                                        </div>
+                                    </template>
+                                    <template x-if="$store.purchasingTableStore.loadingSubmit">
+                                        <x-gxui.loader.button-loader></x-gxui.loader.button-loader>
+                                    </template>
+                                </x-gxui.button.button>
+                            </div>
                         </div>
-                        <x-gxui.table.dynamic.td
-                            class="w-[120px]"
-                        ></x-gxui.table.dynamic.td>
                     </div>
+
                 </x-slot>
             </x-gxui.table.dynamic.collapsible-row>
         </x-slot>
     </x-gxui.table.dynamic.table>
-{{--    <x-gxui.table.table--}}
-{{--        class="mb-1"--}}
-{{--        store="purchasingTableStore"--}}
-{{--    >--}}
-{{--        <x-slot name="header">--}}
-{{--            <x-gxui.table.th--}}
-{{--                title="Date"--}}
-{{--                className="w-[100px]"--}}
-{{--            ></x-gxui.table.th>--}}
-{{--            <x-gxui.table.th--}}
-{{--                title="Store"--}}
-{{--                className="min-w-[120px]"--}}
-{{--            ></x-gxui.table.th>--}}
-{{--            <x-gxui.table.th--}}
-{{--                title="Sales"--}}
-{{--                className="min-w-[150px]"--}}
-{{--                align="left"--}}
-{{--            ></x-gxui.table.th>--}}
-{{--            <x-gxui.table.th--}}
-{{--                title="Total"--}}
-{{--                className="w-[100px]"--}}
-{{--                align="right"--}}
-{{--            ></x-gxui.table.th>--}}
-{{--            <x-gxui.table.th--}}
-{{--                title="Action"--}}
-{{--                className="w-[80px]"--}}
-{{--            ></x-gxui.table.th>--}}
-{{--        </x-slot>--}}
-{{--        <x-slot name="rows">--}}
-{{--            <tr class="border-b border-neutral-300">--}}
-{{--                <x-gxui.table.td className="flex justify-center">--}}
-{{--                    <span x-text="data.date"></span>--}}
-{{--                </x-gxui.table.td>--}}
-{{--                <x-gxui.table.td className="flex justify-center">--}}
-{{--                    <span x-text="data.customer.name"></span>--}}
-{{--                </x-gxui.table.td>--}}
-{{--                <x-gxui.table.td>--}}
-{{--                    <span x-text="data.user.sales.name"></span>--}}
-{{--                </x-gxui.table.td>--}}
-{{--                <x-gxui.table.td className="flex justify-end">--}}
-{{--                    <span x-text="data.total.toLocaleString('id-ID')"></span>--}}
-{{--                </x-gxui.table.td>--}}
-{{--                <x-gxui.table.td className="flex justify-center relative">--}}
-{{--                    <x-gxui.table.action store="purchasingTableStore"></x-gxui.table.action>--}}
-{{--                </x-gxui.table.td>--}}
-{{--            </tr>--}}
-{{--        </x-slot>--}}
-{{--    </x-gxui.table.table>--}}
-{{--    <x-gxui.table.pagination--}}
-{{--        store="purchasingTableStore"--}}
-{{--        dispatcher="onFindAll"--}}
-{{--    ></x-gxui.table.pagination>--}}
 </section>
 
 @push('scripts')
@@ -269,6 +240,7 @@
                 sales: '',
                 dateStart: '',
                 dateEnd: '',
+                loadingSubmit: false,
                 actions: [
                     {
                         label: 'Process',
@@ -333,6 +305,40 @@
                     this.dateStart = q['dateStart'];
                     this.dateEnd = q['dateEnd'];
                     this.onFindAll();
+                },
+                updateCart(id, cartID, qty) {
+                    let purchaseItem = this.data.find(purchase => purchase.id === id);
+                    if (purchaseItem) {
+                        let carts = purchaseItem['carts'];
+                        let selectedCart = carts.find(cart => cart.id === cartID);
+                        if (selectedCart) {
+                            selectedCart.qty = qty;
+                            let intQty = qty.trim() === '' ? 0 : qty;
+                            selectedCart.total = intQty * selectedCart.price;
+                            purchaseItem.total = carts.reduce((sum, c) => sum + c.total, 0);
+                        }
+                    }
+                },
+                onSubmitPurchase(data, index) {
+                    const id = data['id'];
+                    this.loadingSubmit = true;
+                    const carts = this.data[index].carts;
+                    const form = {
+                        id: id,
+                        carts: carts
+                    };
+                    this.component.$wire.call('submitPurchase', form)
+                        .then(response => {
+                            const {success, data, message} = response;
+                            console.log(response);
+                            if (success) {
+                                this.onFindAll();
+                            } else {
+                                this.toastStore.failed(message);
+                            }
+                        }).finally(() => {
+                        this.loadingSubmit = false;
+                    })
                 },
                 onProcess(data) {
                     const id = data['id'];
