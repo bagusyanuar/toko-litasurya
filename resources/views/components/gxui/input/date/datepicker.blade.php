@@ -1,5 +1,10 @@
+@props([
+'store',
+'dispatcher' => '',
+])
+
 <div class="{{ $parentClassName }}">
-    <label for="{{ $id }}" class="text-sm text-neutral-700 {{ $label !== '' ? 'block mb-1' : '' }}">{{ $label }}</label>
+    <label for="{{ $id }}" class="text-xs text-neutral-700 {{ $label !== '' ? 'block mb-1' : '' }}">{{ $label }}</label>
     <div class="relative group w-full">
         <div wire:ignore class="h-full flex items-center px-[0.5rem] absolute inset-y-0 start-0">
             <i data-lucide="calendar-days" class="text-neutral-500 group-focus-within:text-neutral-900 h-3 aspect-[1/1]"></i>
@@ -8,6 +13,7 @@
             id="{{ $id }}"
             {{ $attributes->merge(['class' => $baseClass]) }}
             x-bind:class="{{ $validatorKey !== '' ? "{ '!border-danger-500' : '{$validatorField}' in {$validatorKey} }" : "{}" }}"
+            x-bind:dispatcher="'{{ $dispatcher }}'"
             x-bind="gxuiDatepickerBind"
             x-init="initDatepicker()"
         >

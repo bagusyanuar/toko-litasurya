@@ -5,6 +5,26 @@
     <div class="w-full flex items-center justify-between mb-3">
         <p class="text-neutral-700 font-semibold">Selling Report Data</p>
         <div class="flex items-center gap-1">
+            <div class="">
+                <div class="flex items-center justify-between gap-1">
+                    <x-gxui.input.date.datepicker
+                        id="filterSellingDateStart"
+                        label=""
+                        placeholder="dd/mm/yyyy"
+                        x-model="$store.filterSellingReportStore.dateStartValue"
+                        x-init="initDatepicker({format: 'dd/mm/yyyy'})"
+                        dispatcher=""
+                    ></x-gxui.input.date.datepicker>
+                    <span class="text-sm text-neutral-700">-</span>
+                    <x-gxui.input.date.datepicker
+                        id="filterSellingDateEnd"
+                        label=""
+                        placeholder="dd/mm/yyyy"
+                        x-model="$store.filterSellingReportStore.dateEndValue"
+                        x-init="initDatepicker({format: 'dd/mm/yyyy'})"
+                    ></x-gxui.input.date.datepicker>
+                </div>
+            </div>
             <x-gxui.button.button
                 wire:ignore
                 x-on:click="$store.filterSellingReportStore.show()"
@@ -278,6 +298,11 @@
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
+            const today = new Date().toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
             const componentProps = {
                 component: null,
                 filterStore: null,
@@ -287,8 +312,8 @@
                 types: [],
                 customers: [],
                 invoiceID: '',
-                dateStart: '',
-                dateEnd: '',
+                dateStart: today,
+                dateEnd: today,
                 total: 0,
                 actions: [],
                 init: function () {
