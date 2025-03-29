@@ -178,11 +178,13 @@ document.addEventListener('alpine:init', () => {
             },
             onInput(event) {
                 let store = Alpine.store(this.storeName);
-                if (store && this.stateCurrentPage in store) {
+                if (store) {
                     clearTimeout(this.debounce);
                     this.debounce = setTimeout(() => {
                         let value = event.target.value;
-                        store[this.stateCurrentPage] = 1;
+                        if (this.stateCurrentPage in store) {
+                            store[this.stateCurrentPage] = 1;
+                        }
                         store[this.stateParam] = value;
                         if (this.dispatcher && typeof store[this.dispatcher] === "function") {
                             store[this.dispatcher]();

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Features\Purchasing;
 
+use App\Domain\Web\SalesTeam\DTOFilter;
 use App\Helpers\Alpine\AlpineResponse;
 use App\Services\Web\CustomerService;
 use App\Services\Web\SalesTeamService;
@@ -15,10 +16,14 @@ class Filter extends Component
     /** @var SalesTeamService $salesTeamService */
     private $salesTeamService;
 
+    /** @var DTOFilter $dtoFilter */
+    private $dtoFilter;
+
     public function boot(CustomerService $customerService, SalesTeamService $salesTeamService)
     {
         $this->customerService = $customerService;
         $this->salesTeamService = $salesTeamService;
+        $this->dtoFilter = new DTOFilter();
     }
 
     public function stores()
@@ -29,7 +34,8 @@ class Filter extends Component
 
     public function sales()
     {
-        $response = $this->salesTeamService->all();
+        $this->dtoFilter->hydrateQueryForm([]);
+        $response = $this->salesTeamService->all($this->dtoFilter);
         return AlpineResponse::toJSON($response);
     }
 

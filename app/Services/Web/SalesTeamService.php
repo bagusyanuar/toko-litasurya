@@ -81,8 +81,14 @@ class SalesTeamService implements SalesTeamUseCase
         ]);
     }
 
-    public function all(): ServiceResponse
+    public function all(DTOFilter $filter): ServiceResponse
     {
-        return self::findFrom(SalesTeam::class);
+        $filter->hydrateQuery();
+        $filters = [
+            self::filterQueryLikeBy($filter->getParam(), 'name', "%{$filter->getParam()}%"),
+        ];
+        return self::findFrom(SalesTeam::class,[
+            'filter' => $filters
+        ]);
     }
 }

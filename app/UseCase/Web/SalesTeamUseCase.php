@@ -10,7 +10,7 @@ use App\Domain\Web\SalesTeam\DTOMutate;
 
 interface SalesTeamUseCase
 {
-    public function all(): ServiceResponse;
+    public function all(DTOFilter $filter): ServiceResponse;
     public function findAll(DTOFilter $filter): ServiceResponse;
     public function findByID($id): ServiceResponse;
     public function create(DTOMutate $dto): ServiceResponse;

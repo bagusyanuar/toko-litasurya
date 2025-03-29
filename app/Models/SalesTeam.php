@@ -21,4 +21,9 @@ class SalesTeam extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function schedules()
+    {
+        return $this->hasMany(SalesTeamSchedule::class, 'sales_team_id');
+    }
 }
