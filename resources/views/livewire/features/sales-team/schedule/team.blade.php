@@ -76,8 +76,10 @@
         document.addEventListener('alpine:init', () => {
             Alpine.store('scheduleTeamStore', {
                 component: null,
+                scheduleStore: null,
                 param: '',
                 loading: true,
+                toastStore: null,
                 data: [],
                 selectedSales: '',
                 init: function () {
@@ -85,6 +87,8 @@
                     Livewire.hook('component.init', ({component}) => {
                         if (component.id === componentID) {
                             this.component = component;
+                            this.toastStore = Alpine.store('gxuiToastStore');
+                            this.scheduleStore = Alpine.store('salesTeamScheduleStore');
                             this.onFindAll();
                         }
                     })
@@ -92,9 +96,11 @@
                 onSelectSales(data) {
                     const id = data['id'];
                     this.selectedSales = id;
+                    this.scheduleStore.hydrateSelectedSales(id);
                 },
                 onFindAll() {
                     this.selectedSales = '';
+                    this.scheduleStore.hydrateSelectedSales('');
                     this.loading = true;
                     const query = {
                         param: this.param,

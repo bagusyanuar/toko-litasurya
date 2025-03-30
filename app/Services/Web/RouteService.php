@@ -73,4 +73,12 @@ class RouteService implements RouteInterface
             'children' => ['details']
         ]);
     }
+
+    public function all(): ServiceResponse
+    {
+        // TODO: Implement all() method.
+        return self::findFrom(
+            Route::class
+        );
+    }
 }

@@ -10,6 +10,7 @@ use App\Domain\Web\Route\DTOMutate;
 
 interface RouteInterface
 {
+    public function all(): ServiceResponse;
     public function findAll(DTOFilter $filter): ServiceResponse;
     public function findByID($id): ServiceResponse;
     public function create(DTOMutate $dto): ServiceResponse;

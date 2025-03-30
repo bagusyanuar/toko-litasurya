@@ -20,7 +20,7 @@
         ></x-gxui.tab.tab-item>
     </x-gxui.tab.tab-container>
     <div x-show="$store.salesTeamStore.selectedTab === 'schedule'">
-        <div class="flex items-start gap-3 w-full bg-blue-100">
+        <div class="flex items-start gap-3 w-full">
             <livewire:features.sales-team.schedule.team/>
             <livewire:features.sales-team.schedule.schedule/>
         </div>
