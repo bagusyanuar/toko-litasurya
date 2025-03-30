@@ -13,10 +13,10 @@
             handleChange="$store.salesTeamStore.onChangeTab('schedule')"
         ></x-gxui.tab.tab-item>
         <x-gxui.tab.tab-item
-            active="$store.salesTeamStore.selectedTab === 'sales-team'"
-            icon="bike"
-            title="Sales Team"
-            handleChange="$store.salesTeamStore.onChangeTab('sales-team')"
+            active="$store.salesTeamStore.selectedTab === 'store-visit'"
+            icon="store"
+            title="Store Visits"
+            handleChange="$store.salesTeamStore.onChangeTab('store-visit')"
         ></x-gxui.tab.tab-item>
     </x-gxui.tab.tab-container>
     <div x-show="$store.salesTeamStore.selectedTab === 'schedule'">
@@ -25,14 +25,16 @@
             <livewire:features.sales-team.schedule.schedule/>
         </div>
     </div>
-
+    <div x-show="$store.salesTeamStore.selectedTab === 'store-visit'">
+        <livewire:features.sales-team.store-visit.table/>
+    </div>
 </div>
 
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('salesTeamStore', {
-                selectedTab: 'schedule',
+                selectedTab: 'store-visit',
                 onChangeTab(selectedTab) {
                     this.selectedTab = selectedTab;
                 },
