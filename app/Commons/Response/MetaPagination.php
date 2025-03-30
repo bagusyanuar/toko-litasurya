@@ -92,8 +92,8 @@ class MetaPagination
     {
         return [
             'total_rows' => $this->getTotalRows(),
-            'page' => $this->getPage(),
-            'per_page' => $this->getPerPage(),
+            'page' => (int)$this->getPage(),
+            'per_page' => (int)$this->getPerPage(),
         ];
     }
 
