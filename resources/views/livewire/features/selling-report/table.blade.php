@@ -76,7 +76,7 @@
                         </div>
                         <div
                             class="rounded px-3 py-1.5 flex items-center gap-1 cursor-pointer hover:bg-neutral-100 transition-all ease-in duration-200"
-                            x-on:click="$store.sellingReportTableStore.onExportPDF()"
+                            x-on:click="open = false; $store.sellingReportTableStore.onExportPDF()"
                         >
                             <div wire:ignore>
                                 <i data-lucide="file"
@@ -86,7 +86,7 @@
                         </div>
                         <div
                             class="rounded px-3 py-1.5 flex items-center gap-1 cursor-pointer hover:bg-neutral-100 transition-all ease-in duration-200"
-                            x-on:click=""
+                            x-on:click="open = false; $store.sellingReportTableStore.onExportExcel()"
                         >
                             <div wire:ignore>
                                 <i data-lucide="file-spreadsheet"
@@ -320,6 +320,7 @@
                 component: null,
                 filterStore: null,
                 toastStore: null,
+                actionLoaderStore: null,
                 transactionStore: null,
                 processStore: null,
                 types: [],
@@ -335,6 +336,7 @@
                         if (component.id === componentID) {
                             this.component = component;
                             this.filterStore = Alpine.store('filterPurchasingStore');
+                            this.actionLoaderStore = Alpine.store('gxuiActionLoader');
                             this.processStore = Alpine.store('processPurchasingStore');
                             this.transactionStore = Alpine.store('transactionStore');
                             this.toastStore = Alpine.store('gxuiToastStore');
@@ -378,21 +380,6 @@
                 onDateChange() {
                     this.onFindAll();
                 },
-                onProcess(id) {
-                    this.transactionStore.showLoading('processing purchase...');
-                    this.component.$wire.call('findByID', id)
-                        .then(response => {
-                            const {success, data, message} = response;
-                            console.log(response);
-                            if (success) {
-                                this.processStore.hydrateForm(data);
-                            } else {
-                                this.toastStore.failed(message);
-                            }
-                        }).finally(() => {
-                        this.transactionStore.closeLoading();
-                    })
-                },
                 onExportPDF() {
                     const query = {
                         page: this.currentPage,
@@ -403,6 +390,7 @@
                         invoiceID: this.invoiceID,
                         customers: this.customers
                     };
+                    this.actionLoaderStore.start('exporting to pdf process...');
                     this.component.$wire.call('printToPDF', query)
                         .then(response => {
                             const {success, data, message} = response;
@@ -412,30 +400,49 @@
                             const byteArray = new Uint8Array(byteNumbers);
                             const blob = new Blob([byteArray], {type: 'application/pdf'});
                             const blobUrl = URL.createObjectURL(blob);
-                            window.open(blobUrl, '_blank');
-                            // if (success) {
-                            //     this.formStore.hydrateForm(data);
-                            // } else {
-                            //     this.toastStore.failed(message);
-                            // }
+                            if (success) {
+                                this.toastStore.success(message);
+                                window.open(blobUrl, '_blank');
+                            } else {
+                                this.toastStore.failed(message);
+                            }
+
                         }).finally(() => {
+                        this.actionLoaderStore.end();
                     })
                 },
-                onEdit(id) {
-                    this.customerStore.showLoading('Finding Item Process...');
-                    this.component.$wire.call('findByID', id)
+                onExportExcel() {
+                    const query = {
+                        page: this.currentPage,
+                        per_page: this.perPage,
+                        types: this.types,
+                        dateStart: this.dateStart,
+                        dateEnd: this.dateEnd,
+                        invoiceID: this.invoiceID,
+                        customers: this.customers
+                    };
+                    this.actionLoaderStore.start('exporting to excel process...');
+                    this.component.$wire.call('printToExcel', query)
                         .then(response => {
                             const {success, data, message} = response;
-                            console.log(response);
                             if (success) {
-                                this.formStore.hydrateForm(data);
+                                const byteCharacters = atob(data['file']);
+                                const byteNumbers = new Array(byteCharacters.length).fill(0).map((_, i) => byteCharacters.charCodeAt(i));
+                                const byteArray = new Uint8Array(byteNumbers);
+                                const blob = new Blob([byteArray], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+                                const blobUrl = URL.createObjectURL(blob);
+                                this.toastStore.success(message);
+                                const link = document.createElement("a");
+                                link.href = blobUrl;
+                                link.download = data['file_name'];
+                                link.click();
                             } else {
                                 this.toastStore.failed(message);
                             }
                         }).finally(() => {
-                        this.customerStore.closeLoading();
+                        this.actionLoaderStore.end();
                     })
-                }
+                },
             };
             const props = Object.assign({}, window.TableStore, componentProps);
             Alpine.store('sellingReportTableStore', props);

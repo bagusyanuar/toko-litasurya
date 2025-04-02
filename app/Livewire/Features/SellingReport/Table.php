@@ -3,10 +3,12 @@
 namespace App\Livewire\Features\SellingReport;
 
 use App\Domain\Web\SellingReport\DTOFilter;
+use App\Exports\SellingReport;
 use App\Helpers\Alpine\AlpineResponse;
 use App\Services\Web\SellingReportService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class Table extends Component
@@ -34,6 +36,13 @@ class Table extends Component
     {
         $this->dto->hydrateQueryForm($query);
         $response = $this->service->printToPDF($this->dto);
+        return AlpineResponse::toJSON($response);
+    }
+
+    public function printToExcel($query)
+    {
+        $this->dto->hydrateQueryForm($query);
+        $response = $this->service->printToExcel($this->dto);
         return AlpineResponse::toJSON($response);
     }
 
