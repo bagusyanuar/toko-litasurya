@@ -44,6 +44,12 @@
             active="{{ \Illuminate\Support\Facades\Route::is('users*') }}"
         ></x-gxui.sidebar.item>
         <x-gxui.sidebar.item
+            icon="chart-pie"
+            to="/analytics"
+            title="Analytic"
+            active="{{ \Illuminate\Support\Facades\Route::is('setting*') }}"
+        ></x-gxui.sidebar.item>
+        <x-gxui.sidebar.item
             icon="settings"
             to="/setting"
             title="Setting"
