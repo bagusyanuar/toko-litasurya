@@ -76,7 +76,7 @@
                         </div>
                         <div
                             class="rounded px-3 py-1.5 flex items-center gap-1 cursor-pointer hover:bg-neutral-100 transition-all ease-in duration-200"
-                            x-on:click=""
+                            x-on:click="$store.sellingReportTableStore.onExportPDF()"
                         >
                             <div wire:ignore>
                                 <i data-lucide="file"
@@ -391,6 +391,34 @@
                             }
                         }).finally(() => {
                         this.transactionStore.closeLoading();
+                    })
+                },
+                onExportPDF() {
+                    const query = {
+                        page: this.currentPage,
+                        per_page: this.perPage,
+                        types: this.types,
+                        dateStart: this.dateStart,
+                        dateEnd: this.dateEnd,
+                        invoiceID: this.invoiceID,
+                        customers: this.customers
+                    };
+                    this.component.$wire.call('printToPDF', query)
+                        .then(response => {
+                            const {success, data, message} = response;
+                            console.log(response);
+                            const byteCharacters = atob(data);
+                            const byteNumbers = new Array(byteCharacters.length).fill(0).map((_, i) => byteCharacters.charCodeAt(i));
+                            const byteArray = new Uint8Array(byteNumbers);
+                            const blob = new Blob([byteArray], {type: 'application/pdf'});
+                            const blobUrl = URL.createObjectURL(blob);
+                            window.open(blobUrl, '_blank');
+                            // if (success) {
+                            //     this.formStore.hydrateForm(data);
+                            // } else {
+                            //     this.toastStore.failed(message);
+                            // }
+                        }).finally(() => {
                     })
                 },
                 onEdit(id) {

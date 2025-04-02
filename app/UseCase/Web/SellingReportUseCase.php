@@ -10,4 +10,5 @@ use App\Domain\Web\SellingReport\DTOFilter;
 interface SellingReportUseCase
 {
     public function findAll(DTOFilter $filter): ServiceResponse;
+    public function printToPDF(DTOFilter $filter): ServiceResponse;
 }

@@ -9,6 +9,8 @@ use App\Commons\Response\ServiceResponse;
 use App\Domain\Web\SellingReport\DTOFilter;
 use App\Models\Transaction;
 use App\Usecase\Web\SellingReportUseCase;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
 class SellingReportService implements SellingReportUseCase
@@ -52,6 +54,48 @@ class SellingReportService implements SellingReportUseCase
                 'data' => $data,
                 'total' => (int)$total
             ], $meta);
+        } catch (\Exception $e) {
+            return ServiceResponse::internalServerError($e->getMessage());
+        }
+    }
+
+    public function printToPDF(DTOFilter $filter): ServiceResponse
+    {
+        try {
+            $filter->hydrateQuery();
+            $data = Transaction::with(['user.sales', 'customer', 'carts.item'])
+                ->where('status', '=', 'finish')
+                ->when($filter->getInvoiceID(), function ($q) use ($filter) {
+                    /** @var Builder $q */
+                    return $q->where('reference_number', '=', $filter->getInvoiceID());
+                })
+                ->when((count($filter->getTypes()) > 0), function ($q) use ($filter) {
+                    /** @var Builder $q */
+                    return $q->whereIn('type', $filter->getTypes());
+                })
+                ->when((count($filter->getCustomers()) > 0), function ($q) use ($filter) {
+                    /** @var Builder $q */
+                    if (!in_array('non-member', $filter->getCustomers())) {
+                        return $q->whereIn('type', $filter->getCustomers());
+                    }
+                    return $q->whereIn('customer_id', $filter->getCustomers())->orWhereNull('customer_id');
+                })
+                ->when(($filter->getDateStart() && $filter->getDateEnd()), function ($q) use ($filter) {
+                    /** @var Builder $q */
+                    return $q->whereBetween('date', [$filter->getDateStart(), $filter->getDateEnd()]);
+                })
+                ->orderBy('date', 'ASC')
+                ->get();
+            $dateStart = Carbon::parse($filter->getDateStart())->format('d/m/Y');
+            $dateEnd = Carbon::parse($filter->getDateEnd())->format('d/m/Y');
+            $pdf = Pdf::loadView('livewire.features.pdf.selling-report', [
+                'title' => 'Selling Report',
+                'data' => $data,
+                'period' => "{$dateStart} - {$dateEnd}"
+            ])
+                ->setPaper('a4', 'portrait');
+            $pdfBase64 = base64_encode($pdf->output());
+            return ServiceResponse::statusOK('successfully get selling report', $pdfBase64);
         } catch (\Exception $e) {
             return ServiceResponse::internalServerError($e->getMessage());
         }

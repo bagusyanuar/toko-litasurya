@@ -5,7 +5,9 @@ namespace App\Livewire\Features\SellingReport;
 use App\Domain\Web\SellingReport\DTOFilter;
 use App\Helpers\Alpine\AlpineResponse;
 use App\Services\Web\SellingReportService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Livewire\Component;
+
 
 class Table extends Component
 {
@@ -25,6 +27,13 @@ class Table extends Component
     {
         $this->dto->hydrateQueryForm($query);
         $response = $this->service->findAll($this->dto);
+        return AlpineResponse::toJSON($response);
+    }
+
+    public function printToPDF($query)
+    {
+        $this->dto->hydrateQueryForm($query);
+        $response = $this->service->printToPDF($this->dto);
         return AlpineResponse::toJSON($response);
     }
 
