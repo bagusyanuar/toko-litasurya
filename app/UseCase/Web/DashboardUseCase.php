@@ -14,4 +14,6 @@ interface DashboardUseCase
     public function getProductCount(): ServiceResponse;
     public function getSellingChart(): ServiceResponse;
     public function getLastPurchasing(): ServiceResponse;
+    public function getStoreVisit(): ServiceResponse;
+    public function getTopProduct(): ServiceResponse;
 }

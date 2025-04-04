@@ -23,7 +23,7 @@
                             x-text="data.customer ? data.customer?.name : '-'"></span>
                         <span
                             class="text-xs text-neutral-500 block leading-[1.5]"
-                            x-text="'IDR'+data.total.toLocaleString('id-ID')"
+                            x-text="data.reference_number+'#IDR'+data.total.toLocaleString('id-ID')"
                         ></span>
                     </div>
                     <div class="w-fit flex items-center justify-center">

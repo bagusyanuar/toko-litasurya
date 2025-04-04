@@ -10,8 +10,9 @@
         <div class="col-span-2 flex flex-col gap-3">
             <livewire:features.dashboard.selling-chart />
             <div class="flex gap-3">
-                <div class="w-full bg-white p-4 rounded-md"></div>
-                <div class="w-full bg-white p-4 rounded-md"></div>
+                <livewire:features.dashboard.top-product />
+                <div class="w-full bg-white p-4 rounded-lg shadow-md"></div>
+
             </div>
         </div>
         <div class="col-span-1 flex flex-col gap-3">

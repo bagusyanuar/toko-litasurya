@@ -3,7 +3,95 @@
     data-component-id="dashboard-store-visit"
     class="w-full"
 >
-    <div class="w-full bg-white p-4 rounded-lg shadow-md h-56">
-        <p class="text-neutral-700 font-semibold">Store Visit</p>
+    <div class="w-full bg-white p-4 rounded-lg shadow-md h-[22rem]">
+        <div class="w-full flex items-center justify-between mb-1">
+            <span class="text-neutral-700 font-semibold leading-none block">Store Visit</span>
+            <span
+                class="text-sm text-neutral-500 block cursor-pointer hover:underline transition-all ease-in duration-300">see all</span>
+        </div>
+        <div class="w-full flex flex-col gap-1" x-show="$store.dashboardVisitStore.loading">
+            <template x-for="(data, index) in [1, 2, 3, 4, 5]" :key="index">
+                <x-gxui.loader.shimmer class="!h-[3.5rem] !w-full !rounded-md"></x-gxui.loader.shimmer>
+            </template>
+        </div>
+        <div class="flex flex-col gap-1" x-cloak x-show="!$store.dashboardVisitStore.loading">
+            <template x-for="(data, index) in $store.dashboardVisitStore.data" :key="index">
+                <div class="flex items-center py-3 border-b border-neutral-300 rounded-md">
+                    <div class="flex-1">
+                        <div class="flex items-start gap-1">
+                            <img
+                                alt="evidence-image"
+                                x-data
+                                class="h-8 aspect-[1/1] border-neutral-300 border rounded"
+                                x-bind:src="data.image"
+                            >
+                            <div>
+                                <span
+                                    class="text-neutral-700 font-bold leading-none text-sm block mb-0"
+                                    x-text="data.store ? data.store?.name : '-'"
+                                ></span>
+                                <span
+                                    class="text-xs text-neutral-500 block leading-[1.5]"
+                                    x-text="data.sales ? data.sales?.name : '-'"
+                                ></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-fit flex items-center justify-center">
+                        <template x-if="data.status === 'visited'">
+                            <div
+                                class=" w-fit px-3 py-0.5 rounded bg-green-500 text-white flex items-center justify-center">
+                                <span class="text-xs">Visited</span>
+                            </div>
+                        </template>
+                        <template x-if="data.status === 'skip'">
+                            <div
+                                class=" w-fit px-3 py-0.5 rounded bg-orange-500 text-white flex items-center justify-center">
+                                <span class="text-xs">Skip</span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
     </div>
 </section>
+@push('scripts')
+    <script>
+        document.addEventListener('alpine:init', () => {
+            const componentProps = {
+                component: null,
+                toastStore: null,
+                loading: true,
+                data: [],
+                init: function () {
+                    const componentID = document.querySelector('[data-component-id="dashboard-store-visit"]')?.getAttribute('wire:id');
+                    Livewire.hook('component.init', ({component}) => {
+                        if (component.id === componentID) {
+                            this.component = component;
+                            this.toastStore = Alpine.store('gxuiToastStore');
+                            this.getStoreVisit();
+                        }
+                    });
+                },
+                getStoreVisit() {
+                    this.loading = true;
+                    this.component.$wire.call('getStoreVisit')
+                        .then(response => {
+                            const {success, data, message} = response;
+                            console.log(response);
+                            if (success) {
+                                this.data = data;
+                            } else {
+                                this.toastStore.failed(message);
+                            }
+                        }).finally(() => {
+                        this.loading = false;
+                    })
+                },
+            };
+            const props = Object.assign({}, componentProps);
+            Alpine.store('dashboardVisitStore', props);
+        });
+    </script>
+@endpush

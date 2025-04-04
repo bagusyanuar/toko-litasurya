@@ -6,7 +6,7 @@ use App\Helpers\Alpine\AlpineResponse;
 use App\Services\Web\DashboardService;
 use Livewire\Component;
 
-class StoreVisit extends Component
+class TopProduct extends Component
 {
     /** @var DashboardService $service */
     protected $service;
@@ -16,14 +16,14 @@ class StoreVisit extends Component
         $this->service = $service;
     }
 
-    public function getStoreVisit()
+    public function getTopProduct()
     {
-        $response = $this->service->getStoreVisit();
+        $response = $this->service->getTopProduct();
         return AlpineResponse::toJSON($response);
     }
 
     public function render()
     {
-        return view('livewire.features.dashboard.store-visit');
+        return view('livewire.features.dashboard.top-product');
     }
 }

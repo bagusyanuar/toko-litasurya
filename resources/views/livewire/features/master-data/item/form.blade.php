@@ -180,9 +180,9 @@
                 },
                 formReset() {
                     this.form = {...INITIAL_FORM};
-                    this.form.price = 0;
-                    this.form.plu = '';
-                    this.form.unit = 'retail';
+                    this.form.price.price = 0;
+                    this.form.price.plu = '';
+                    this.form.price.unit = 'retail';
                     this.formType = 'create';
                     this.formValidator = {};
                     this.fileDropper.removeAllFiles();
