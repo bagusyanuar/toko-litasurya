@@ -4,70 +4,70 @@
 >
     <div class="w-full grid grid-cols-4 gap-3">
         <div
-            class="bg-white shadow-md rounded-lg h-24 w-full flex items-start p-3 gap-2"
+            class="bg-white shadow-md rounded-lg h-20 w-full flex items-start p-3 gap-2"
             wire:ignore
         >
             <div class="h-full aspect-[1/1] rounded-md bg-brand-500 flex items-center justify-center text-white">
                 <i data-lucide="store" class="h-6 aspect-[1/1]"></i>
             </div>
             <div class="flex-1">
-                <p class="font-bold text-lg text-brand-500 leading-none">Store</p>
+                <p class="font-bold text-base text-brand-500 leading-none">Store</p>
                 <div x-show="$store.dashboardWidgetStore.loadingStoreCount" class="mt-1">
                     <x-gxui.loader.shimmer class="!h-5 !w-1/2"></x-gxui.loader.shimmer>
                 </div>
                 <div x-cloak x-show="!$store.dashboardWidgetStore.loadingStoreCount">
-                    <p class="text-neutral-700 font-semibold" x-text="$store.dashboardWidgetStore.storeCount"></p>
+                    <p class="text-neutral-700 text-sm font-semibold" x-text="$store.dashboardWidgetStore.storeCount"></p>
                 </div>
             </div>
         </div>
         <div
-            class="bg-white shadow-md rounded-lg h-24 w-full flex items-start p-3 gap-2"
+            class="bg-white shadow-md rounded-lg h-20 w-full flex items-start p-3 gap-2"
             wire:ignore
         >
             <div class="h-full aspect-[1/1] rounded-md bg-brand-500 flex items-center justify-center text-white">
                 <i data-lucide="contact" class="h-6 aspect-[1/1]"></i>
             </div>
             <div class="flex-1">
-                <p class="font-bold text-lg text-brand-500 leading-none">Member</p>
+                <p class="font-bold text-base text-brand-500 leading-none">Member</p>
                 <div x-show="$store.dashboardWidgetStore.loadingMemberCount" class="mt-1">
                     <x-gxui.loader.shimmer class="!h-5 !w-1/2"></x-gxui.loader.shimmer>
                 </div>
                 <div x-cloak x-show="!$store.dashboardWidgetStore.loadingMemberCount">
-                    <p class="text-neutral-700 font-semibold" x-text="$store.dashboardWidgetStore.memberCount"></p>
+                    <p class="text-neutral-700 text-sm font-semibold" x-text="$store.dashboardWidgetStore.memberCount"></p>
                 </div>
             </div>
         </div>
         <div
-            class="bg-white shadow-md rounded-lg h-24 w-full flex items-start p-3 gap-2"
+            class="bg-white shadow-md rounded-lg h-20 w-full flex items-start p-3 gap-2"
             wire:ignore
         >
             <div class="h-full aspect-[1/1] rounded-md bg-brand-500 flex items-center justify-center text-white">
                 <i data-lucide="wallet" class="h-6 aspect-[1/1]"></i>
             </div>
             <div class="flex-1">
-                <p class="font-bold text-lg text-brand-500 leading-none">Revenue</p>
+                <p class="font-bold text-base text-brand-500 leading-none">Revenue</p>
                 <div x-show="$store.dashboardWidgetStore.loadingTotalRevenue" class="mt-1">
                     <x-gxui.loader.shimmer class="!h-5 !w-1/2"></x-gxui.loader.shimmer>
                 </div>
                 <div x-cloak x-show="!$store.dashboardWidgetStore.loadingTotalRevenue">
-                    <p class="text-neutral-700 font-semibold" x-text="'IDR'+$store.dashboardWidgetStore.totalRevenue.toLocaleString('id-ID')"></p>
+                    <p class="text-neutral-700 text-sm font-semibold" x-text="'IDR'+$store.dashboardWidgetStore.totalRevenue.toLocaleString('id-ID')"></p>
                 </div>
             </div>
         </div>
         <div
-            class="bg-white shadow-md rounded-lg h-24 w-full flex items-start p-3 gap-2"
+            class="bg-white shadow-md rounded-lg h-20 w-full flex items-start p-3 gap-2"
             wire:ignore
         >
             <div class="h-full aspect-[1/1] rounded-md bg-brand-500 flex items-center justify-center text-white">
                 <i data-lucide="box" class="h-6 aspect-[1/1]"></i>
             </div>
             <div class="flex-1">
-                <p class="font-bold text-lg text-brand-500 leading-none">Product</p>
+                <p class="font-bold text-base text-brand-500 leading-none">Product</p>
                 <div x-show="$store.dashboardWidgetStore.loadingProductCount" class="mt-1">
                     <x-gxui.loader.shimmer class="!h-5 !w-1/2"></x-gxui.loader.shimmer>
                 </div>
                 <div x-cloak x-show="!$store.dashboardWidgetStore.loadingProductCount">
-                    <p class="text-neutral-700 font-semibold" x-text="$store.dashboardWidgetStore.productCount"></p>
+                    <p class="text-neutral-700 text-sm font-semibold" x-text="$store.dashboardWidgetStore.productCount"></p>
                 </div>
             </div>
         </div>

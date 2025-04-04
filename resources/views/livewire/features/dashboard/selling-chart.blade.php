@@ -3,9 +3,14 @@
     data-component-id="dashboard-selling-chart"
     class="w-full"
 >
-    <div class="w-full bg-white p-4 rounded-lg shadow-md">
+    <div class="w-full bg-white p-4 rounded-lg shadow-md overflow-x-auto">
         <p class="text-neutral-700 font-semibold">Selling Chart</p>
-        <div id="selling-chart-canvas" class="h-72"></div>
+        <div class="w-full relative">
+            <div id="selling-chart-canvas" class="h-[25rem]" style="min-width: 150px;"></div>
+            <div class="w-full absolute z-10 top-0 left-0" x-show="$store.dashboardSellingChartStore.loadingSellingChart">
+                <x-gxui.loader.shimmer class="!h-[25rem] !w-full !rounded-md"></x-gxui.loader.shimmer>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -18,26 +23,49 @@
                 toastStore: null,
                 chartInstance: null,
                 resizeHandler: null,
+                loadingSellingChart: null,
                 init: function () {
                     const componentID = document.querySelector('[data-component-id="dashboard-selling-chart"]')?.getAttribute('wire:id');
                     Livewire.hook('component.init', ({component}) => {
                         if (component.id === componentID) {
                             this.component = component;
                             this.toastStore = Alpine.store('gxuiToastStore');
-                            this.generateChart();
+                            this.getSellingChart();
                         }
                     });
                 },
-                generateChart() {
+                getSellingChart() {
+                    this.loadingSellingChart = true;
+                    this.component.$wire.call('getSellingChart')
+                        .then(response => {
+                            const {success, data, meta} = response;
+                            if (success) {
+                                this.generateChart(data);
+                            } else {
+                                this.toastStore.failed(message);
+                            }
+                        }).finally(() => {
+                        this.loadingSellingChart = false;
+                    })
+                },
+                generateChart(d) {
+                    const AVAILABLE_MONTH = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Des"];
+                    let data = AVAILABLE_MONTH.map((v, k) => {
+                        return d[k+1];
+                    });
                     let chartEl = document.getElementById('selling-chart-canvas');
                     this.chartInstance = echarts.init(chartEl);
                     this.chartInstance.setOption({
                         tooltip: {
-                            trigger: "axis"
+                            trigger: "item",
+                            formatter: function (params) {
+                                const data = params['data'];
+                                return `IDR${data.toLocaleString('id-ID')}`;
+                            }
                         },
                         xAxis: {
                             type: "category",
-                            data: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Des"]
+                            data: AVAILABLE_MONTH
                         },
                         yAxis: {
                             type: "value"
@@ -45,18 +73,11 @@
                         series: [{
                             name: "Sales",
                             type: "line",
-                            data: [120, 200, 150, 80, 70]
+                            data: data,
+                            showSymbol: true, // pastikan simbol titik ditampilkan
+                            symbolSize: 10
                         }]
                     });
-
-                    this.resizeHandler = () => {
-                        console.log("Resized");
-                        if (this.chartInstance) {
-                            this.chartInstance.resize();
-                        }
-                    };
-
-                    window.addEventListener("resize", this.resizeHandler);
                 }
             };
             const props = Object.assign({}, componentProps);
