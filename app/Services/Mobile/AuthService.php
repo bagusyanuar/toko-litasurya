@@ -41,6 +41,11 @@ class AuthService implements AuthInterface
             $token = JWTAuth::encode($jwtClaim);
             $response = [
                 'access_token' => $token,
+                'user_id' => [
+                    'id' => $account->id,
+                    'username' => $account->username,
+                    'name' => $account->name ?? '',
+                ]
             ];
             return ServiceResponse::statusOK("successfully login", $response);
         } catch (\Throwable $e) {
