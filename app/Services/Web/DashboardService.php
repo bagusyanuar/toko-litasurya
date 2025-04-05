@@ -76,7 +76,7 @@ class DashboardService implements DashboardUseCase
                 ->groupBy(DB::raw('MONTH(date)'))
                 ->pluck('total', 'month');
             $data = collect(range(1, 12))->mapWithKeys(function ($month) use ($query) {
-                return [$month => (int) $query->get($month, 0)];
+                return [$month => (int)$query->get($month, 0)];
             });
             return ServiceResponse::statusOK('successfully get selling chart', $data);
         } catch (\Exception $e) {
@@ -88,11 +88,11 @@ class DashboardService implements DashboardUseCase
     {
         try {
             $data = Transaction::with(['carts.item', 'customer'])
-                ->where('type' ,'=', 'sales')
+                ->where('type', '=', 'sales')
                 ->orderBy('created_at', 'DESC')
                 ->get()->take(5);
             return ServiceResponse::statusOK('successfully get last purchasing', $data);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return ServiceResponse::internalServerError($e->getMessage());
         }
     }
@@ -104,7 +104,7 @@ class DashboardService implements DashboardUseCase
                 ->orderBy('created_at', 'DESC')
                 ->get()->take(5);
             return ServiceResponse::statusOK('successfully get store visit', $data);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return ServiceResponse::internalServerError($e->getMessage());
         }
     }
@@ -127,7 +127,21 @@ class DashboardService implements DashboardUseCase
                 ->limit(5)
                 ->get();
             return ServiceResponse::statusOK('successfully get top 5 products', $data);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
+            return ServiceResponse::internalServerError($e->getMessage());
+        }
+    }
+
+    public function getTopStore(): ServiceResponse
+    {
+        try {
+            $data = Customer::with([])
+                ->where('type', '=', 'store')
+                ->withCount('transactions')
+                ->orderByDesc('transactions_count')
+                ->take(5)->get();
+            return ServiceResponse::statusOK('successfully get top 5 store', $data);
+        } catch (\Exception $e) {
             return ServiceResponse::internalServerError($e->getMessage());
         }
     }

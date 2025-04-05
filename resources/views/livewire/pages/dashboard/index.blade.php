@@ -11,8 +11,7 @@
             <livewire:features.dashboard.selling-chart />
             <div class="flex gap-3">
                 <livewire:features.dashboard.top-product />
-                <div class="w-full bg-white p-4 rounded-lg shadow-md"></div>
-
+                <livewire:features.dashboard.top-store />
             </div>
         </div>
         <div class="col-span-1 flex flex-col gap-3">
