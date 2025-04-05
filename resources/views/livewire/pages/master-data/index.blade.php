@@ -29,6 +29,18 @@
             title="Route"
             handleChange="$store.masterDataStore.onChangeTab('route')"
         ></x-gxui.tab.tab-item>
+        <x-gxui.tab.tab-item
+            active="$store.masterDataStore.selectedTab === 'customer'"
+            icon="square-user"
+            title="Customer"
+            handleChange="$store.masterDataStore.onChangeTab('customer')"
+        ></x-gxui.tab.tab-item>
+        <x-gxui.tab.tab-item
+            active="$store.masterDataStore.selectedTab === 'schedule'"
+            icon="calendar-check"
+            title="Schedule"
+            handleChange="$store.masterDataStore.onChangeTab('schedule')"
+        ></x-gxui.tab.tab-item>
     </x-gxui.tab.tab-container>
     <div x-show="$store.masterDataStore.selectedTab === 'category'">
         <livewire:features.master-data.category.table/>
@@ -55,6 +67,21 @@
     >
         <livewire:features.master-data.route.table/>
         <livewire:features.master-data.route.form/>
+    </div>
+    <div
+        x-show="$store.masterDataStore.selectedTab === 'customer'"
+        x-cloak
+    >
+        <livewire:features.master-data.customer.index/>
+    </div>
+    <div
+        x-show="$store.masterDataStore.selectedTab === 'schedule'"
+        x-cloak
+    >
+        <div class="flex items-start gap-3 w-full">
+            <livewire:features.master-data.schedule.team/>
+            <livewire:features.master-data.schedule.schedule/>
+        </div>
     </div>
     <x-gxui.loader.action-loader></x-gxui.loader.action-loader>
 </div>
