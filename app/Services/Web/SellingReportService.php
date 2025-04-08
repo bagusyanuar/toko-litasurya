@@ -9,7 +9,7 @@ use App\Commons\Response\ServiceResponse;
 use App\Domain\Web\SellingReport\DTOFilter;
 use App\Exports\SellingReport;
 use App\Models\Transaction;
-use App\Usecase\Web\SellingReportUseCase;
+use App\UseCase\Web\SellingReportUseCase;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -108,6 +108,4 @@ class SellingReportService implements SellingReportUseCase
                 return $q->whereBetween('date', [$filter->getDateStart(), $filter->getDateEnd()]);
             });
     }
-
-
 }

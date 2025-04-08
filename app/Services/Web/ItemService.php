@@ -18,7 +18,7 @@ use App\Models\Category;
 use App\Models\Item;
 use App\Models\ItemPrice;
 use App\Services\CustomService;
-use App\Usecase\Web\ItemInterface;
+use App\UseCase\Web\ItemInterface;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 

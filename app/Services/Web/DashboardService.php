@@ -9,7 +9,7 @@ use App\Models\Customer;
 use App\Models\Item;
 use App\Models\SalesTeamVisit;
 use App\Models\Transaction;
-use App\Usecase\Web\DashboardUseCase;
+use App\UseCase\Web\DashboardUseCase;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Usecase\Web;
+namespace App\UseCase\Web;
 
 
 use App\Commons\Response\ServiceResponse;

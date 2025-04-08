@@ -10,7 +10,7 @@ use App\Commons\Traits\Eloquent\Mutator;
 use App\Domain\Web\Admin\DTOFilter;
 use App\Domain\Web\Admin\DTOMutate;
 use App\Models\User;
-use App\Usecase\Web\AdminUseCase;
+use App\UseCase\Web\AdminUseCase;
 
 class AdminService implements AdminUseCase
 {

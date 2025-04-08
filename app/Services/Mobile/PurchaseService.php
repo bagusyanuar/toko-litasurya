@@ -9,7 +9,7 @@ use App\Commons\Response\ServiceResponse;
 use App\Domain\Mobile\Purchase\DTOFilter;
 use App\Domain\Mobile\Purchase\DTOPurchase;
 use App\Models\Transaction;
-use App\Usecase\Mobile\PurchaseInterface;
+use App\UseCase\Mobile\PurchaseInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
