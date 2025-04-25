@@ -36,7 +36,7 @@
                         options="categoryOptions"
                         label="Category"
                         parentClassName="mb-3 flex-1"
-                        selectID="storeSelect"
+                        selectID="categoryItemSelect"
                         x-init="initSelect2({placeholder: 'choose a category'})"
                         x-bind="gxuiSelect2Bind"
                         x-bind:store-name="'$store.itemFormStore.categoryOptions'"
@@ -190,6 +190,19 @@
                 showModal(formType = 'create') {
                     this.showModalForm = true;
                     this.type = formType;
+                    this.component.$wire.call('categories').then(response => {
+                        const {success, data} = response;
+                        if (success) {
+                            let categoryOptions = [];
+                            data.forEach(function (v, k) {
+                                const option = {id: v.id, text: v.name};
+                                categoryOptions.push(option);
+                            });
+                            this.categoryOptions = categoryOptions;
+                        } else {
+                            this.toastStore.failed('failed to load item data');
+                        }
+                    });
                 },
                 closeModal() {
                     this.formReset();

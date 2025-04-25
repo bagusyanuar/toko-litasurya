@@ -30,7 +30,6 @@ document.addEventListener('alpine:init', () => {
                     this.statePerPage = this.$el.getAttribute("state-per-page") || '';
                     this.stateCurrentPage = this.$el.getAttribute("state-current-page") || '';
                     if (this.storeName) {
-
                         if (this.statePerPageOptions) {
                             if (Array.isArray(Alpine.store(this.storeName)?.[this.statePerPageOptions])) {
                                 this.perPageOptions = Alpine.store(this.storeName)?.[this.statePerPageOptions];
@@ -83,7 +82,9 @@ document.addEventListener('alpine:init', () => {
                             this.dispatch();
                         });
 
-                        this.dispatch();
+                        if (Alpine.store(this.storeName)?.component) {
+                            this.dispatch();
+                        }
                     }
                 });
             },

@@ -111,7 +111,6 @@
                     this.component.$wire.call('sales', query)
                         .then(response => {
                             const {success, data, meta, message} = response;
-                            console.log(data);
                             if (success) {
                                 this.data = data;
                             } else {

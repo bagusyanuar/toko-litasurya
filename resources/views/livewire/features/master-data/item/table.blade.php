@@ -193,8 +193,8 @@
                     // },
                 ],
                 init: function () {
-                    const componentID = document.querySelector('[data-component-id="table-item"]')?.getAttribute('wire:id');
                     Livewire.hook('component.init', ({component}) => {
+                        const componentID = document.querySelector('[data-component-id="table-item"]')?.getAttribute('wire:id');
                         if (component.id === componentID) {
                             this.component = component;
                             this.formStore = Alpine.store('itemFormStore');
@@ -208,6 +208,7 @@
                     })
                 },
                 onFindAll() {
+                    console.log('render item table');
                     this.loading = true;
                     this.component.$wire.call('findAll', this.param, this.page, this.perPage)
                         .then(response => {
@@ -227,6 +228,7 @@
                     })
                 },
                 _generatePrices() {
+                    this.prices = [];
                     this.data.forEach((item, key) => {
                         const prices = item['prices'];
                         const itemID = item['id'];

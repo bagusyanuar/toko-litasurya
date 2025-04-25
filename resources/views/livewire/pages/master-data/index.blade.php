@@ -1,4 +1,7 @@
-<div>
+<section
+    id="section-master-data"
+    data-component-id="master-data"
+>
     <div class="mb-5">
         <x-gxui.typography.page-title text="Master Data"></x-gxui.typography.page-title>
         <x-gxui.typography.page-sub-title
@@ -42,58 +45,88 @@
             handleChange="$store.masterDataStore.onChangeTab('schedule')"
         ></x-gxui.tab.tab-item>
     </x-gxui.tab.tab-container>
-    <div x-show="$store.masterDataStore.selectedTab === 'category'">
-        <livewire:features.master-data.category.table/>
-        <livewire:features.master-data.category.form/>
-    </div>
-    <div
-        x-show="$store.masterDataStore.selectedTab === 'item'"
-        x-cloak
-    >
-        <livewire:features.master-data.item.table/>
-        <livewire:features.master-data.item.form/>
-        <livewire:features.master-data.item.price-list/>
-    </div>
-    <div
-        x-show="$store.masterDataStore.selectedTab === 'reward'"
-        x-cloak
-    >
-        <livewire:features.master-data.reward.table/>
-        <livewire:features.master-data.reward.form/>
-    </div>
-    <div
-        x-show="$store.masterDataStore.selectedTab === 'route'"
-        x-cloak
-    >
-        <livewire:features.master-data.route.table/>
-        <livewire:features.master-data.route.form/>
-    </div>
-    <div
-        x-show="$store.masterDataStore.selectedTab === 'customer'"
-        x-cloak
-    >
-        <livewire:features.master-data.customer.index/>
-    </div>
-    <div
-        x-show="$store.masterDataStore.selectedTab === 'schedule'"
-        x-cloak
-    >
-        <div class="flex items-start gap-3 w-full">
-            <livewire:features.master-data.schedule.team/>
-            <livewire:features.master-data.schedule.schedule/>
+    <template x-if="$store.masterDataStore.selectedTab === 'category'">
+        <div>
+            <livewire:features.master-data.category.table/>
+            <livewire:features.master-data.category.form/>
         </div>
-    </div>
+    </template>
+    <template x-if="$store.masterDataStore.selectedTab === 'item'">
+        <div>
+            <livewire:features.master-data.item.table/>
+            <livewire:features.master-data.item.form/>
+            <livewire:features.master-data.item.price-list/>
+        </div>
+    </template>
+    <template x-if="$store.masterDataStore.selectedTab === 'reward'">
+        <div>
+            <livewire:features.master-data.reward.table/>
+            <livewire:features.master-data.reward.form/>
+        </div>
+    </template>
+    <template x-if="$store.masterDataStore.selectedTab === 'route'">
+        <div>
+            <livewire:features.master-data.route.table/>
+            <livewire:features.master-data.route.form/>
+        </div>
+    </template>
+    <template x-if="$store.masterDataStore.selectedTab === 'customer'">
+        <div>
+            <livewire:features.master-data.customer.index/>
+        </div>
+    </template>
+    <template x-if="$store.masterDataStore.selectedTab === 'schedule'">
+        <div>
+            <div class="flex items-start gap-3 w-full">
+                <livewire:features.master-data.schedule.team/>
+                <livewire:features.master-data.schedule.schedule/>
+            </div>
+        </div>
+    </template>
+
     <x-gxui.loader.action-loader></x-gxui.loader.action-loader>
-</div>
+</section>
 
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('masterDataStore', {
+                component: null,
                 selectedTab: 'category',
+                // init: function() {
+                //     const componentID = document.querySelector('[data-component-id="master-data"]')?.getAttribute('wire:id');
+                //     Livewire.hook('component.init', ({component}) => {
+                //         if (component.id === componentID) {
+                //             this.component = component;
+                //             // const categoryTableComponent = document.querySelector('[data-component-id="table-category"]')?.getAttribute('wire:id');
+                //             // if (categoryTableComponent === component.id) {
+                //             //     this.tabEvent(this.selectedTab);
+                //             // }
+                //         }
+                //     })
+                // },
                 onChangeTab(selectedTab) {
+                    // this.tabEvent(selectedTab);
                     this.selectedTab = selectedTab;
                 },
+                tabEvent(selectedTab) {
+                    switch (selectedTab) {
+                        case 'category':
+                            Alpine.store('categoryTableStore').onFindAll();
+                            break;
+                        case 'item':
+                            Alpine.store('itemTableStore').onFindAll();
+                            break;
+                        case 'reward':
+                            Alpine.store('rewardTableStore').onFindAll();
+                            break;
+                        case 'route':
+                            Alpine.store('routeTableStore').onFindAll();
+                            break;
+                        default:
+                            break;
+                    }
+                }
             })
         })
     </script>

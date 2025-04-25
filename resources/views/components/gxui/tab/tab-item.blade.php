@@ -12,6 +12,7 @@
     </div>
     <div
         class="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-brand-500 w-[75%]"
+        x-cloak
         x-bind:class="{{ $active }} ? '' : 'hidden'"
     ></div>
 </div>
