@@ -4,7 +4,7 @@
     class="w-full"
 >
     <div class="w-full flex gap-3">
-        <div class="w-[10rem] border-r border-neutral-300 pe-1">
+        <div class="min-w-[10rem] border-r border-neutral-300 pe-1">
             <div
                 class="relative cursor-pointer w-full"
                 x-on:click="$store.masterDataCustomerStore.onChangeTab('store')"
@@ -39,14 +39,18 @@
             </div>
         </div>
         <div class="flex-1">
-            <div x-show="$store.masterDataCustomerStore.selectedTab === 'store'">
-                <livewire:features.master-data.customer.store.table/>
-                <livewire:features.master-data.customer.store.form/>
-            </div>
-            <div x-show="$store.masterDataCustomerStore.selectedTab === 'personal'">
-                <livewire:features.master-data.customer.personal.table/>
-                <livewire:features.master-data.customer.personal.form/>
-            </div>
+            <template x-if="$store.masterDataCustomerStore.selectedTab === 'store'">
+                <div>
+                    <livewire:features.master-data.customer.store.table/>
+                    <livewire:features.master-data.customer.store.form/>
+                </div>
+            </template>
+            <template x-if="$store.masterDataCustomerStore.selectedTab === 'personal'">
+                <div>
+                    <livewire:features.master-data.customer.personal.table/>
+                    <livewire:features.master-data.customer.personal.form/>
+                </div>
+            </template>
         </div>
     </div>
 </section>
@@ -58,6 +62,18 @@
                 selectedTab: 'store',
                 onChangeTab(selectedTab) {
                     this.selectedTab = selectedTab;
+                },
+                tabEvent(selectedTab) {
+                    switch (selectedTab) {
+                        case 'store':
+                            Alpine.store('customerStoreTableStore').onFindAll();
+                            break;
+                        case 'personal':
+                            Alpine.store('customerPersonalTableStore').onFindAll();
+                            break;
+                        default:
+                            break;
+                    }
                 },
             })
         })

@@ -55,7 +55,6 @@
         <div>
             <livewire:features.master-data.item.table/>
             <livewire:features.master-data.item.form/>
-            <livewire:features.master-data.item.price-list/>
         </div>
     </template>
     <template x-if="$store.masterDataStore.selectedTab === 'reward'">

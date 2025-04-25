@@ -184,13 +184,6 @@
                             this.onDelete(data)
                         }
                     },
-                    // {
-                    //     label: 'Pricing',
-                    //     icon: 'circle-dollar-sign',
-                    //     dispatch: function (data) {
-                    //         this.onPriceList(data);
-                    //     }
-                    // },
                 ],
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
@@ -208,7 +201,6 @@
                     })
                 },
                 onFindAll() {
-                    console.log('render item table');
                     this.loading = true;
                     this.component.$wire.call('findAll', this.param, this.page, this.perPage)
                         .then(response => {

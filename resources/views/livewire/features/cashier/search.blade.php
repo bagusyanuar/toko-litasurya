@@ -180,8 +180,8 @@
                 data: [],
                 loading: false,
                 init: function () {
-                    const componentID = document.querySelector('[data-component-id="cashier-search"]')?.getAttribute('wire:id');
                     Livewire.hook('component.init', ({component}) => {
+                        const componentID = document.querySelector('[data-component-id="cashier-search"]')?.getAttribute('wire:id');
                         if (component.id === componentID) {
                             this.component = component;
                             this.cartStore = Alpine.store('cartStore');

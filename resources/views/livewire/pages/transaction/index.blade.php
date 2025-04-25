@@ -19,27 +19,33 @@
             handleChange="$store.transactionStore.onChangeTab('purchasing')"
         ></x-gxui.tab.tab-item>
         <x-gxui.tab.tab-item
-            active="$store.transactionStore.selectedTab === 'selling-report'"
-            icon="file-stack"
-            title="Selling Report"
-            handleChange="$store.transactionStore.onChangeTab('selling-report')"
+            active="$store.transactionStore.selectedTab === 'return'"
+            icon="undo-2"
+            title="Return"
+            handleChange="$store.transactionStore.onChangeTab('return')"
         ></x-gxui.tab.tab-item>
 
     </x-gxui.tab.tab-container>
-    <div x-show="$store.transactionStore.selectedTab === 'cashier'">
-        <livewire:pages.cashier.index/>
-    </div>
-    <div x-cloak x-show="$store.transactionStore.selectedTab === 'purchasing'">
-        <livewire:features.purchasing.table/>
-        <livewire:features.purchasing.filter/>
-        <livewire:features.purchasing.process/>
-    </div>
-    <div x-cloak x-show="$store.transactionStore.selectedTab === 'selling-report'">
-        <livewire:features.selling-report.table/>
-        <livewire:features.selling-report.filter/>
-        {{--        <livewire:features.purchasing.process/>--}}
-    </div>
-    <x-gxui.loader.action-loader ></x-gxui.loader.action-loader>
+    <template x-if="$store.transactionStore.selectedTab === 'cashier'">
+        <div>
+            <livewire:pages.cashier.index/>
+        </div>
+    </template>
+    <template x-if="$store.transactionStore.selectedTab === 'purchasing'">
+        <div>
+            <livewire:features.purchasing.table/>
+            <livewire:features.purchasing.filter/>
+            <livewire:features.purchasing.process/>
+        </div>
+    </template>
+    <template x-if="$store.transactionStore.selectedTab === 'a'">
+        <div>
+            <livewire:features.selling-report.table/>
+            <livewire:features.selling-report.filter/>
+            {{--        <livewire:features.purchasing.process/>--}}
+        </div>
+    </template>
+    <x-gxui.loader.action-loader></x-gxui.loader.action-loader>
     <div>
         <div
             class="fixed inset-0 bg-gray-500 bg-opacity-50 z-[300]"
@@ -75,7 +81,7 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('transactionStore', {
-                selectedTab: 'selling-report',
+                selectedTab: 'cashier',
                 gift: false,
                 point: 0,
                 onChangeTab(selectedTab) {
