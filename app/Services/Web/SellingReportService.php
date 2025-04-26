@@ -14,6 +14,7 @@ use App\Usecase\Web\SellingReportUseCase;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class SellingReportService implements SellingReportUseCase
@@ -109,5 +110,27 @@ class SellingReportService implements SellingReportUseCase
             })->orderBy('date', 'ASC');
     }
 
+    private function generateQueryChart($year)
+    {
+        $query = Transaction::select(
+            DB::raw('MONTH(date) as month'),
+            DB::raw('SUM(total) as total')
+        )->whereYear('date', $year)
+            ->where('status', '=', 'finish')
+            ->groupBy(DB::raw('MONTH(date)'))
+            ->pluck('total', 'month');
+        return collect(range(1, 12))->mapWithKeys(function ($month) use ($query) {
+            return [$month => (int)$query->get($month, 0)];
+        });
+    }
 
+    public function makeChart($year): ServiceResponse
+    {
+        try {
+            $data = $this->generateQueryChart($year);
+            return ServiceResponse::statusOK('successfully get selling chart', $data);
+        }catch (\Throwable $e) {
+            return ServiceResponse::internalServerError($e->getMessage());
+        }
+    }
 }
