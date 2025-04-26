@@ -46,6 +46,13 @@
                 </div>
             </div>
         </div>
+        <div class="flex-1">
+            <template x-if="$store.sellingReportStore.selectedTab === 'table'">
+                <div class="w-full">
+                    <livewire:features.report.selling.table />
+                </div>
+            </template>
+        </div>
     </div>
 </section>
 

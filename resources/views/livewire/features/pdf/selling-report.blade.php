@@ -34,12 +34,6 @@
                 <span class="font-normal text-dark font-bold leading-0">Customer</span>
             </td>
             <td
-                style="border: 1px solid #0f172a; width: 13%; text-align: center; vertical-align: middle;"
-                class="tb-px tb-py"
-            >
-                <span class="font-normal text-dark font-bold leading-0">Type</span>
-            </td>
-            <td
                 style="border: 1px solid #0f172a; width: 15%; text-align: right; vertical-align: middle;"
                 class="tb-px tb-py"
             >
@@ -69,12 +63,6 @@
                         class="font-normal text-light leading-0">{{ $datum->customer ? $datum->customer->name : '-' }}</span>
                 </td>
                 <td
-                    style="border: 1px solid #0f172a; width: 13%; text-align: center; vertical-align: middle;"
-                    class="tb-px tb-py"
-                >
-                    <span class="font-normal text-light leading-0">{{ ucfirst($datum->type) }}</span>
-                </td>
-                <td
                     style="border: 1px solid #0f172a; width: 15%; text-align: right; vertical-align: middle;"
                     class="tb-px tb-py"
                 >
@@ -83,24 +71,24 @@
                 </td>
             </tr>
             <tr>
-                <td class="tb-px tb-py" colspan="4" style="border-left: 1px solid #0f172a;">
+                <td class="tb-px tb-py" colspan="3" style="border-left: 1px solid #0f172a;">
                     <table style="width: 100%; border-collapse: collapse">
                         <tr>
                             <td style="width: 50%;">
                                 <span class="font-small font-bold text-dark leading-0">Cart List</span>
                             </td>
                             <td style="width: 50%; text-align: right;">
-                                <span
-                                    class="font-small font-bold text-light leading-0"
-                                    style="font-style: italic; text-align: right"
-                                >
-                                    Purchased By :
-                                    @if($datum->user->sales)
-                                        <span style="margin-left: 5px;">{{ $datum->user->sales->name }}</span>
-                                    @else
-                                        <span style="margin-left: 5px;">Cashier</span>
-                                    @endif
-                                </span>
+{{--                                <span--}}
+{{--                                    class="font-small font-bold text-light leading-0"--}}
+{{--                                    style="font-style: italic; text-align: right"--}}
+{{--                                >--}}
+{{--                                    Purchased By :--}}
+{{--                                    @if($datum->user->sales)--}}
+{{--                                        <span style="margin-left: 5px;">{{ $datum->user->sales->name }}</span>--}}
+{{--                                    @else--}}
+{{--                                        <span style="margin-left: 5px;">Cashier</span>--}}
+{{--                                    @endif--}}
+{{--                                </span>--}}
                             </td>
                         </tr>
                     </table>
@@ -181,7 +169,7 @@
         @endforeach
         <tr>
             <td
-                colspan="4"
+                colspan="3"
                 style="border: 1px solid #0f172a; text-align: right; vertical-align: middle;"
                 class="tb-px tb-py"
             >

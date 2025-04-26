@@ -23,6 +23,7 @@
             <livewire:features.report.selling.index/>
         </div>
     </template>
+    <x-gxui.loader.action-loader></x-gxui.loader.action-loader>
 </div>
 
 @push('scripts')
