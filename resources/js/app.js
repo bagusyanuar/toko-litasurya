@@ -1,5 +1,7 @@
 import './bootstrap';
 import 'flowbite';
+import flatpickr from 'flatpickr';
+import "flatpickr/dist/flatpickr.min.css";
 import './gxui/pagination'
 import './gxui/file-dropper'
 import './gxui/toast'

@@ -52,6 +52,11 @@
                     <livewire:features.report.selling.table />
                 </div>
             </template>
+            <template x-if="$store.sellingReportStore.selectedTab === 'chart'">
+                <div class="w-full">
+                    <livewire:features.report.selling.chart />
+                </div>
+            </template>
         </div>
     </div>
 </section>

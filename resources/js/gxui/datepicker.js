@@ -1,3 +1,5 @@
+import "flatpickr/dist/flatpickr.min.css";
+import monthSelectPlugin from "flatpickr/dist/plugins/monthSelect"
 document.addEventListener('alpine:init', () => {
     Alpine.bind('gxuiDatepickerBind', () => ({
         'x-data': () => ({
@@ -40,5 +42,38 @@ document.addEventListener('alpine:init', () => {
                 })
             },
         }),
-    }))
+    }));
+
+    Alpine.bind('gxuiYearPickerBind', () => ({
+        'x-data': () => ({
+            yearPicker: null,
+            initYearPicker(config = {}){
+                const baseConfig = {
+                    dateFormat: "Y", // untuk value yang disimpan
+                    altInput: true,
+                    altFormat: "Y", // untuk tampilan yang ditampilkan
+                    allowInput: true,
+                    onReady: function(selectedDates, dateStr, instance) {
+                        const monthElement = instance?.monthElements?.[0] || instance?.calendarContainer?.querySelector('.flatpickr-monthDropdown-months');
+                        if (monthElement) {
+                            monthElement.style.display = "none"; // Hide bulan
+                        }
+
+                        const yearElement = instance?.currentYearElement || instance?.calendarContainer?.querySelector('.flatpickr-current-year');
+                        if (yearElement) {
+                            yearElement.removeAttribute("disabled");
+                            yearElement.focus();
+                        }
+                    },
+                    onChange: function(selectedDates, dateStr, instance) {
+                        instance.close();
+                    },
+                };
+                const cfg = Object.assign({}, baseConfig, config);
+                this.$nextTick(() => {
+                    this.datepicker = flatpickr(this.$el, cfg);
+                });
+            },
+        })
+    }));
 });
