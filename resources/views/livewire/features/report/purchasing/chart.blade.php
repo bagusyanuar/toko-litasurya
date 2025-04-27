@@ -1,6 +1,6 @@
 <section
-    id="section-selling-chart"
-    data-component-id="selling-chart"
+    id="section-purchasing-chart"
+    data-component-id="purchasing-chart"
     class="w-full"
 >
     <div
@@ -13,28 +13,29 @@
         x-init="initIcons()"
         x-effect="initIcons()"
     >
-        <p class="mb-0 text-sm text-neutral-700 font-bold">SELLING CHART</p>
+        <p class="mb-0 text-sm text-neutral-700 font-bold">PURCHASING CHART</p>
         <div class="flex gap-1 items-center" wire:ignore>
             <x-gxui.input.date.yearpicker
-                id="filterSellingYear"
-                store="sellingChartStore"
+                id="filterPurchasingYear"
+                store="purchasingChartStore"
                 placeholder="yyyy"
                 class="!w-[120px]"
-                x-model="$store.sellingChartStore.year"
+                x-model="$store.purchasingChartStore.year"
                 x-init="initDatepicker({format: 'yyyy'})"
                 dispatcher="onDateChange"
             ></x-gxui.input.date.yearpicker>
         </div>
     </div>
     <div class="w-full relative">
-        <div id="selling-chart-canvas" class="h-[25rem] w-full" style="min-width: 150px; width: 100%;"></div>
-        <div class="w-full absolute z-10 top-0 left-0" x-show="$store.sellingChartStore.loadingSellingChart">
+        <div id="purchasing-chart-canvas" class="h-[25rem] w-full" style="min-width: 150px; width: 100%;"></div>
+        <div class="w-full absolute z-10 top-0 left-0" x-show="$store.purchasingChartStore.loadingSellingChart">
             <x-gxui.loader.shimmer class="!h-[25rem] !w-full !rounded-md"></x-gxui.loader.shimmer>
         </div>
     </div>
 </section>
 
 @push('scripts')
+
     <script>
         document.addEventListener('alpine:init', () => {
             const today = new Date().toLocaleDateString('id-ID', {
@@ -51,7 +52,7 @@
                 year: '2025',
                 init: function () {
                     Livewire.hook('component.init', ({component}) => {
-                        const componentID = document.querySelector('[data-component-id="selling-chart"]')?.getAttribute('wire:id');
+                        const componentID = document.querySelector('[data-component-id="purchasing-chart"]')?.getAttribute('wire:id');
                         if (component.id === componentID) {
                             this.component = component;
                             this.toastStore = Alpine.store('gxuiToastStore');
@@ -82,7 +83,7 @@
                     let data = AVAILABLE_MONTH.map((v, k) => {
                         return d[k + 1];
                     });
-                    let chartEl = document.getElementById('selling-chart-canvas');
+                    let chartEl = document.getElementById('purchasing-chart-canvas');
                     this.chartInstance = echarts.init(chartEl);
                     this.chartInstance.setOption({
                         tooltip: {
@@ -110,7 +111,7 @@
                 }
             };
             const props = Object.assign({}, window.TableStore, componentProps);
-            Alpine.store('sellingChartStore', props);
+            Alpine.store('purchasingChartStore', props);
         });
     </script>
 @endpush

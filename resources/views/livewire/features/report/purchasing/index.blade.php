@@ -52,11 +52,11 @@
                     <livewire:features.report.purchasing.table />
                 </div>
             </template>
-{{--            <template x-if="$store.purchasingReportStore.selectedTab === 'chart'">--}}
-{{--                <div class="w-full">--}}
-{{--                    <livewire:features.report.purchasing.chart />--}}
-{{--                </div>--}}
-{{--            </template>--}}
+            <template x-if="$store.purchasingReportStore.selectedTab === 'chart'">
+                <div class="w-full">
+                    <livewire:features.report.purchasing.chart />
+                </div>
+            </template>
         </div>
     </div>
 </section>

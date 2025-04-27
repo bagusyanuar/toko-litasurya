@@ -32,6 +32,7 @@
 </div>
 
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('reportStore', {
