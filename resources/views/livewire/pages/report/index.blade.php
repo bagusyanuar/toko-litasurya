@@ -23,6 +23,11 @@
             <livewire:features.report.selling.index/>
         </div>
     </template>
+    <template x-if="$store.reportStore.selectedTab === 'purchasing'">
+        <div>
+            <livewire:features.report.purchasing.index/>
+        </div>
+    </template>
     <x-gxui.loader.action-loader></x-gxui.loader.action-loader>
 </div>
 
