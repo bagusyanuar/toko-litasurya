@@ -20,5 +20,9 @@ Route::group(['prefix' => '/v1'], function () {
             Route::get('/{id}', [\App\Http\Controllers\Mobile\PurchaseController::class, 'findByID']);
         });
 
+        Route::group(['prefix' => 'return'], function () {
+            Route::post('/', [\App\Http\Controllers\Mobile\TransactionReturnController::class, 'create']);
+        });
+
     });
 });
