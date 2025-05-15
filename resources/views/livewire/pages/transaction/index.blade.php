@@ -38,11 +38,9 @@
             <livewire:features.purchasing.process/>
         </div>
     </template>
-    <template x-if="$store.transactionStore.selectedTab === 'a'">
+    <template x-if="$store.transactionStore.selectedTab === 'return'">
         <div>
-            <livewire:features.selling-report.table/>
-            <livewire:features.selling-report.filter/>
-            {{--        <livewire:features.purchasing.process/>--}}
+            <livewire:features.selling-return.table/>
         </div>
     </template>
     <x-gxui.loader.action-loader></x-gxui.loader.action-loader>
