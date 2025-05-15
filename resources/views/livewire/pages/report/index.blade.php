@@ -17,6 +17,12 @@
             title="Purchasing"
             handleChange="$store.reportStore.onChangeTab('purchasing')"
         ></x-gxui.tab.tab-item>
+        <x-gxui.tab.tab-item
+            active="$store.reportStore.selectedTab === 'return'"
+            icon="undo"
+            title="Selling Return"
+            handleChange="$store.reportStore.onChangeTab('return')"
+        ></x-gxui.tab.tab-item>
     </x-gxui.tab.tab-container>
     <template x-if="$store.reportStore.selectedTab === 'selling'">
         <div>
@@ -26,6 +32,11 @@
     <template x-if="$store.reportStore.selectedTab === 'purchasing'">
         <div>
             <livewire:features.report.purchasing.index/>
+        </div>
+    </template>
+    <template x-if="$store.reportStore.selectedTab === 'return'">
+        <div>
+            <livewire:features.report.selling-return.index/>
         </div>
     </template>
     <x-gxui.loader.action-loader></x-gxui.loader.action-loader>
