@@ -6,26 +6,31 @@ COPY composer.json composer.lock ./
 RUN composer install --no-scripts --no-autoloader
 
 # Stage 2: PHP Application
-FROM php:8.2-fpm-alpine
+FROM php:8.2-fpm
 
 # Install system dependencies
-RUN apk add --no-cache \
-    bash \
+RUN apt-get update && apt-get install -y \
+    libicu-dev \
     libpng-dev \
-    libjpeg-turbo-dev \
+    libjpeg-dev \
     libwebp-dev \
     libxpm-dev \
-    freetype-dev \
-    oniguruma-dev \
-    libzip-dev \
-    icu-dev \
+    libfreetype6-dev \
     zip \
     unzip \
     curl \
     git \
     nano \
-    mysql-client \
-    nginx
+    default-mysql-client \
+    nginx \
+    && docker-php-ext-configure gd \
+    --with-freetype \
+    --with-jpeg \
+    --with-webp \
+    --with-xpm \
+    && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl bcmath intl gd \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
 RUN docker-php-ext-configure intl \
