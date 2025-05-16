@@ -30,4 +30,11 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}:latest
+          no-cache: true
+          tags: |
+            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
+
+      - name: Verify PHP Extensions
+        run: |
+          docker run --rm ghcr.io/${{ github.repository }}:latest php -m
