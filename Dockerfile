@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     libwebp-dev \
     libxpm-dev \
     libfreetype6-dev \
+    libonig-dev \
     zip \
     unzip \
     git \
