@@ -2,10 +2,7 @@
 FROM composer:2 AS composer
 
 WORKDIR /app
-
-# Karena Dockerfile ada di root, cukup copy langsung file-nya
 COPY composer.json composer.lock ./
-
 RUN composer install --no-scripts --no-autoloader
 
 # Stage 2: PHP Application
@@ -21,6 +18,7 @@ RUN apk add --no-cache \
     freetype-dev \
     oniguruma-dev \
     libzip-dev \
+    icu-dev \                   # <-- Tambahkan ini
     zip \
     unzip \
     curl \
@@ -30,7 +28,7 @@ RUN apk add --no-cache \
     nginx
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl bcmath gd
+RUN docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl bcmath gd intl  # <-- Tambahkan intl
 
 # Install Composer
 COPY --from=composer /usr/bin/composer /usr/bin/composer
@@ -38,10 +36,10 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Copy seluruh isi Laravel (Dockerfile sudah di root, jadi tidak perlu folder lagi)
+# Copy app files
 COPY . .
 
-# Copy vendor hasil composer install dari stage 1
+# Copy installed vendor from composer stage
 COPY --from=composer /app/vendor ./vendor
 
 # Set permissions
