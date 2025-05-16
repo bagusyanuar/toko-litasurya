@@ -18,7 +18,7 @@ RUN apk add --no-cache \
     freetype-dev \
     oniguruma-dev \
     libzip-dev \
-    icu-dev \                   # <-- Tambahkan ini
+    icu-dev \
     zip \
     unzip \
     curl \
@@ -28,7 +28,8 @@ RUN apk add --no-cache \
     nginx
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl bcmath gd intl  # <-- Tambahkan intl
+RUN docker-php-ext-configure intl \
+    && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl bcmath gd intl
 
 # Install Composer
 COPY --from=composer /usr/bin/composer /usr/bin/composer
