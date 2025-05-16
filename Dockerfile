@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     libxpm-dev \
     libfreetype6-dev \
     libonig-dev \
+    libzip-dev \
     zip \
     unzip \
     git \
