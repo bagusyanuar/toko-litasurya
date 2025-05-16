@@ -1,14 +1,7 @@
-# Stage 1: Composer
-FROM composer:2 AS composer
+# Stage 1: Base PHP dengan ekstensi lengkap
+FROM php:8.2-fpm AS app
 
-WORKDIR /app
-COPY composer.json composer.lock ./
-RUN composer install --no-scripts --no-autoloader
-
-# Stage 2: PHP Application
-FROM php:8.2-fpm
-
-# Install system dependencies
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     libicu-dev \
     libpng-dev \
@@ -18,41 +11,37 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     zip \
     unzip \
-    curl \
     git \
+    curl \
     nano \
     default-mysql-client \
     nginx \
     && docker-php-ext-configure gd \
-    --with-freetype \
-    --with-jpeg \
-    --with-webp \
-    --with-xpm \
+        --with-freetype \
+        --with-jpeg \
+        --with-webp \
+        --with-xpm \
     && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl bcmath intl gd \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
-RUN docker-php-ext-configure intl \
-    && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl bcmath gd intl
-
 # Install Composer
-COPY --from=composer /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www
 
-# Copy app files
+# Copy composer files first
+COPY composer.json composer.lock ./
+
+# Run composer install (sekarang ekstensi intl dan gd sudah tersedia)
+RUN composer install --no-scripts --no-autoloader
+
+# Copy sisanya
 COPY . .
 
-# Copy installed vendor from composer stage
-COPY --from=composer /app/vendor ./vendor
-
 # Set permissions
-RUN chown -R www-data:www-data /var/www \
-    && chmod -R 755 /var/www
+RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
-# Expose port
 EXPOSE 9000
-
 CMD ["php-fpm"]
