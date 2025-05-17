@@ -47,7 +47,7 @@ WORKDIR /var/www
 COPY composer.json composer.lock ./
 
 # Jalankan composer install
-RUN composer install --no-scripts --no-autoloader --prefer-dist --no-interaction --no-progress
+RUN composer install --no-scripts --prefer-dist --no-interaction --no-progress
 
 # Copy semua source code ke container
 COPY . .
