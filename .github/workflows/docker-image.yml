@@ -51,6 +51,8 @@ jobs:
             echo "Cleaning up old images..."
             docker image prune -f
 
+            cd litasurya-compose
+
             echo "Pulling latest image..."
             docker compose pull
             docker compose up -d --force-recreate
