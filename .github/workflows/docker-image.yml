@@ -56,4 +56,4 @@ jobs:
             echo "Pulling latest image..."
             docker compose pull
             docker compose up -d --force-recreate
-            docker compose exec app php artisan migrate --force
+            docker compose exec laravel-app php artisan migrate --force
