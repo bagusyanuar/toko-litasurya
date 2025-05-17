@@ -1,24 +1,28 @@
-#!/bin/bash
+#!/bin/sh
+set -e
 
-echo "🚀 Starting Laravel container..."
+echo "🔍 Checking application dependencies..."
 
-# Jalankan composer install kalau vendor belum ada
-if [ ! -d "/var/www/vendor" ]; then
-    echo "📦 Running composer install..."
-    composer install --no-dev --optimize-autoloader
+# Composer install jika vendor tidak ada atau composer.lock terbaru
+if [ ! -d "/var/www/vendor" ] || [ /var/www/composer.lock -nt /var/www/vendor ]; then
+  echo "📦 Running composer install..."
+  composer install --no-dev --optimize-autoloader --no-interaction
+else
+  echo "✅ Composer dependencies are up to date."
 fi
 
-# Jalankan npm run build kalau folder build belum ada
-if [ ! -d "/var/www/public/build" ]; then
-    echo "🔧 Running npm install and build..."
-    npm install && npm run build
+# NPM install dan build jika node_modules tidak ada atau package.json terbaru
+if [ ! -d "/var/www/node_modules" ] || [ /var/www/package.json -nt /var/www/node_modules ]; then
+  echo "📦 Running npm install and build..."
+  npm install
+  npm run build
+else
+  echo "✅ NPM dependencies and build are up to date."
 fi
 
-# Set permission
-echo "🔐 Fixing file permissions..."
+# Set permission (opsional, bisa disesuaikan)
 chown -R www-data:www-data /var/www
 chmod -R 755 /var/www
 
-# Start PHP-FPM
-echo "✅ Starting PHP-FPM..."
-exec php-fpm
+echo "🚀 Starting PHP-FPM..."
+exec "$@"

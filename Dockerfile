@@ -58,4 +58,5 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 # Expose port PHP-FPM
 EXPOSE 9000
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["php-fpm"]

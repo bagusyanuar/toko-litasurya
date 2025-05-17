@@ -1,0 +1,25 @@
+# Ignore node_modules dan vendor supaya tidak ikut di-copy saat build
+node_modules
+vendor
+
+# File log dan cache
+*.log
+storage/logs/*
+storage/framework/cache/data/*
+
+# File environment dan konfigurasi lokal
+.env
+.env.local
+.env.*.local
+
+# Git dan file version control
+.git
+.gitignore
+
+# File sistem dan IDE
+.DS_Store
+.vscode
+.idea
+
+# Build output (jika ada)
+public/build
