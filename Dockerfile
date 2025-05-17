@@ -52,14 +52,10 @@ RUN composer install --no-scripts --no-autoloader --prefer-dist --no-interaction
 # Copy semua source code ke container
 COPY . .
 
-# Install dependencies JS dan build Vite
-RUN npm install && npm run build
-
-# Set permission untuk www-data
-RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Expose port PHP-FPM
 EXPOSE 9000
 
-# Jalankan PHP-FPM
-CMD ["php-fpm"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
