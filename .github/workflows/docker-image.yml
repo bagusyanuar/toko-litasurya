@@ -48,6 +48,9 @@ jobs:
             echo "Logging in to GitHub Container Registry..."
             docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password ${{ secrets.GHCR_PAT }}
 
+            echo "Cleaning up old images..."
+            docker image prune -f
+
             echo "Pulling latest image..."
             docker compose pull
             docker compose up -d --force-recreate
