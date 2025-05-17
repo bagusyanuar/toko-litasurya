@@ -17,6 +17,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     nano \
     default-mysql-client \
+    gnupg \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
     && docker-php-ext-configure gd \
         --with-freetype \
         --with-jpeg \
@@ -48,6 +51,9 @@ RUN composer install --no-scripts --no-autoloader --prefer-dist --no-interaction
 
 # Copy semua source code ke container
 COPY . .
+
+# Install dependencies JS dan build Vite
+RUN npm install && npm run build
 
 # Set permission untuk www-data
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
