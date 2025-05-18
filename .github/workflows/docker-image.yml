@@ -53,6 +53,9 @@ jobs:
 
             cd litasurya-deployment
 
+            echo "Stopping and removing old containers if any..."
+            docker compose -p litasurya down
+
             echo "Pulling latest image..."
             docker compose -p litasurya pull
             docker compose -p litasurya up -d --force-recreate
