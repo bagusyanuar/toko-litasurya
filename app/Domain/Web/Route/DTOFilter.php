@@ -18,7 +18,7 @@ class DTOFilter extends DTORequest
         $page = $this->query['page'] ?? 1;
         $perPage = $this->query['per_page'] ?? 10;
 
-        $this->setPage($param)
+        $this->setParam($param)
             ->setPage($page)
             ->setPerPage($perPage);
     }

@@ -35,13 +35,13 @@
             icon="chart-pie"
             to="/report"
             title="Reports & Analytics"
-            active="{{ \Illuminate\Support\Facades\Route::is('setting*') }}"
+            active="{{ \Illuminate\Support\Facades\Route::is('report*') }}"
         ></x-gxui.sidebar.item>
-        <x-gxui.sidebar.item
-            icon="settings"
-            to="/setting"
-            title="Setting"
-            active="{{ \Illuminate\Support\Facades\Route::is('setting*') }}"
-        ></x-gxui.sidebar.item>
+{{--        <x-gxui.sidebar.item--}}
+{{--            icon="settings"--}}
+{{--            to="/setting"--}}
+{{--            title="Setting"--}}
+{{--            active="{{ \Illuminate\Support\Facades\Route::is('setting*') }}"--}}
+{{--        ></x-gxui.sidebar.item>--}}
     </div>
 </div>

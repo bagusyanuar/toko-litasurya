@@ -129,8 +129,8 @@
                     },
                 ],
                 init: function () {
-                    const componentID = document.querySelector('[data-component-id="table-route"]')?.getAttribute('wire:id');
                     Livewire.hook('component.init', ({component}) => {
+                        const componentID = document.querySelector('[data-component-id="table-route"]')?.getAttribute('wire:id');
                         if (component.id === componentID) {
                             this.component = component;
                             this.formStore = Alpine.store('routeFormStore');

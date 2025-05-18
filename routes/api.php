@@ -10,6 +10,7 @@ use App\Http\Controllers\Mobile\TransactionController;
 use App\Http\Controllers\Mobile\AuthController;
 use Illuminate\Support\Facades\Route;
 
+//cek docker lagi
 Route::post('/test-purchase', [\App\Http\Controllers\TestController::class, 'addPurchase']);
 
 Route::group(['prefix' => '/v1'], function () {
@@ -62,5 +63,8 @@ Route::group(['prefix' => '/v1'], function () {
         Route::get('/attendance/weekly-schedule', [AttendanceController::class, 'getWeeklySchedule']);
         Route::get('/attendance/today-schedule', [AttendanceController::class, 'getTodaySchedule']);
         Route::post('/attendance/store', [AttendanceController::class, 'store']);
+        Route::group(['prefix' => 'return'], function () {
+            Route::post('/', [\App\Http\Controllers\Mobile\TransactionReturnController::class, 'create']);
+        });
     });
 });

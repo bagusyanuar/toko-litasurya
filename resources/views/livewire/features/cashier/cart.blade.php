@@ -3,7 +3,15 @@
     data-component-id="cashier-cart"
     class="flex-1"
 >
-    <div class="w-full flex justify-end mb-3">
+    <div class="w-full flex justify-end mb-3"
+         x-data="{
+            initIcons() {
+               setTimeout(() => { lucide.createIcons(); }, 0);
+            }
+        }"
+         x-init="initIcons()"
+         x-effect="initIcons()"
+    >
         <div class="flex gap-1">
             <div class="relative group">
                 <div wire:ignore class="h-full flex items-center px-[0.5rem] absolute inset-y-0 start-0">
@@ -123,15 +131,15 @@
                     x-init="initIcons()"
                     x-effect="initIcons()"
                 >
-                        <div
-                            class="cursor-pointer w-fit"
-                            wire:ignore
-                            x-on:click="$store.cartStore.confirmDelete(index)"
-                        >
-                            <i data-lucide="trash"
-                               class="text-red-500 group-focus-within:text-neutral-900 h-3 aspect-[1/1]">
-                            </i>
-                        </div>
+                    <div
+                        class="cursor-pointer w-fit"
+                        wire:ignore
+                        x-on:click="$store.cartStore.confirmDelete(index)"
+                    >
+                        <i data-lucide="trash"
+                           class="text-red-500 group-focus-within:text-neutral-900 h-3 aspect-[1/1]">
+                        </i>
+                    </div>
                 </x-gxui.table.dynamic.td>
             </x-gxui.table.dynamic.row>
         </x-slot>
@@ -158,8 +166,8 @@
                 data: [],
                 deleteIndex: 0,
                 init: function () {
-                    const componentID = document.querySelector('[data-component-id="cashier-cart"]')?.getAttribute('wire:id');
                     Livewire.hook('component.init', ({component}) => {
+                        const componentID = document.querySelector('[data-component-id="cashier-cart"]')?.getAttribute('wire:id');
                         if (component.id === componentID) {
                             this.component = component;
                             this.billingStore = Alpine.store('billingStore');
@@ -227,9 +235,10 @@
                     this._updateStorageCart();
                 },
                 getCart() {
-                    this.loading = false;
+                    this.loading = true;
                     this.data = this._getStorageCart();
                     this._setTotal();
+                    this.loading = false;
                 },
                 updateCart(id, qty) {
                     const item = this.data.find(item => item.id === id);

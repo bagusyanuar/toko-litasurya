@@ -116,8 +116,8 @@
                 loadingSave: false,
                 availableSchedule: AVAILABLE_SCHEDULES.map(schedule => ({...schedule})),
                 init: function () {
-                    const componentID = document.querySelector('[data-component-id="sales-team-schedule"]')?.getAttribute('wire:id');
                     Livewire.hook('component.init', ({component}) => {
+                        const componentID = document.querySelector('[data-component-id="sales-team-schedule"]')?.getAttribute('wire:id');
                         if (component.id === componentID) {
                             this.component = component;
                             this.toastStore = Alpine.store('gxuiToastStore');

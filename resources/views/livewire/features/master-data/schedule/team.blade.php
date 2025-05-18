@@ -83,8 +83,8 @@
                 data: [],
                 selectedSales: '',
                 init: function () {
-                    const componentID = document.querySelector('[data-component-id="sales-team-list"]')?.getAttribute('wire:id');
                     Livewire.hook('component.init', ({component}) => {
+                        const componentID = document.querySelector('[data-component-id="sales-team-list"]')?.getAttribute('wire:id');
                         if (component.id === componentID) {
                             this.component = component;
                             this.toastStore = Alpine.store('gxuiToastStore');
@@ -111,7 +111,6 @@
                     this.component.$wire.call('sales', query)
                         .then(response => {
                             const {success, data, meta, message} = response;
-                            console.log(data);
                             if (success) {
                                 this.data = data;
                             } else {

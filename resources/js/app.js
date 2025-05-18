@@ -1,5 +1,6 @@
 import './bootstrap';
 import 'flowbite';
+import {Datepicker} from 'vanillajs-datepicker';
 import './gxui/pagination'
 import './gxui/file-dropper'
 import './gxui/toast'
@@ -15,3 +16,4 @@ import "dropzone/dist/dropzone.css";
 Dropzone.autoDiscover = false;
 window.Dropzone = Dropzone;
 window.TableStore = TABLE_STORE;
+window.VDatepicker = Datepicker;

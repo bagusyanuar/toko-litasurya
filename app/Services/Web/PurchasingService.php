@@ -36,10 +36,11 @@ class PurchasingService implements PurchasingUseCase
                 })->when($filter->getSales(), function ($q) use ($filter) {
                     /** @var Builder $q */
                     return $q->where('user_id', '=', $filter->getSales());
-                })->when(($filter->getDateStart() && $filter->getDateEnd()), function ($q) use ($filter) {
-                    /** @var Builder $q */
-                    return $q->whereBetween('date', [$filter->getDateStart(), $filter->getDateEnd()]);
                 });
+//                ->when(($filter->getDateStart() && $filter->getDateEnd()), function ($q) use ($filter) {
+//                    /** @var Builder $q */
+//                    return $q->whereBetween('date', [$filter->getDateStart(), $filter->getDateEnd()]);
+//                });
             $totalRows = $query->count();
             $offset = ($filter->getPage() - 1) * $filter->getPerPage();
             $query
