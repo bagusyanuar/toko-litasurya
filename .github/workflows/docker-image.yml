@@ -57,5 +57,14 @@ jobs:
             docker compose pull
             docker compose up -d --force-recreate
 
+            echo "Waiting for litasurya-app to be ready..."
+            until [ "$(docker inspect -f '{{.State.Running}}' litasurya-app)" == "true" ]; do
+              echo "Waiting for litasurya-app to start..."
+              sleep 5
+            done
+
+            echo "Checking logs for litasurya-app..."
+            docker compose logs litasurya-app
+
             echo "Running database migrations..."
             docker compose exec -T litasurya-app php artisan migrate
