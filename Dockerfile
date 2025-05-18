@@ -57,5 +57,5 @@ RUN npm install && npm run build
 # Expose port PHP-FPM
 EXPOSE 9000
 
-ENTRYPOINT ["entrypoint.sh"]
+
 CMD ["php-fpm"]
