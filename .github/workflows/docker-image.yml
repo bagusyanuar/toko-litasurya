@@ -53,33 +53,31 @@ jobs:
 
             cd litasurya-deployment
 
-            echo "Stopping and removing old containers if any..."
-            docker compose -p litasurya down
-
+            docker compose down
             echo "Pulling latest image..."
-            docker compose -p litasurya pull
-            docker compose -p litasurya up -d --force-recreate
+            docker compose pull
+            docker compose up -d --force-recreate
 
             echo "Checking containers status..."
-            docker compose -p litasurya ps
+            docker compose ps
 
-            CONTAINER_ID=$(docker compose -p litasurya ps -q litasurya-app)
+            CONTAINER_ID=$(docker compose ps -q app)
             if [ -z "$CONTAINER_ID" ]; then
               echo "Error: litasurya-app container not found!"
               exit 1
             fi
 
-            echo "Waiting for litasurya-app container to be running..."
+            echo "Waiting for app container to be running..."
             while [ "$(docker inspect -f '{{.State.Running}}' $CONTAINER_ID)" != "true" ]; do
               echo "Waiting..."
               sleep 5
             done
 
             echo "litasurya-app is running, checking logs..."
-            docker compose logs --tail=20 litasurya-app
+            docker compose logs --tail=20 app
 
             echo "Running database migrations..."
-            docker compose -p litasurya exec -T litasurya-app php artisan migrate --force
+            docker compose exec -T app php artisan migrate --force
             if [ $? -ne 0 ]; then
               echo "Migration failed!"
               exit 1
