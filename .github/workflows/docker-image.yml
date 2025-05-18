@@ -61,22 +61,42 @@ jobs:
             echo "Checking containers status..."
             docker compose ps
 
-            CONTAINER_ID=$(docker compose ps -q app)
-            if [ -z "$CONTAINER_ID" ]; then
-              echo "Error: litasurya-app container not found!"
+            echo "Getting container IDs..."
+            APP_CONTAINER_ID=$(docker compose ps -q app)
+            MYSQL_CONTAINER_ID=$(docker compose ps -q mysql)
+
+            if [ -z "$APP_CONTAINER_ID" ]; then
+              echo "Error: app container not found!"
+              exit 1
+            fi
+            if [ -z "$MYSQL_CONTAINER_ID" ]; then
+              echo "Error: mysql container not found!"
               exit 1
             fi
 
             echo "Waiting for app container to be running..."
-            while [ "$(docker inspect -f '{{.State.Running}}' $CONTAINER_ID)" != "true" ]; do
-              echo "Waiting..."
-              sleep 5
+            while [ "$(docker inspect -f '{{.State.Running}}' $APP_CONTAINER_ID)" != "true" ]; do
+              echo "Waiting for app container..."
+              sleep 3
+            done
+
+            echo "Waiting for MySQL container to be running..."
+            while [ "$(docker inspect -f '{{.State.Running}}' $MYSQL_CONTAINER_ID)" != "true" ]; do
+              echo "Waiting for MySQL container..."
+              sleep 3
             done
 
             echo "Waiting for MySQL to be ready..."
+            MAX_TRIES=20
+            COUNT=0
             until docker compose exec -T mysql mysqladmin ping -h localhost --silent; do
-              echo "Waiting for MySQL..."
+              echo "Waiting for MySQL to accept connections... ($COUNT/$MAX_TRIES)"
               sleep 3
+              COUNT=$((COUNT+1))
+              if [ $COUNT -ge $MAX_TRIES ]; then
+                echo "MySQL did not become ready in time, exiting."
+                exit 1
+              fi
             done
 
             echo "litasurya-app is running, checking logs..."
