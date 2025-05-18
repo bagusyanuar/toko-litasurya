@@ -57,14 +57,25 @@ jobs:
             docker compose pull
             docker compose up -d --force-recreate
 
-            echo "Waiting for litasurya-app to be ready..."
-            until [ "$(docker inspect -f '{{.State.Running}}' litasurya-app)" == "true" ]; do
-              echo "Waiting for litasurya-app to start..."
+            echo "Checking containers status..."
+            docker compose ps
+
+            CONTAINER_ID=$(docker compose ps -q litasurya-app)
+            if [ -z "$CONTAINER_ID" ]; then
+              echo "Error: litasurya-app container not found!"
+              exit 1
+            fi
+
+            echo "Waiting for litasurya-app container to be running..."
+            while [ "$(docker inspect -f '{{.State.Running}}' $CONTAINER_ID)" != "true" ]; do
+              echo "Waiting..."
               sleep 5
             done
 
-            echo "Checking logs for litasurya-app..."
-            docker compose logs litasurya-app
+            echo "litasurya-app is running, checking logs..."
+            docker compose logs --tail=20 litasurya-app
 
             echo "Running database migrations..."
-            docker compose exec -T litasurya-app php artisan migrate
+            docker compose exec -T litasurya-app php artisan migrate --force
+
+            echo "Deployment complete!"
