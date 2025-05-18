@@ -54,9 +54,6 @@ COPY . .
 
 RUN npm install && npm run build
 
-# Copy installed vendor from composer stage
-COPY --from=composer /app/vendor ./vendor
-
 # Set permissions
 RUN chown -R www-data:www-data /var/www \
     && chmod -R 755 /var/www
