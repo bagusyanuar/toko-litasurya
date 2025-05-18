@@ -58,4 +58,4 @@ jobs:
             docker compose up -d --force-recreate
 
             echo "Running database migrations..."
-            docker compose exec -T <service_name> php artisan migrate
+            docker compose exec -T litasurya-app php artisan migrate
