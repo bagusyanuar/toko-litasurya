@@ -52,8 +52,7 @@ RUN composer install --no-scripts --prefer-dist --no-interaction --no-progress
 # Copy semua source code ke container
 COPY . .
 
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+RUN npm install && npm run build
 
 # Expose port PHP-FPM
 EXPOSE 9000
