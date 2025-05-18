@@ -54,13 +54,13 @@ jobs:
             cd litasurya-deployment
 
             echo "Pulling latest image..."
-            docker compose pull
-            docker compose up -d --force-recreate
+            docker compose -p litasurya pull
+            docker compose -p litasurya up -d --force-recreate
 
             echo "Checking containers status..."
-            docker compose ps
+            docker compose -p litasurya ps
 
-            CONTAINER_ID=$(docker compose ps -q litasurya-app)
+            CONTAINER_ID=$(docker compose -p litasurya ps -q litasurya-app)
             if [ -z "$CONTAINER_ID" ]; then
               echo "Error: litasurya-app container not found!"
               exit 1
@@ -76,6 +76,10 @@ jobs:
             docker compose logs --tail=20 litasurya-app
 
             echo "Running database migrations..."
-            docker compose exec -T litasurya-app php artisan migrate --force
+            docker compose -p litasurya exec -T litasurya-app php artisan migrate --force
+            if [ $? -ne 0 ]; then
+              echo "Migration failed!"
+              exit 1
+            fi
 
             echo "Deployment complete!"
