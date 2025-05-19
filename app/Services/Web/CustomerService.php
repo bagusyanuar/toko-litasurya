@@ -10,7 +10,7 @@ use App\Commons\Traits\Eloquent\Mutator;
 use App\Domain\Web\Customer\DTOFilter;
 use App\Domain\Web\Customer\DTOMutate;
 use App\Models\Customer;
-use App\Usecase\Web\CustomerInterface;
+use App\UseCase\Web\CustomerInterface;
 
 class CustomerService implements CustomerInterface
 {

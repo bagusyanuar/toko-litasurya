@@ -7,7 +7,7 @@ namespace App\Services\Web;
 use App\Commons\Response\ServiceResponse;
 use App\Domain\Web\Schedule\DTOMutate;
 use App\Models\SalesTeamSchedule;
-use App\Usecase\Web\ScheduleUseCase;
+use App\UseCase\Web\ScheduleUseCase;
 
 class ScheduleService implements ScheduleUseCase
 {
@@ -52,7 +52,7 @@ class ScheduleService implements ScheduleUseCase
                 ->where('day', '=', $dto->getDay())
                 ->delete();
             return ServiceResponse::statusOK('successfully delete schedule');
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return ServiceResponse::internalServerError($e->getMessage());
         }
     }

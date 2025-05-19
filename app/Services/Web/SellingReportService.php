@@ -10,7 +10,7 @@ use App\Domain\Web\SellingReport\DTOFilter;
 use App\Exports\Selling\Report;
 use App\Exports\SellingReport;
 use App\Models\Transaction;
-use App\Usecase\Web\SellingReportUseCase;
+use App\UseCase\Web\SellingReportUseCase;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -93,10 +93,10 @@ class SellingReportService implements SellingReportUseCase
                 /** @var Builder $q */
                 return $q->where('reference_number', '=', $filter->getInvoiceID());
             })
-//            ->when((count($filter->getTypes()) > 0), function ($q) use ($filter) {
-//                /** @var Builder $q */
-//                return $q->whereIn('type', $filter->getTypes());
-//            })
+            //            ->when((count($filter->getTypes()) > 0), function ($q) use ($filter) {
+            //                /** @var Builder $q */
+            //                return $q->whereIn('type', $filter->getTypes());
+            //            })
             ->when((count($filter->getCustomers()) > 0), function ($q) use ($filter) {
                 /** @var Builder $q */
                 if (!in_array('non-member', $filter->getCustomers())) {
@@ -130,7 +130,7 @@ class SellingReportService implements SellingReportUseCase
         try {
             $data = $this->generateQueryChart($year);
             return ServiceResponse::statusOK('successfully get selling chart', $data);
-        }catch (\Throwable $e) {
+        } catch (\Throwable $e) {
             return ServiceResponse::internalServerError($e->getMessage());
         }
     }

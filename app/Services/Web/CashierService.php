@@ -12,7 +12,7 @@ use App\Models\Cart;
 use App\Models\Customer;
 use App\Models\PointSetting;
 use App\Models\Transaction;
-use App\Usecase\Web\CashierUseCase;
+use App\UseCase\Web\CashierUseCase;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 

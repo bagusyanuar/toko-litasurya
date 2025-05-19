@@ -10,7 +10,7 @@ use App\Commons\Traits\Eloquent\Mutator;
 use App\Domain\Web\Point\DTOFilter;
 use App\Domain\Web\Point\DTOMutate;
 use App\Models\PointSetting;
-use App\Usecase\Web\PointUseCase;
+use App\UseCase\Web\PointUseCase;
 
 class PointService implements PointUseCase
 {

@@ -10,7 +10,7 @@ use App\Commons\Traits\Eloquent\Mutator;
 use App\Domain\Web\Route\DTOFilter;
 use App\Domain\Web\Route\DTOMutate;
 use App\Models\Route;
-use App\Usecase\Web\RouteInterface;
+use App\UseCase\Web\RouteInterface;
 
 class RouteService implements RouteInterface
 {
