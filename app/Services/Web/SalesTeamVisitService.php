@@ -8,7 +8,7 @@ use App\Commons\Response\MetaPagination;
 use App\Commons\Response\ServiceResponse;
 use App\Domain\Web\SalesTeamVisit\DTOFilter;
 use App\Models\SalesTeamVisit;
-use App\Usecase\Web\SalesTeamVisitUseCase;
+use App\UseCase\Web\SalesTeamVisitUseCase;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 

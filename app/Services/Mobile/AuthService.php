@@ -9,7 +9,7 @@ use App\Commons\JWT\JWTClaims;
 use App\Commons\Response\ServiceResponse;
 use App\Domain\Mobile\DTOLogin;
 use App\Models\User;
-use App\Usecase\Mobile\AuthInterface;
+use App\UseCase\Mobile\AuthInterface;
 use Illuminate\Support\Facades\Hash;
 
 class AuthService implements AuthInterface

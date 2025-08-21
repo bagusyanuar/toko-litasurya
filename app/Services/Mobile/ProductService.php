@@ -8,7 +8,7 @@ use App\Commons\Response\MetaPagination;
 use App\Commons\Response\ServiceResponse;
 use App\Domain\Mobile\Product\DTOFilter;
 use App\Models\Item;
-use App\Usecase\Mobile\ProductInterface;
+use App\UseCase\Mobile\ProductInterface;
 use Illuminate\Database\Eloquent\Builder;
 
 class ProductService implements ProductInterface

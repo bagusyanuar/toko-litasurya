@@ -11,7 +11,7 @@ use App\Commons\Traits\Eloquent\Mutator;
 use App\Domain\Web\Reward\DTOFilterReward;
 use App\Domain\Web\Reward\DTOMutateReward;
 use App\Models\Reward;
-use App\Usecase\Web\RewardInterface;
+use App\UseCase\Web\RewardInterface;
 
 class RewardService implements RewardInterface
 {
