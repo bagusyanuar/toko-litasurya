@@ -6,63 +6,42 @@
             text="Welcome to transaction page. You can manage all transactions on this page."></x-gxui.typography.page-sub-title>
     </div>
     <x-gxui.tab.tab-container class="mb-5">
-        <x-gxui.tab.tab-item
-            active="$store.transactionStore.selectedTab === 'cashier'"
-            icon="shopping-bag"
-            title="Cashier"
-            handleChange="$store.transactionStore.onChangeTab('cashier')"
-        ></x-gxui.tab.tab-item>
-        <x-gxui.tab.tab-item
-            active="$store.transactionStore.selectedTab === 'purchasing'"
-            icon="notebook-pen"
-            title="Purchasing"
-            handleChange="$store.transactionStore.onChangeTab('purchasing')"
-        ></x-gxui.tab.tab-item>
-        <x-gxui.tab.tab-item
-            active="$store.transactionStore.selectedTab === 'return'"
-            icon="undo-2"
-            title="Return"
-            handleChange="$store.transactionStore.onChangeTab('return')"
-        ></x-gxui.tab.tab-item>
+        <x-gxui.tab.tab-item active="$store.transactionStore.selectedTab === 'cashier'" icon="shopping-bag" title="Cashier"
+            handleChange="$store.transactionStore.onChangeTab('cashier')"></x-gxui.tab.tab-item>
+        <x-gxui.tab.tab-item active="$store.transactionStore.selectedTab === 'purchasing'" icon="notebook-pen"
+            title="Purchasing" handleChange="$store.transactionStore.onChangeTab('purchasing')"></x-gxui.tab.tab-item>
+        <x-gxui.tab.tab-item active="$store.transactionStore.selectedTab === 'return'" icon="undo-2" title="Return"
+            handleChange="$store.transactionStore.onChangeTab('return')"></x-gxui.tab.tab-item>
 
     </x-gxui.tab.tab-container>
     <template x-if="$store.transactionStore.selectedTab === 'cashier'">
         <div>
-            <livewire:pages.cashier.index/>
+            <livewire:pages.cashier.index />
         </div>
     </template>
     <template x-if="$store.transactionStore.selectedTab === 'purchasing'">
         <div>
-            <livewire:features.purchasing.table/>
-            <livewire:features.purchasing.filter/>
-            <livewire:features.purchasing.process/>
+            <livewire:features.purchasing.table />
+            <livewire:features.purchasing.filter />
+            <livewire:features.purchasing.process />
         </div>
     </template>
     <template x-if="$store.transactionStore.selectedTab === 'return'">
         <div>
-            <livewire:features.selling-return.table/>
+            <livewire:features.selling-return.table />
         </div>
     </template>
     <x-gxui.loader.action-loader></x-gxui.loader.action-loader>
     <div>
-        <div
-            class="fixed inset-0 bg-gray-500 bg-opacity-50 z-[300]"
-            x-cloak
-            x-show="$store.transactionStore.gift"
-            x-on:click="$store.transactionStore.closePoint()"
-        >
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-50 z-[300]" x-cloak x-show="$store.transactionStore.gift"
+            x-on:click="$store.transactionStore.closePoint()">
         </div>
-        <div
-            x-cloak
-            x-show="$store.transactionStore.gift"
+        <div x-cloak x-show="$store.transactionStore.gift"
             x-transition:enter="transition ease-out duration-300 transform"
-            x-transition:enter-start="translate-y-[-100%] opacity-0"
-            x-transition:enter-end="translate-y-0 opacity-100"
+            x-transition:enter-start="translate-y-[-100%] opacity-0" x-transition:enter-end="translate-y-0 opacity-100"
             x-transition:leave="transition ease-in duration-200 transform"
-            x-transition:leave-start="translate-y-0 opacity-100"
-            x-transition:leave-end="translate-y-[-100%] opacity-0"
-            class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[301] flex items-center justify-center"
-        >
+            x-transition:leave-start="translate-y-0 opacity-100" x-transition:leave-end="translate-y-[-100%] opacity-0"
+            class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[301] flex items-center justify-center">
             <div class="bg-white rounded shadow-lg w-[30rem] max-h-full flex flex-col items-center py-4">
                 <p class="text-neutral-700 text-xl font-bold mb-5">Congratulations!</p>
                 <img src="{{ asset('/static/images/gift.png') }}" alt="gift-image" class="w-auto h-32 mb-5">
@@ -73,6 +52,8 @@
             </div>
         </div>
     </div>
+    <x-gxui.loader.action-loader>
+    </x-gxui.loader.action-loader>
 </div>
 
 @push('scripts')
@@ -82,6 +63,16 @@
                 selectedTab: 'cashier',
                 gift: false,
                 point: 0,
+                processLoading: true,
+                processText: 'Loading...',
+                showLoading(text = 'Loading process...') {
+                    this.processText = text;
+                    this.processLoading = true;
+                },
+                closeLoading() {
+                    this.processLoading = false;
+                    this.processText = 'Loading...';
+                },
                 onChangeTab(selectedTab) {
                     this.selectedTab = selectedTab;
                 },
