@@ -7,7 +7,7 @@ namespace App\Services\Mobile;
 use App\Commons\Response\ServiceResponse;
 use App\Domain\Mobile\TransactionReturn\DTOTransactionReturn;
 use App\Models\TransactionReturn;
-use App\Usecase\Mobile\TransactionReturnUseCase;
+use App\UseCase\Mobile\TransactionReturnUseCase;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 

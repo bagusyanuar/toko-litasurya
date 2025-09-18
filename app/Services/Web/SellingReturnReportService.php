@@ -9,7 +9,7 @@ use App\Commons\Response\ServiceResponse;
 use App\Domain\Web\SellingReturnReport\DTOFilter;
 use App\Exports\SellingReturn\Report;
 use App\Models\TransactionReturn;
-use App\Usecase\Web\SellingReportReturnUseCase;
+use App\UseCase\Web\SellingReportReturnUseCase;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -88,7 +88,7 @@ class SellingReturnReportService implements SellingReportReturnUseCase
         try {
             $data = $this->generateQueryChart($year);
             return ServiceResponse::statusOK('successfully get selling return chart', $data);
-        }catch (\Throwable $e) {
+        } catch (\Throwable $e) {
             return ServiceResponse::internalServerError($e->getMessage());
         }
     }

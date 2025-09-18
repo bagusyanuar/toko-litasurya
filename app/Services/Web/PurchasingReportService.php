@@ -9,7 +9,7 @@ use App\Commons\Response\ServiceResponse;
 use App\Domain\Web\PurchasingReport\DTOFilter;
 use App\Exports\Purchasing\Report;
 use App\Models\Transaction;
-use App\Usecase\Web\PurchasingReportUseCase;
+use App\UseCase\Web\PurchasingReportUseCase;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -90,7 +90,7 @@ class PurchasingReportService implements PurchasingReportUseCase
         try {
             $data = $this->generateQueryChart($year);
             return ServiceResponse::statusOK('successfully get purchasing chart', $data);
-        }catch (\Throwable $e) {
+        } catch (\Throwable $e) {
             return ServiceResponse::internalServerError($e->getMessage());
         }
     }

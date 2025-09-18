@@ -8,7 +8,7 @@ use App\Commons\Response\MetaPagination;
 use App\Commons\Response\ServiceResponse;
 use App\Domain\Web\SellingReturn\DTOFilter;
 use App\Models\TransactionReturn;
-use App\Usecase\Web\SellingReturnUseCase;
+use App\UseCase\Web\SellingReturnUseCase;
 use Illuminate\Database\Eloquent\Builder;
 
 class SellingReturnService implements SellingReturnUseCase
@@ -57,7 +57,7 @@ class SellingReturnService implements SellingReturnUseCase
             }
             $transaction->update(['status' => 'finish']);
             return ServiceResponse::statusOK('successfully update selling return');
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return ServiceResponse::internalServerError($e->getMessage());
         }
     }
