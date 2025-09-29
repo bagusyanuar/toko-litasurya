@@ -34,6 +34,14 @@ class AuthController extends CustomController
         return $this->toJSON($response);
     }
 
+    public function loginCashier()
+    {
+        $jsonData = $this->requestFromJSON();
+        $this->dtoLogin->hydrateForm($jsonData);
+        $response = $this->service->loginCashier($this->dtoLogin);
+        return $this->toJSON($response);
+    }
+
     public function getUserData()
     {
         $user = User::with('sales')->find(Auth::id());

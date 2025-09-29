@@ -29,7 +29,7 @@ class InvoiceService
             $carts = $transaction->carts;
             $connector = new WindowsPrintConnector("POS-58");
             $printer = new Printer($connector);
-//        $printer->pulse();
+            $printer->pulse();
             $printer->setJustification(Printer::JUSTIFY_CENTER);
             $printer->setEmphasis(true);
             $printer->setTextSize(1, 1);

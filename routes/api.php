@@ -15,6 +15,7 @@ Route::post('/test-purchase', [\App\Http\Controllers\TestController::class, 'add
 
 Route::group(['prefix' => '/v1'], function () {
     Route::post('/auth/login', [\App\Http\Controllers\Mobile\AuthController::class, 'login']);
+    Route::post('/auth/login/cashier', [\App\Http\Controllers\Mobile\AuthController::class, 'loginCashier']);
 
     Route::group(['middleware' => [\App\Http\Middleware\JWTMiddleware::class]], function () {
         Route::group(['prefix' => 'product'], function () {
@@ -65,6 +66,22 @@ Route::group(['prefix' => '/v1'], function () {
         Route::post('/attendance/store', [AttendanceController::class, 'store']);
         Route::group(['prefix' => 'return'], function () {
             Route::post('/', [\App\Http\Controllers\Mobile\TransactionReturnController::class, 'create']);
+        });
+
+        Route::group(['prefix' => 'cashier'], function () {
+            Route::group(['prefix' => 'product'], function () {
+                Route::get('/', [\App\Http\Controllers\Cashier\ProductController::class, 'findAllPLU']);
+                Route::get('/{plu}', [\App\Http\Controllers\Cashier\ProductController::class, 'findByPLU']);
+            });
+
+            Route::group(['prefix' => 'customer'], function () {
+                Route::get('/', [\App\Http\Controllers\Cashier\CustomerController::class, 'findAll']);
+            });
+
+            Route::group(['prefix' => 'order'], function () {
+                Route::post('/', [\App\Http\Controllers\Cashier\OrderController::class, 'order']);
+                Route::get('/{id}', [\App\Http\Controllers\Cashier\OrderController::class, 'findByID']);
+            });
         });
     });
 });
