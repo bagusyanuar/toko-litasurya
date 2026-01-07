@@ -1,45 +1,28 @@
-<section
-    id="section-cashier-billing"
-    data-component-id="cashier-billing"
->
+<section id="section-cashier-billing" data-component-id="cashier-billing">
     <div class="w-64 bg-white px-6 py-4 rounded-md shadow-md">
         <p class="font-bold text-sm text-neutral-700 mb-3">Billing</p>
-        <hr class="mb-3"/>
-        <x-gxui.input.select.select2
-            label="Customer"
-            parentClassName="mb-3 flex-1"
-            selectID="billingCustomerSelect"
-            x-init="initSelect2({placeholder: 'choose a customer'})"
-            x-bind="gxuiSelect2Bind"
-            x-bind:store-name="'$store.billingStore.customerOptions'"
-            x-model="$store.billingStore.customerValue"
-        ></x-gxui.input.select.select2>
+        <hr class="mb-3" />
+        <x-gxui.input.select.select2 label="Customer" parentClassName="mb-3 flex-1" selectID="billingCustomerSelect"
+            x-init="initSelect2({ placeholder: 'choose a customer' })" x-bind="gxuiSelect2Bind" x-bind:store-name="'$store.billingStore.customerOptions'"
+            x-model="$store.billingStore.customerValue"></x-gxui.input.select.select2>
 
-        <hr class="mb-3"/>
+        <hr class="mb-3" />
         <div class="w-full mb-3 flex items-center justify-between text-neutral-700">
             <span class="">Total</span>
             <span class="font-bold">: <span
                     x-text="'Rp. '+$store.billingStore.total.toLocaleString('id-ID')"></span></span>
         </div>
 
-        <hr class="mb-3"/>
+        <hr class="mb-3" />
         <div class="flex items-center justify-end w-full mb-3">
-            <input
-                id="print-option"
-                type="checkbox"
+            <input id="print-option" type="checkbox"
                 class="w-4 h-4 text-brand-500 bg-gray-100 border-brand-500 rounded-sm !focus:ring-0 !focus:outline-none"
-                style="box-shadow: none"
-                x-on:change="$store.billingStore.usePrint = $event.target.checked"
-                :checked="$store.billingStore.usePrint"
-            >
+                style="box-shadow: none" x-on:change="$store.billingStore.usePrint = $event.target.checked"
+                :checked="$store.billingStore.usePrint">
             <label for="cashier-type" class="ms-2 text-xs font-medium text-neutral-700">Print</label>
         </div>
-        <x-gxui.button.button
-            wire:ignore
-            x-on:click="$store.billingStore.submitOrder()"
-            class="!w-full"
-            x-bind:disabled="false"
-        >
+        <x-gxui.button.button wire:ignore x-on:click="$store.billingStore.submitOrder()" class="!w-full"
+            x-bind:disabled="false">
             <div class="w-full flex justify-center items-center gap-1 text-sm">
                 <span>Place Order</span>
             </div>
@@ -61,9 +44,13 @@
                 total: 0,
                 customerValue: '',
                 usePrint: true,
-                init: function () {
-                    Livewire.hook('component.init', ({component}) => {
-                        const componentID = document.querySelector('[data-component-id="cashier-billing"]')?.getAttribute('wire:id');
+                init: function() {
+                    Livewire.hook('component.init', ({
+                        component
+                    }) => {
+                        const componentID = document.querySelector(
+                            '[data-component-id="cashier-billing"]')?.getAttribute(
+                            'wire:id');
                         if (component.id === componentID) {
                             this.component = component;
                             this.transactionStore = Alpine.store('transactionStore');
@@ -71,16 +58,23 @@
                             this.toastStore = Alpine.store('gxuiToastStore');
                             this.actionLoaderStore = Alpine.store('gxuiActionLoader');
                             this.component.$wire.call('customer').then(response => {
-                                const {success, data} = response;
+                                const {
+                                    success,
+                                    data
+                                } = response;
                                 if (success) {
                                     let customerOptions = [];
-                                    data.forEach(function (v, k) {
-                                        const option = {id: v.id, text: v.name};
+                                    data.forEach(function(v, k) {
+                                        const option = {
+                                            id: v.id,
+                                            text: v.name
+                                        };
                                         customerOptions.push(option);
                                     });
                                     this.customerOptions = customerOptions;
                                 } else {
-                                    this.toastStore.failed('failed to load customer option');
+                                    this.toastStore.failed(
+                                        'failed to load customer option');
                                 }
                             });
                         }
@@ -98,17 +92,33 @@
                     };
                     this.component.$wire.call('submitOrder', form)
                         .then(response => {
-                            const {success, message, data} = response;
+                            const {
+                                success,
+                                message,
+                                data
+                            } = response;
+                            console.log(response);
+
                             if (success) {
-                                this.actionLoaderStore.end();
-                                this.customerValue = '';
-                                $('#customerSelect').val(null).trigger('change');
-                                this.toastStore.success(message);
-                                this.cartStore.clearCart();
-                                const {withPoint, point} = data;
-                                if (withPoint) {
-                                    this.transactionStore.showPoint(point);
-                                }
+                                const byteCharacters = atob(data);
+                                const byteNumbers = new Array(byteCharacters.length).fill(0).map((_,
+                                    i) =>
+                                    byteCharacters.charCodeAt(i));
+                                const byteArray = new Uint8Array(byteNumbers);
+                                const blob = new Blob([byteArray], {
+                                    type: 'application/pdf'
+                                });
+                                const blobUrl = URL.createObjectURL(blob);
+                                window.open(blobUrl, '_blank');
+                                // this.actionLoaderStore.end();
+                                // this.customerValue = '';
+                                // $('#customerSelect').val(null).trigger('change');
+                                // this.toastStore.success(message);
+                                // this.cartStore.clearCart();
+                                // const {withPoint, point} = data;
+                                // if (withPoint) {
+                                //     this.transactionStore.showPoint(point);
+                                // }
                             } else {
                                 this.actionLoaderStore.end();
                                 this.toastStore.failed(message);

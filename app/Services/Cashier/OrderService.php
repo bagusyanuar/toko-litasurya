@@ -1,33 +1,28 @@
 <?php
 
+namespace App\Services\Cashier;
 
-namespace App\Services\Web;
-
-
-use App\Commons\Invoice\InvoiceService;
+use App\Domain\Cashier\Order\OrderSchema;
 use App\Commons\Response\ServiceResponse;
-use App\Domain\Web\Cashier\DTOCart;
-use App\Domain\Web\Cashier\DTOSubmit;
-use App\Models\Cart;
 use App\Models\Customer;
 use App\Models\PointSetting;
 use App\Models\Transaction;
-use App\UseCase\Web\CashierUseCase;
+use App\UseCase\Cashier\OrderInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class CashierService implements CashierUseCase
+class OrderService implements OrderInterface
 {
-
-    public function submitOrder(DTOSubmit $dto): ServiceResponse
+    public function placeOrder(OrderSchema $schema): ServiceResponse
     {
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             $userID = Auth::user()->id;
-            $dto->hydrate();
+            $schema->hydrate();
+
             /** @var DTOCart $cart */
-            $total = array_sum(array_map(fn($cart) => $cart->getTotal(), $dto->getCarts()));
+            $total = array_sum(array_map(fn($cart) => $cart->getTotal(), $schema->getCarts()));
 
             //checking point
             $pointSetting = PointSetting::with([])
@@ -35,23 +30,24 @@ class CashierService implements CashierUseCase
                 ->orderBy('nominal', 'DESC')
                 ->first();
 
-            $referenceNumber = 'INV-LS-' . date('YmdHis');
+            $referenceNumber = 'LS' . date('YmdHis');
             $cashier = Auth::user()->username;
             $dataTransaction = [
                 'user_id' => $userID,
-                'customer_id' => $dto->getCustomerID(),
-                'reference_number' => 'INV-LS-' . date('YmdHis'),
+                'customer_id' => $schema->getCustomerID(),
+                'reference_number' => $referenceNumber,
                 'date' => Carbon::now(),
                 'total' => $total,
                 'status' => 'finish',
                 'type' => 'cashier'
             ];
             $transaction = Transaction::create($dataTransaction);
+
             $carts = [];
-            foreach ($dto->getCarts() as $cart) {
+            foreach ($schema->getCarts() as $cart) {
                 $dataCart = [
                     'user_id' => $userID,
-                    'customer_id' => $dto->getCustomerID(),
+                    'customer_id' => $schema->getCustomerID(),
                     'item_id' => $cart->getItemID(),
                     'request_qty' => $cart->getQty(),
                     'qty' => $cart->getQty(),
@@ -66,9 +62,10 @@ class CashierService implements CashierUseCase
 
             $withPoint = false;
             $point = 0;
-            if ($dto->getCustomerID() && $pointSetting) {
+
+            if ($schema->getCustomerID() && $pointSetting) {
                 $customer = Customer::with([])
-                    ->where('id', '=', $dto->getCustomerID())
+                    ->where('id', '=', $schema->getCustomerID())
                     ->first();
                 if ($customer) {
                     $withPoint = true;
@@ -81,21 +78,29 @@ class CashierService implements CashierUseCase
                 }
             }
 
-            $dataPrint = [
-                'invoice_id' => $referenceNumber,
-                'cashier' => $cashier,
-                'carts' => $carts
-            ];
-            if ($dto->isUsePrint()) {
-                InvoiceService::printInvoice($transaction->id);
-            }
             DB::commit();
-            return ServiceResponse::created('successfully create order', [
+            return ServiceResponse::created("successfully place order", [
                 'withPoint' => $withPoint,
-                'point' => $point
+                'point' => $point,
+                'id' => $transaction->id
             ]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             DB::rollBack();
+            return ServiceResponse::internalServerError($e->getMessage());
+        }
+    }
+
+    public function findByID($orderId): ServiceResponse
+    {
+        try {
+            $data = Transaction::with(['carts.item', 'user'])
+                ->where('id', '=', $orderId)
+                ->first();
+            if (!$data) {
+                return ServiceResponse::notFound('transaction not found');
+            }
+            return ServiceResponse::statusOK('successfully get product', $data);
+        } catch (\Throwable $e) {
             return ServiceResponse::internalServerError($e->getMessage());
         }
     }
