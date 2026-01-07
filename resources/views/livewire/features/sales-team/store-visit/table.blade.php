@@ -171,7 +171,7 @@
                     this.loading = true;
                     const query = {
                         param: this.param,
-                        page: this.page,
+                        page: this.currentPage,
                         per_page: this.perPage,
                         dateStart: this.dateStart,
                         dateEnd: this.dateEnd,
@@ -185,7 +185,7 @@
                                 const totalRows = meta['pagination'] ? meta['pagination']['total_rows'] : 0;
                                 const page = meta['pagination'] ? meta['pagination']['page'] : 1;
                                 this.totalRows = totalRows;
-                                this.page = page;
+                                this.currentPage = page;
                             } else {
                                 this.toastStore.failed(message);
                             }

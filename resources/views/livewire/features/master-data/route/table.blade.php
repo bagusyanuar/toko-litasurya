@@ -148,7 +148,7 @@
                     const query = {
                         type: this.type,
                         param: this.param,
-                        page: this.page,
+                        page: this.currentPage,
                         per_page: this.perPage
                     };
                     this.component.$wire.call('findAll', query)
@@ -159,7 +159,7 @@
                                 const totalRows = meta['pagination'] ? meta['pagination']['total_rows'] : 0;
                                 const page = meta['pagination'] ? meta['pagination']['page'] : 1;
                                 this.totalRows = totalRows;
-                                this.page = page;
+                                this.currentPage = page;
                             } else {
                                 this.toastStore.failed(message);
                             }
