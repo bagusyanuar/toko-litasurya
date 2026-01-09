@@ -92,8 +92,9 @@ document.addEventListener('alpine:init', () => {
                 let store = Alpine.store(this.storeName);
                 if (store && this.stateCurrentPage in store) {
                     store[this.stateCurrentPage] = 1;
+                    this.perPage = perPage;
+                    this.currentPage = 1;
                 }
-                this.perPage = perPage;
             },
             onPrevious() {
                 let store = Alpine.store(this.storeName);
@@ -111,6 +112,7 @@ document.addEventListener('alpine:init', () => {
                 let store = Alpine.store(this.storeName);
                 if (store && this.stateCurrentPage in store) {
                     store[this.stateCurrentPage] = page;
+                    this.currentPage = page
                 }
 
             },

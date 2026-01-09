@@ -198,7 +198,7 @@
                 },
                 onFindAll() {
                     this.loading = true;
-                    this.component.$wire.call('findAll', this.param, this.page, this.perPage)
+                    this.component.$wire.call('findAll', this.param, this.currentPage, this.perPage)
                         .then(response => {
                             const {success, data, meta, message} = response;
                             if (success) {
@@ -206,7 +206,7 @@
                                 const totalRows = meta['pagination'] ? meta['pagination']['total_rows'] : 0;
                                 const page = meta['pagination'] ? meta['pagination']['page'] : 1;
                                 this.totalRows = totalRows;
-                                this.page = page;
+                                this.currentPage = page;
                             } else {
                                 this.toastStore.failed(message);
                             }
