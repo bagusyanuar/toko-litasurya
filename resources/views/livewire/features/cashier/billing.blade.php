@@ -100,25 +100,27 @@
                             console.log(response);
 
                             if (success) {
-                                const byteCharacters = atob(data);
-                                const byteNumbers = new Array(byteCharacters.length).fill(0).map((_,
-                                    i) =>
-                                    byteCharacters.charCodeAt(i));
-                                const byteArray = new Uint8Array(byteNumbers);
-                                const blob = new Blob([byteArray], {
-                                    type: 'application/pdf'
-                                });
-                                const blobUrl = URL.createObjectURL(blob);
-                                window.open(blobUrl, '_blank');
-                                // this.actionLoaderStore.end();
-                                // this.customerValue = '';
-                                // $('#customerSelect').val(null).trigger('change');
-                                // this.toastStore.success(message);
-                                // this.cartStore.clearCart();
-                                // const {withPoint, point} = data;
-                                // if (withPoint) {
-                                //     this.transactionStore.showPoint(point);
-                                // }
+                                // const byteCharacters = atob(data);
+                                // console.log(byteCharacters);
+
+                                // const byteNumbers = new Array(byteCharacters.length).fill(0).map((_,
+                                //     i) =>
+                                //     byteCharacters.charCodeAt(i));
+                                // const byteArray = new Uint8Array(byteNumbers);
+                                // const blob = new Blob([byteArray], {
+                                //     type: 'application/pdf'
+                                // });
+                                // const blobUrl = URL.createObjectURL(blob);
+                                // window.open(blobUrl, '_blank');
+                                this.actionLoaderStore.end();
+                                this.customerValue = '';
+                                $('#customerSelect').val(null).trigger('change');
+                                this.toastStore.success(message);
+                                this.cartStore.clearCart();
+                                const {withPoint, point} = data;
+                                if (withPoint) {
+                                    this.transactionStore.showPoint(point);
+                                }
                             } else {
                                 this.actionLoaderStore.end();
                                 this.toastStore.failed(message);

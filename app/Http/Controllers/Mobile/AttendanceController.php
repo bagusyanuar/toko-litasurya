@@ -257,15 +257,17 @@ class AttendanceController extends Controller
         }
 
         try {
-            // Menangani upload gambar
             $imagePath = null;
-            if ($request->hasFile('image')) {
-                // Upload gambar dan simpan di storage/app/public/attendances
-                $image = $request->file('image');
-                $imageName = time() . '_' . $image->getClientOriginalName(); // Nama file gambar unik
-                $image->storeAs('attendances', $imageName, 'public'); // Menyimpan file gambar ke dalam storage/public/attendances
-                $imagePath = 'storage/attendances/' . $imageName; // Path gambar yang akan disimpan di database
-            }
+           if ($request->hasFile('image')) {
+    $image = $request->file('image');
+    $imageName = time() . '_' . $image->getClientOriginalName();
+    
+    $destinationPath = 'attendances'; 
+    
+    $image->move(public_path($destinationPath), $imageName);
+    
+    $imagePath = $destinationPath . '/' . $imageName;
+}
 
             // Simpan data ke database
             $attendance = SalesTeamVisit::create([
