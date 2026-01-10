@@ -5,12 +5,12 @@
             text="Welcome to reports and analytics page. You can view report and analytic your transaction on this page."></x-gxui.typography.page-sub-title>
     </div>
     <x-gxui.tab.tab-container class="mb-5">
-        <!-- <x-gxui.tab.tab-item
+        <x-gxui.tab.tab-item
             active="$store.reportStore.selectedTab === 'selling'"
             icon="shopping-bag"
             title="Selling Report"
             handleChange="$store.reportStore.onChangeTab('selling')"
-        ></x-gxui.tab.tab-item> -->
+        ></x-gxui.tab.tab-item>
         <x-gxui.tab.tab-item
             active="$store.reportStore.selectedTab === 'purchasing'"
             icon="notebook-pen"
