@@ -6,8 +6,8 @@
             text="Welcome to transaction page. You can manage all transactions on this page."></x-gxui.typography.page-sub-title>
     </div>
     <x-gxui.tab.tab-container class="mb-5">
-        <x-gxui.tab.tab-item active="$store.transactionStore.selectedTab === 'cashier'" icon="shopping-bag" title="Cashier"
-            handleChange="$store.transactionStore.onChangeTab('cashier')"></x-gxui.tab.tab-item>
+        <!-- <x-gxui.tab.tab-item active="$store.transactionStore.selectedTab === 'cashier'" icon="shopping-bag" title="Cashier"
+            handleChange="$store.transactionStore.onChangeTab('cashier')"></x-gxui.tab.tab-item> -->
         <x-gxui.tab.tab-item active="$store.transactionStore.selectedTab === 'purchasing'" icon="notebook-pen"
             title="Purchasing" handleChange="$store.transactionStore.onChangeTab('purchasing')"></x-gxui.tab.tab-item>
         <x-gxui.tab.tab-item active="$store.transactionStore.selectedTab === 'return'" icon="undo-2" title="Return"
