@@ -12,6 +12,8 @@
             title="Purchasing" handleChange="$store.transactionStore.onChangeTab('purchasing')"></x-gxui.tab.tab-item>
         <x-gxui.tab.tab-item active="$store.transactionStore.selectedTab === 'return'" icon="undo-2" title="Return"
             handleChange="$store.transactionStore.onChangeTab('return')"></x-gxui.tab.tab-item>
+        <x-gxui.tab.tab-item active="$store.transactionStore.selectedTab === 'point-redemption'" icon="gift" title="Penukaran Poin"
+            handleChange="$store.transactionStore.onChangeTab('point-redemption')"></x-gxui.tab.tab-item>
 
     </x-gxui.tab.tab-container>
     <template x-if="$store.transactionStore.selectedTab === 'cashier'">
@@ -29,6 +31,12 @@
     <template x-if="$store.transactionStore.selectedTab === 'return'">
         <div>
             <livewire:features.selling-return.table />
+        </div>
+    </template>
+    <template x-if="$store.transactionStore.selectedTab === 'point-redemption'">
+        <div>
+            <livewire:features.point-redemption.table />
+            <livewire:features.point-redemption.form />
         </div>
     </template>
     <x-gxui.loader.action-loader></x-gxui.loader.action-loader>

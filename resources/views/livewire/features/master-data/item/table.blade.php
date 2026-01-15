@@ -12,8 +12,7 @@
                 </x-gxui.button.button>
             </div>
         </div>
-        <x-gxui.table.dynamic.table store="itemTableStore" dispatcher="onFindAll" pagination="true"
-            statePerPageOptions="perPageOptions">
+        <x-gxui.table.dynamic.table store="itemTableStore" dispatcher="onFindAll" pagination="true">
             <x-slot name="header">
                 <x-gxui.table.dynamic.th class="w-[140px]" contentClass="justify-center">
                     <span>Category</span>
@@ -61,7 +60,8 @@
                                                 <span x-text="unit.label"></span>
                                                 <span>:</span>
                                             </div>
-                                            <template x-if="$store.itemTableStore.prices && $store.itemTableStore.prices[index]">
+                                            <template
+                                                x-if="$store.itemTableStore.prices && $store.itemTableStore.prices[index]">
                                                 <div class="flex-1 flex items-center gap-2">
                                                     <x-gxui.input.text.text placeholder="PLU" parentClassName="w-full"
                                                         x-model="$store.itemTableStore.prices[index].prices[idx].plu"
@@ -128,7 +128,6 @@
                 units: [...AVAILABLE_UNITS],
                 prices: [],
                 loadingPrice: false,
-                perPageOptions: [1, 2, 3],
                 actions: [{
                         label: 'Edit',
                         icon: 'pencil',

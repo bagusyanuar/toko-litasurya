@@ -95,7 +95,7 @@
             </div>
         </div>
         <div
-            class="modal-footer w-full w-full flex items-center justify-end gap-2 px-4 py-3 border-t border-neutral-300"
+            class="modal-footer w-full flex items-center justify-end gap-2 px-4 py-3 border-t border-neutral-300"
         >
             <x-gxui.button.button
                 wire:ignore
