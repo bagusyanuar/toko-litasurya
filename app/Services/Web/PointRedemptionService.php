@@ -27,11 +27,11 @@ class PointRedemptionService implements PointRedemptionUseCase
                 ->when($filter->getParam(), function ($q) use ($filter) {
                     /** @var Builder $q */
                     return $q->whereRelation('customer', 'name', 'LIKE', "%{$filter->getParam()}%");
+                })
+                ->when(($filter->getDateStart() && $filter->getDateEnd()), function ($q) use ($filter) {
+                    /** @var Builder $q */
+                    return $q->whereBetween('date', [$filter->getDateStart(), $filter->getDateEnd()]);
                 });
-            //                ->when(($filter->getDateStart() && $filter->getDateEnd()), function ($q) use ($filter) {
-            //                    /** @var Builder $q */
-            //                    return $q->whereBetween('date', [$filter->getDateStart(), $filter->getDateEnd()]);
-            //                });
             $totalRows = $query->count();
             $offset = ($filter->getPage() - 1) * $filter->getPerPage();
             $query

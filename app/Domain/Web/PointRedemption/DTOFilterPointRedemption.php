@@ -3,12 +3,15 @@
 namespace App\Domain\Web\PointRedemption;
 
 use App\Commons\Request\DTORequest;
+use Carbon\Carbon;
 
 class DTOFilterPointRedemption extends DTORequest
 {
     private $param;
     private $page;
     private $perPage;
+    private $dateStart;
+    private $dateEnd;
 
     /**
      * DTOFilterItem constructor.
@@ -29,9 +32,13 @@ class DTOFilterPointRedemption extends DTORequest
         $param = $this->query['param'] ?? '';
         $page = $this->query['page'] ?? 1;
         $perPage = $this->query['per_page'] ?? 10;
+        $dateStart = $this->query['dateStart'] ? Carbon::createFromFormat('d/m/Y', $this->query['dateStart'])->format('Y-m-d') : '';
+        $dateEnd = $this->query['dateEnd'] ? Carbon::createFromFormat('d/m/Y', $this->query['dateEnd'])->format('Y-m-d') : '';
         $this->setParam($param)
             ->setPage($page)
-            ->setPerPage($perPage);
+            ->setPerPage($perPage)
+            ->setDateStart($dateStart)
+            ->setDateEnd($dateEnd);
     }
 
     /**
@@ -85,6 +92,42 @@ class DTOFilterPointRedemption extends DTORequest
     public function setPerPage($perPage)
     {
         $this->perPage = $perPage;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateStart()
+    {
+        return $this->dateStart;
+    }
+
+    /**
+     * @param mixed $dateStart
+     * @return DTOFilterReward
+     */
+    public function setDateStart($dateStart)
+    {
+        $this->dateStart = $dateStart;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateEnd()
+    {
+        return $this->dateEnd;
+    }
+
+    /**
+     * @param mixed $dateEnd
+     * @return DTOFilterReward
+     */
+    public function setDateEnd($dateEnd)
+    {
+        $this->dateEnd = $dateEnd;
         return $this;
     }
 }

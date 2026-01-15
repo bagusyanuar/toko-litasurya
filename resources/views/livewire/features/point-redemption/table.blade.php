@@ -6,7 +6,16 @@
     }" x-init="initIcons()"
         x-effect="initIcons()">
         <p class="text-neutral-700 font-semibold">Data Penukaran Hadiah</p>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1">
+            <div class="flex items-center justify-between gap-1">
+                <x-gxui.input.date.datepicker id="filterSellingDateStart" store="pointRedemptionTableStore"
+                    placeholder="dd/mm/yyyy" class="!w-[120px]" x-model="$store.pointRedemptionTableStore.dateStart"
+                    x-init="initDatepicker({ format: 'dd/mm/yyyy' })" dispatcher="onDateChange"></x-gxui.input.date.datepicker>
+                <span class="text-sm text-neutral-700">-</span>
+                <x-gxui.input.date.datepicker id="filterSellingDateEnd" store="pointRedemptionTableStore"
+                    placeholder="dd/mm/yyyy" class="!w-[120px]" x-model="$store.pointRedemptionTableStore.dateEnd"
+                    x-init="initDatepicker({ format: 'dd/mm/yyyy' })" dispatcher="onDateChange"></x-gxui.input.date.datepicker>
+            </div>
             <x-gxui.button.button wire:ignore x-on:click="$store.pointRedemptionFormStore.showModal()">
                 <div class="w-full flex justify-center items-center gap-1 text-xs">
                     <i data-lucide="plus" class="h-3" style="width: fit-content;"></i>
@@ -101,14 +110,15 @@
 
                     })
                 },
+                onDateChange() {
+                    this.onFindAll();
+                },
                 onFindAll() {
                     this.loading = true;
                     const query = {
                         param: this.param,
                         page: this.currentPage,
                         per_page: this.perPage,
-                        store: this.store,
-                        sales: this.sales,
                         dateStart: this.dateStart,
                         dateEnd: this.dateEnd,
                     };
